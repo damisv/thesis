@@ -1,0 +1,110 @@
+<div id="content">
+  <mat-toolbar color="primary" style="transition: all 1.5s ease;position: sticky;z-index:999;border-radius: 6px;top:0">
+    <p style="transition: all 1.5s ease;">Project Management Web App</p>
+    <span class="spacer"></span>
+    <div style="transition: all 1.5s ease;">
+        <span>
+          <button mat-icon-button matTooltip="Top Section"><mat-icon>home</mat-icon></button>
+          <button mat-icon-button matTooltip="About"><mat-icon>info</mat-icon></button>
+          <button mat-icon-button matTooltip="Product"><mat-icon>business_center</mat-icon></button>
+          <button mat-icon-button matTooltip="Authenticate"><mat-icon>card_membership</mat-icon></button>
+          <button mat-icon-button matTooltip="Our Team"><mat-icon>group</mat-icon></button>
+          <button mat-icon-button matTooltip="Contact Us"><mat-icon>contact_mail</mat-icon></button>
+        </span>
+      <button mat-icon-button >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+  <div>
+    <div id="wallpaper" class="header">
+        <br><br>
+        <p class="title">Project Management Thesis App</p>
+        <p class="description">Greatest app out there!</p>
+    </div>
+    <div class="main main-raised" [ngClass]="{'main-dark': isDark, 'main-light': !isDark}">
+      <div id="about">
+        <br>
+        <p class="title" style="font-size:2em;">About this application</p>
+        <p class="description">
+          This application is the subject of a Bachelor's Degree Thesis at the University of Applied Sciences of Central Macedonia.
+          Some of the important features are the below:
+        </p>
+      </div>
+      <div id="product">
+        <br>
+        <hr>
+        <p class="title" style="font-size:2em;">Let's talk product</p>
+        <p class="description">
+          If you're looking for a quick and easy way of directing a project, you've come to the right place.
+          No matter the size or nature of your plan, our application is the right tool for it.
+          <br>Below you'll get to know the most important features implemented in PM Web App.
+        </p>
+
+        <div fxLayout
+             fxLayout.xs="column"
+             fxLayoutAlign="center"
+             fxLayoutGap="1em"
+             fxLayoutGap.xs="0.1em">
+          <div fxFlex >
+            <mat-card>
+              <mat-card-title class="title">Project & Private discussions</mat-card-title>
+              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color:purple">chat</mat-icon></mat-card-subtitle>
+              <mat-card-content>
+                <p class="description">You can discuss important matters about your project, tasks, issues with the other member of your team entirely privately and secure. The chat is based on Socket.io.</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div fxFlex >
+            <mat-card>
+              <mat-card-title class="title">Quick & easy</mat-card-title>
+              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color:green">verified_user</mat-icon></mat-card-subtitle>
+              <mat-card-content>
+                <p class="description">Keep up with your tasks, issues as well as your teammates one's, through the Dashboard.</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div fxFlex>
+            <mat-card>
+              <mat-card-title class="title">Gantt Charts</mat-card-title>
+              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color:blue">insert_chart</mat-icon></mat-card-subtitle>
+              <mat-card-content>
+                <p class="description">Don't lose track of time using the Gantt charts provided by our app.</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <!--<div id="authenticate">-->
+          <!--<hr>-->
+          <!--<div fxLayout-->
+               <!--fxLayout.xs="column"-->
+               <!--fxLayoutAlign="center"-->
+               <!--fxLayoutGap="1em"-->
+               <!--fxLayoutGap.xs="0">-->
+            <!--<div fxFlex>-->
+              <!--<mat-card>-->
+                <!--<mat-card-title class="title">What are you waiting for?</mat-card-title>-->
+                <!--<mat-card-subtitle>Register for free here , and start using this awesome app!</mat-card-subtitle>-->
+                <!--<mat-card-content>-->
+                  <!--<a mat-raised-button color="accent" [routerLink]="['/auth/signup']">Register</a>-->
+                <!--</mat-card-content>-->
+              <!--</mat-card>-->
+            <!--</div>-->
+            <!--<div fxFlex>-->
+              <!--<mat-card>-->
+                <!--<mat-card-title class="title">Or if you already have an account:</mat-card-title>-->
+                <!--<mat-card-subtitle></mat-card-subtitle>-->
+                <!--<mat-card-content>-->
+                  <!--<a mat-raised-button  color="primary" [routerLink]="['/auth/signin']">Login</a>-->
+                <!--</mat-card-content>-->
+              <!--</mat-card>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+
+      </div>
+    </div>
+  </div>
+</div>
+

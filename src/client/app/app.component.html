@@ -1,0 +1,31 @@
+<!--<mat-sidenav-container id="angular-universal-seed" class="mat-typography" ngClass="{{theme}}">-->
+
+<!-- Side Menu -->
+<!--<mat-sidenav id="side-menu" #sideMenu mode="over" opened="false">-->
+<!--<mat-nav-list>-->
+<!--<a mat-list-item *ngFor="let item of menu" routerLink="{{item.path}}" routerLinkActive="active" (click)="sideMenu.close()">{{item.title}}</a>-->
+<!--<mat-divider></mat-divider>-->
+<!--<a mat-list-item (click)="toggleTheme()">Toggle Theme</a>-->
+<!--</mat-nav-list>-->
+<!--</mat-sidenav>-->
+
+<!--&lt;!&ndash; Header &ndash;&gt;-->
+<!--<mat-toolbar id="header" color="primary">-->
+<!--<div class="container">-->
+<!--<a mat-icon-button routerLink="/"><mat-icon svgIcon="angular"></mat-icon> {{name}}</a>-->
+<!--<span class="spacer"></span>-->
+<!--<div id="header-menu" class="toolbar-menu" fxShow fxShow.xs="false">-->
+<!--<a mat-icon-button *ngFor="let item of menu" routerLink="{{item.path}}" routerLinkActive="active">{{item.title}}</a>-->
+<!--<button mat-icon-button (click)="toggleTheme()"><mat-icon svgIcon="invert-colors"></mat-icon></button>-->
+<!--</div>-->
+<!--<button mat-icon-button fxHide fxHide.xs="false" (click)="sideMenu.open()"><mat-icon svgIcon="menu"></mat-icon></button>-->
+<!--</div>-->
+<!--</mat-toolbar>-->
+
+<!-- Content -->
+
+
+<!--</mat-sidenav-container>-->
+<div ngClass="{{theme}}">
+  <router-outlet></router-outlet>
+</div>
