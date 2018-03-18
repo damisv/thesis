@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
 
+.transparentToolbar {
+  background-color: transparent !important;
+  color: #673AB7 !important;
+}
+
 #wallpaper {
   background: url('../../assets/images/wallpaper.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
@@ -12,7 +17,7 @@
 }
 .header {
   height: 50vh;
-  color: #FFFFFF;
+  color: #E3F2FD;
   .title {
     font-size: 5em;
     font-weight: 600;
@@ -22,22 +27,47 @@
     font-size: 2.5em;
   }
 }
-#about {
-  .title {
-    color: #3C4858;
-  }
-  .description {
-    color: #999999;
-  }
+hr {
+  border: 0;
+  height: 1px;
+  background: #FFFFFF;
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,hsla(0,0%,0%,0)), color-stop(50%,hsla(0,0%,0%,.75)), color-stop(100%,hsla(0,0%,0%,0)));
+  background: -webkit-linear-gradient(left, hsla(0,0%,0%,0) 0%, hsla(0,0%,0%,.75) 50%, hsla(0,0%,0%,0) 100%);
+  background:    -moz-linear-gradient(left, hsla(0,0%,0%,0) 0%, hsla(0,0%,0%,.75) 50%, hsla(0,0%,0%,0) 100%);
+  background:     -ms-linear-gradient(left, hsla(0,0%,0%,0) 0%, hsla(0,0%,0%,.75) 50%, hsla(0,0%,0%,0) 100%);
+  background:      -o-linear-gradient(left, hsla(0,0%,0%,0) 0%, hsla(0,0%,0%,.75) 50%, hsla(0,0%,0%,0) 100%);
+  background:         linear-gradient(left, hsla(0,0%,0%,0) 0%, hsla(0,0%,0%,.75) 50%, hsla(0,0%,0%,0) 100%);
 }
 .spacer {
   flex: 1 1 auto;
 }
+.mini-spacer {
+  flex: 0.25 0.25 auto;
+}
+/*
+ Main content canvas
+ */
 .main-dark {
   background: #424242;
+  * {
+    .title {
+      color: #FFFFFF;
+    }
+    .description {
+      color: lightgray;
+    }
+  }
 }
 .main-light {
   background: #FFFFFF;
+  * {
+    .title {
+      color: #3C4858;
+    }
+    .description {
+      color: #999999;
+    }
+  }
 }
 .main {
   position: relative;
@@ -49,4 +79,13 @@
   margin: -60px 30px 0;
   border-radius: 6px;
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.24), 0 6px 30px 5px rgba(0, 0, 0, 0.32), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
+}
+
+.team_member {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+mat-card {
+  box-shadow: none !important;
 }

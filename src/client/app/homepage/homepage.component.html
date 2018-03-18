@@ -1,19 +1,17 @@
 <div id="content">
-  <mat-toolbar color="primary" style="transition: all 1.5s ease;position: sticky;z-index:999;border-radius: 6px;top:0">
-    <p style="transition: all 1.5s ease;">Project Management Web App</p>
+  <mat-toolbar color="primary" style="transition: all 1.5s ease;position: sticky;z-index:999;top:0" [ngClass]="{'transparentToolbar': isTop}">
+    <p style="font-weight: bold;">Project Management Web App</p>
     <span class="spacer"></span>
-    <div style="transition: all 1.5s ease;">
+    <div>
         <span>
-          <button mat-icon-button matTooltip="Top Section"><mat-icon>home</mat-icon></button>
-          <button mat-icon-button matTooltip="About"><mat-icon>info</mat-icon></button>
-          <button mat-icon-button matTooltip="Product"><mat-icon>business_center</mat-icon></button>
-          <button mat-icon-button matTooltip="Authenticate"><mat-icon>card_membership</mat-icon></button>
-          <button mat-icon-button matTooltip="Our Team"><mat-icon>group</mat-icon></button>
-          <button mat-icon-button matTooltip="Contact Us"><mat-icon>contact_mail</mat-icon></button>
+          <button mat-icon-button matTooltip="Top Section" (click)="scrollTo('wallpaper')" ><mat-icon>home</mat-icon></button>
+          <button mat-icon-button matTooltip="About" (click)="scrollTo('about')"><mat-icon>info</mat-icon></button>
+          <button mat-icon-button matTooltip="Product" (click)="scrollTo('product')"><mat-icon>business_center</mat-icon></button>
+          <button mat-icon-button matTooltip="Authenticate" (click)="scrollTo('authenticate')"><mat-icon>card_membership</mat-icon></button>
+          <button mat-icon-button matTooltip="Our Team" (click)="scrollTo('team')"><mat-icon>group</mat-icon></button>
+          <button mat-icon-button matTooltip="Contact Us" (click)="scrollTo('contact')"><mat-icon>contact_mail</mat-icon></button>
         </span>
-      <button mat-icon-button >
-        <mat-icon>more_vert</mat-icon>
-      </button>
+      <button mat-icon-button ><mat-icon>more_vert</mat-icon></button>
     </div>
   </mat-toolbar>
   <div>
@@ -23,6 +21,7 @@
         <p class="description">Greatest app out there!</p>
     </div>
     <div class="main main-raised" [ngClass]="{'main-dark': isDark, 'main-light': !isDark}">
+
       <div id="about">
         <br>
         <p class="title" style="font-size:2em;">About this application</p>
@@ -31,6 +30,7 @@
           Some of the important features are the below:
         </p>
       </div>
+
       <div id="product">
         <br>
         <hr>
@@ -49,7 +49,7 @@
           <div fxFlex >
             <mat-card>
               <mat-card-title class="title">Project & Private discussions</mat-card-title>
-              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color:purple">chat</mat-icon></mat-card-subtitle>
+              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color: #9575CD">chat</mat-icon></mat-card-subtitle>
               <mat-card-content>
                 <p class="description">You can discuss important matters about your project, tasks, issues with the other member of your team entirely privately and secure. The chat is based on Socket.io.</p>
               </mat-card-content>
@@ -58,7 +58,7 @@
           <div fxFlex >
             <mat-card>
               <mat-card-title class="title">Quick & easy</mat-card-title>
-              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color:green">verified_user</mat-icon></mat-card-subtitle>
+              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color: #2E7D32">verified_user</mat-icon></mat-card-subtitle>
               <mat-card-content>
                 <p class="description">Keep up with your tasks, issues as well as your teammates one's, through the Dashboard.</p>
               </mat-card-content>
@@ -67,7 +67,7 @@
           <div fxFlex>
             <mat-card>
               <mat-card-title class="title">Gantt Charts</mat-card-title>
-              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color:blue">insert_chart</mat-icon></mat-card-subtitle>
+              <mat-card-subtitle><mat-icon style="font-size: 4.4em;;color: #00ACC1">insert_chart</mat-icon></mat-card-subtitle>
               <mat-card-content>
                 <p class="description">Don't lose track of time using the Gantt charts provided by our app.</p>
               </mat-card-content>
@@ -75,36 +75,135 @@
           </div>
         </div>
 
-        <!--<div id="authenticate">-->
-          <!--<hr>-->
-          <!--<div fxLayout-->
-               <!--fxLayout.xs="column"-->
-               <!--fxLayoutAlign="center"-->
-               <!--fxLayoutGap="1em"-->
-               <!--fxLayoutGap.xs="0">-->
-            <!--<div fxFlex>-->
-              <!--<mat-card>-->
-                <!--<mat-card-title class="title">What are you waiting for?</mat-card-title>-->
-                <!--<mat-card-subtitle>Register for free here , and start using this awesome app!</mat-card-subtitle>-->
-                <!--<mat-card-content>-->
-                  <!--<a mat-raised-button color="accent" [routerLink]="['/auth/signup']">Register</a>-->
-                <!--</mat-card-content>-->
-              <!--</mat-card>-->
-            <!--</div>-->
-            <!--<div fxFlex>-->
-              <!--<mat-card>-->
-                <!--<mat-card-title class="title">Or if you already have an account:</mat-card-title>-->
-                <!--<mat-card-subtitle></mat-card-subtitle>-->
-                <!--<mat-card-content>-->
-                  <!--<a mat-raised-button  color="primary" [routerLink]="['/auth/signin']">Login</a>-->
-                <!--</mat-card-content>-->
-              <!--</mat-card>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
+      </div>
+
+      <div id="authenticate">
+        <hr>
+        <div fxLayout
+             fxLayout.xs="column"
+             fxLayoutAlign="center"
+             fxLayoutGap="1em"
+             fxLayoutGap.xs="0">
+          <div fxFlex>
+            <mat-card>
+              <mat-card-title class="title">What are you waiting for?</mat-card-title>
+              <mat-card-subtitle>Register for free here , and start using this awesome app!</mat-card-subtitle>
+              <mat-card-content>
+                <a mat-raised-button color="accent" [routerLink]="['/auth/signup']">Register</a>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div fxFlex>
+            <mat-card>
+              <mat-card-title class="title">Or if you already have an account:</mat-card-title>
+              <mat-card-subtitle><br></mat-card-subtitle>
+              <mat-card-content>
+                <a mat-raised-button color="primary" [routerLink]="['/auth/signin']">Login</a>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+
+      <div id="team" >
+        <hr>
+        <div fxLayout
+             fxLayout.xs="column"
+             fxLayoutAlign="center"
+             fxLayoutGap="1em"
+             fxLayoutGap.xs="0">
+          <div fxFlex class="team_member">
+            <mat-card>
+              <mat-card-header>
+                <img mat-card-avatar mat-card-md-image src="../../assets/images/gates.jpg" alt="Thumbnail Image">
+                <mat-card-title class="title">Anastasios Gymnopoylos</mat-card-title>
+                <mat-card-subtitle class="description">Full Stack Developer</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">You can write here details about one of your team members.</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-icon-button><i class="fab fab fa-linkedin fa-2x"></i></button>
+                <button mat-icon-button><i class="fab fa-github fa-2x"></i></button>
+                <button mat-icon-button><i class="fab fa-facebook-square fa-2x"></i></button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          <div fxFlex class="team_member">
+            <mat-card >
+              <mat-card-header>
+                <img mat-card-avatar mat-card-md-image src="../../assets/images/jobs.jpg" alt="Thumbnail Image">
+                <mat-card-title class="title">Damian Anchidin</mat-card-title>
+                <mat-card-subtitle class="description">Full Stack Developer</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">You can write here details about one of your team members.</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-icon-button><i class="fab fab fa-linkedin fa-2x"></i></button>
+                <button mat-icon-button><i class="fab fa-github fa-2x"></i></button>
+                <button mat-icon-button><i class="fab fa-facebook-square fa-2x"></i></button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+
+      <div id="contact">
+        <br>
+        <hr>
+        <h2 class="title">Contact Us</h2>
+        <h5 class="description">Divide details about your inquiry. We will responde back to you in a couple of hours.</h5>
+        <div fxLayout>
+          <div fxFlex>
+            <mat-card>
+              <mat-card-content>
+                <div fxLayout fxLayout.xs="column" fxLayoutWrap fxLayoutGap="25px">
+                  <mat-form-field fxFlex="calc(50% - 25px)">
+                    <mat-icon matPrefix>email</mat-icon>
+                    <input matInput placeholder="Email" type="email">
+                  </mat-form-field>
+                  <mat-form-field fxFlex="calc(50% - 25px)">
+                    <mat-icon matPrefix>subject</mat-icon>
+                    <input matInput placeholder="Subject" type="text">
+                  </mat-form-field>
+                  <mat-form-field fxFlex="calc(50% - 25px)">
+                    <mat-icon matPrefix>short_text</mat-icon>
+                    <textarea matInput placeholder="Your inquiry ..." matTextareaAutosize matAutosizeMinRows="2"
+                              matAutosizeMaxRows="5"></textarea>
+                  </mat-form-field>
+                </div>
+              </mat-card-content>
+
+              <mat-card-actions>
+                <button mat-raised-button color="primary">Send</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+        <br>
 
       </div>
+
     </div>
   </div>
+
+  <footer>
+    <mat-toolbar>
+      <div fxLayout
+           fxLayout.xs="column"
+           fxLayoutAlign="center"
+           fxLayoutGap="0">
+        <div fxFlex><a mat-icon-button><i class="fab fa-github fa-2x"></i><br><span class="description">Visit our repo</span></a></div>
+        <div fxFlex><a mat-icon-button><i class="fas fa-university fa-2x"></i><br><span class="description">University</span></a></div>
+        <div fxFlex><a mat-icon-button><i class="fas fa-question-circle fa-2x"></i><br><span class="description">FAQ</span></a></div>
+      </div>
+      <mat-toolbar-row>
+        <div class="spacer"></div>
+        <p class="description">Copyright &copy; 2017 by  Anchidin Damian | Anastasios Gymnopoylos</p>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </footer>
+
 </div>
 

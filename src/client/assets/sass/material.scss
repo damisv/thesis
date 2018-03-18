@@ -2,6 +2,9 @@
 
 @include mat-core();
 
+/*
+Light theme configs
+ */
 $light-app-primary: mat-palette($mat-blue, 700, 500, 900);
 $light-app-accent: mat-palette($mat-grey, 700, 500, 900);
 $light-app-warn: mat-palette($mat-red);
@@ -11,6 +14,10 @@ $light-app-theme: mat-light-theme($light-app-primary, $light-app-accent, $light-
   @include angular-material-theme($light-app-theme);
 }
 
+
+/*
+ Dark theme configs
+ */
 $dark-app-primary: mat-palette($mat-pink, 700);
 $dark-app-accent: mat-palette($mat-blue-grey);
 $dark-app-warn: mat-palette($mat-red);
