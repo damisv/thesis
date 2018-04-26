@@ -5,12 +5,14 @@ Starter Angular 5 application with server side rendering support on top of angul
 ## Installation
 
 ```
-$ yarn install
-$ yarn run build
+$ npm install
+$ npm run build
+OR 
+$ npm run build:ngClient => this is for frontEnd rendering ?
 ```
 
 ## Starting Application
 
 ```
-$ yarn start
+$ npm run start
 ```
