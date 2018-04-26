@@ -1,0 +1,116 @@
+<mat-accordion class="headers-align">
+  <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Basic info</mat-panel-title>
+      <mat-panel-description>Name and description for this assignment<mat-icon>description</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="flex_container">
+
+        <mat-radio-group [(ngModel)]="task.type">
+          <mat-radio-button [value]="taskType.task">Task</mat-radio-button>
+          <mat-radio-button [value]="taskType.issue">Issue</mat-radio-button>
+        </mat-radio-group>
+
+        <mat-form-field>
+          <input matInput placeholder="Name" [(ngModel)]="task.name" required>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-icon matSuffix>description</mat-icon>
+          <textarea #description matInput placeholder="Description"
+                    maxlength="2048" matTextareaAutosize
+                    matAutosizeMinRows="2" matAutosizeMaxRows="5" [(ngModel)]="task.description"></textarea>
+          <mat-hint align="end">{{description.value.length}} / 2048</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <mat-action-row>
+        <button mat-button color="primary" (click)="nextStep()">Next</button>
+      </mat-action-row>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Date ranges</mat-panel-title>
+      <mat-panel-description>Set start and end dates.<mat-icon>date_range</mat-icon></mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="flex_container rows">
+        <mat-form-field>
+          <input matInput [matDatepicker]="start" placeholder="Choose a date" [(ngModel)]="task.date_start" readonly>
+          <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+          <mat-datepicker #start></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="end" placeholder="Choose a date" [(ngModel)]="task.date_end" readonly>
+          <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
+          <mat-datepicker #end></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <mat-action-row>
+        <button mat-button color="warn" (click)="prevStep()">Previous</button>
+        <button mat-button color="primary" (click)="nextStep()">Next</button>
+      </mat-action-row>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Assigning</mat-panel-title>
+      <mat-panel-description>{{ 0 }} assigness<mat-icon>group_add</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <div class="flex_container">
+        <mat-form-field>
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let member of task?.assignee_email; let i = index;" selectable="true"
+                      removable="true" (remove)="remove(i)">
+              {{member}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+
+            <input #addAssignee placeholder="Pick assignees" matInput
+                   [matAutocomplete]="teamAuto"
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (matChipInputTokenEnd)="add($event.input, $event.value)"
+                    (keyup)="searchTerm$.next($event.target.value)">
+            <mat-autocomplete #teamAuto="matAutocomplete">
+              <mat-option *ngFor="let member of filteredTeam | async" (click)="add(addAssignee, member)" [value]="member">
+                {{ member }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+      <mat-action-row>
+        <button mat-button color="warn" (click)="prevStep()">Previous</button>
+        <button mat-button color="primary" (click)="nextStep()">Next</button>
+      </mat-action-row>
+    </ng-template>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Dependencies</mat-panel-title>
+      <mat-panel-description>Add dependencies for this assignment<mat-icon>settings_input_component</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div class="flex_container">
+
+    </div>
+
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">End</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+</mat-accordion>
+
+<button mat-raised-button color="primary" (click)="onCreate()">Create</button>

@@ -30,12 +30,7 @@ export class ProjectService {
               private progressBarService: ProgressBarService,
               private taskService: TaskService,
               private dialog: MatDialog) {
-    this.project$.subscribe(
-      project => {
-        this.taskService.getFor(project._id, TaskType.task);
-        this.taskService.getFor(project._id, TaskType.issue);
-      }
-    );
+    this.project$.subscribe(project => this.taskService.getFor(project._id));
   }
 
   giveProjects(projects: Project[]) {
@@ -90,7 +85,7 @@ export class ProjectService {
 
   // Remove Member Of Project Team
   removeMember(email: string, projectID: string) {
-    const req = new HttpRequest(HttpMethods.Patch, 'project.' + projectID, {headers: getHeaders()});
+    const req = new HttpRequest(HttpMethods.Patch, 'project/' + projectID, {headers: getHeaders()});
     return this.makeRequest(req)
       .map(res => res.json());
   }

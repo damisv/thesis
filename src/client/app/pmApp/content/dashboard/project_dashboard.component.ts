@@ -13,12 +13,10 @@ import {Project} from '../../../models/project';
   styleUrls: ['./dashboard.component.scss']
 })
 export class ProjectDashboardComponent implements OnDestroy {
-  tasks: Task[];
-  issues: Task[];
+  assignments: Task[];
   project: Project;
   projectSubscription: Subscription = this.projectService.project$.subscribe( project => this.project = project);
-  tasksSubscription: Subscription = this.taskService.tasks$.subscribe( tasks => this.tasks = tasks);
-  issuesSubscription: Subscription = this.taskService.issues$.subscribe( issues => this.issues = issues);
+  assignmentsSubscription: Subscription = this.taskService.assignments$.subscribe( assignments => this.assignments = assignments);
 
   constructor(private projectService: ProjectService,
               private titleService: Title,
@@ -27,7 +25,6 @@ export class ProjectDashboardComponent implements OnDestroy {
 
   ngOnDestroy() {
     if (this.projectSubscription !== undefined) { this.projectSubscription.unsubscribe(); }
-    if (this.tasksSubscription !== undefined) { this.tasksSubscription.unsubscribe(); }
-    if (this.issuesSubscription !== undefined) { this.issuesSubscription.unsubscribe(); }
+    if (this.assignmentsSubscription !== undefined) { this.assignmentsSubscription.unsubscribe(); }
   }
   }

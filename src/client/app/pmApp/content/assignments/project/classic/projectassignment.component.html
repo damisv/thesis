@@ -45,7 +45,8 @@
           </mat-radio-group>
           <div style="flex: 1 1 auto;"></div>
           <mat-form-field>
-            <mat-select placeholder="Status" color="primary" (change)="statusFilter.next({type: filterType.status, value: $event.value})" value="all">
+            <mat-hint align="start"><strong>Status of assignment</strong></mat-hint>
+            <mat-select color="primary" (change)="statusFilter.next({type: filterType.status, value: $event.value})" value="all">
               <mat-option value="all">All</mat-option>
               <mat-option value="true">Closed</mat-option>
               <mat-option value="false">Open</mat-option>
@@ -65,7 +66,7 @@
             <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
             <mat-cell *matCellDef="let element" class="mat-column-select">
               <mat-checkbox (click)="$event.stopPropagation()"
-                            [(ngModel)]="element.completed"></mat-checkbox>
+                            [(ngModel)]="element.completed" (change)="changeStatusOf(element)"></mat-checkbox>
             </mat-cell>
           </ng-container>
 

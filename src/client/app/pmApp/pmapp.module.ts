@@ -40,6 +40,8 @@ import {ProjectAssignmentsComponent} from './content/assignments/project/project
 import {ProjectAssignmentComponent} from './content/assignments/project/classic/projectassignment.component';
 import {AgileComponent} from './content/assignments/project/agile/agile.component';
 import {AgileBoardComponent} from './content/assignments/project/agileBoard/agileBoard.component';
+import {CreateAssignmentComponent} from './content/assignments/project/createassignment.component';
+import {SnackbarService} from '../services/snackbar.service';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import {AgileBoardComponent} from './content/assignments/project/agileBoard/agil
     ProfileComponent,
     OthersProfileComponent,
     MyAssignmentsComponent,
+    CreateAssignmentComponent,
     ProjectAssignmentsComponent,
     ProjectAssignmentComponent,
     AgileComponent,
@@ -79,7 +82,16 @@ import {AgileBoardComponent} from './content/assignments/project/agileBoard/agil
     TruncateModule,
     MglTimelineModule
   ],
-  providers: [SidebarMenuService, UserService, ProjectService, TaskService, ChatService, InviteService, TimelineService],
+  providers: [
+    SidebarMenuService,
+    UserService,
+    ProjectService,
+    TaskService,
+    ChatService,
+    InviteService,
+    TimelineService,
+    SnackbarService
+  ],
   entryComponents: [ExampleComponent]
 })
 

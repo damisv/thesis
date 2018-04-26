@@ -5,33 +5,32 @@
         fxLayoutGap.xs="0">
   <div fxFlex="auto">
     <mat-card class="card">
-      <mat-card-header>
-        <mat-card-title>Assignments</mat-card-title>
-        <mat-card-subtitle></mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <nav mat-tab-nav-bar>
-          <a mat-tab-link
-             [routerLink]="[{outlets: {assignments: ['assignments']}}]"
-          routerLinkActive #rla="routerLinkActive"
-             [active]="rla.isActive">
-            Assignments
-          </a>
-          <a mat-tab-link
-             [routerLink]="[{outlets: {assignments: ['agile']}}]"
-             routerLinkActive #tas="routerLinkActive"
-             [active]="tas.isActive">
-            Agile
-          </a>
-          <a mat-tab-link
-             [routerLink]="[{outlets: {assignments: ['agile-board']}}]"
-             routerLinkActive #iss="routerLinkActive"
-             [active]="iss.isActive">
-            Agile Board
-          </a>
-        </nav>
-        <router-outlet name="assignments"></router-outlet>
-      </mat-card-content>
+      <mat-tab-group [selectedIndex]="selectedTab">
+        <mat-tab label="Assignments">
+          <mat-card-content>
+            <nav mat-tab-nav-bar>
+              <a mat-tab-link
+                 [routerLink]="[{outlets: {assignments: ['assignments']}}]"
+                 routerLinkActive #rla="routerLinkActive"
+                 [active]="rla.isActive">Assignments</a>
+              <a mat-tab-link
+                 [routerLink]="[{outlets: {assignments: ['agile']}}]"
+                 routerLinkActive #tas="routerLinkActive"
+                 [active]="tas.isActive">Agile</a>
+              <a mat-tab-link
+                 [routerLink]="[{outlets: {assignments: ['agile-board']}}]"
+                 routerLinkActive #iss="routerLinkActive"
+                 [active]="iss.isActive">Agile Board</a>
+            </nav>
+            <router-outlet name="assignments"></router-outlet>
+          </mat-card-content>
+        </mat-tab>
+        <mat-tab label="New Assignment">
+          <mat-card-content>
+            <app-pmapp-project-assignment-create (createTask)="create($event)" [project]="project"></app-pmapp-project-assignment-create>
+          </mat-card-content>
+        </mat-tab>
+      </mat-tab-group>
     </mat-card>
   </div>
 </div>

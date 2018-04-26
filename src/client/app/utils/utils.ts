@@ -16,6 +16,15 @@ export function getHeaders(): HttpHeaders {
   return new HttpHeaders({'Content-Type': 'application/json'});
 }
 
+// Date
+// Checks if date1 is less than date2, and that both of them aren't null/undefined
+/// this should be done as an extension to Date
+export function areDatesCorrect(date1: Date, date2: Date): boolean {
+  if (!date1) { return false; }
+  if (date2) { return date1.getMilliseconds() < date2.getMilliseconds(); }
+  return true;
+}
+
 // Assignments Filters
 export class FilterOption {
   constructor(public type: FilterType, public value: any) {}

@@ -1,0 +1,15 @@
+.headers-align  {
+  & .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
+    flex-basis: 0;
+  }
+}
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+.flex_container {
+  display: flex;
+  flex-direction: column;
+  & .rows { flex-direction: row}
+  margin: 1em;
+}

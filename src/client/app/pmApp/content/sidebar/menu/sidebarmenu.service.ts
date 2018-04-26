@@ -18,8 +18,8 @@ export class Option {
 export const userSideNav = [
   new Option('dashboard', 'dashboard', 'Dashboard', 'Live stats'),
   new Option('myprojects', 'business_center', 'My Projects', 'All projects you\'re part of'),
-  new Option('mytasks', 'list', 'My Tasks', 'Upcoming Tasks across all projects'),
-  new Option('myissues', 'warning', 'My Issues', 'Upcoming Issues across all projects'),
+  new Option('mytasks', 'assignment', 'My Tasks', 'Upcoming Tasks across all projects'),
+  new Option('myissues', 'assignment_late', 'My Issues', 'Upcoming Issues across all projects'),
   new Option('profile', 'account_circle', 'My Profile', ''),
   new Option('calendar', 'schedule', 'Calendar', 'Schedule personal, team or projects events'),
   new Option('chat', 'chat', 'Chat', 'Project Threads to chat'),
@@ -27,9 +27,8 @@ export const userSideNav = [
 ];
 export const projectSideNav = [
   new Option('dashboard', 'dashboard', 'Dashboard', 'Project Live Stats'),
-  new Option('assignments', 'format_list_bulleted', 'Assignments', 'All assignments which belong to this project'),
+  new Option('assignments', 'assignment', 'Assignments', 'All assignments which belong to this project'),
   new Option('gantt', 'show_chart', 'Gantt', 'Gantt chart view for project tasks'),
-  // new Option('issues', 'warning', 'Issues', 'All issues which belong to this project'),
   new Option('team', 'group', 'Team', 'Members who contribute'),
   new Option('timeline', 'timeline', 'Action Log', 'Timeline feed'),
   new Option('chat', 'chat', 'Chat', 'Project Threads'),

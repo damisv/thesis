@@ -23,7 +23,10 @@ export class AppComponent {
               private progressBar: ProgressBarService) {
       themeService.currentTheme$
         .pipe(distinctUntilChanged())
-        .subscribe(theme => this.theme = theme);
+        .subscribe(theme => {
+          this.theme = theme;
+          overlayContainer.getContainerElement().classList.add(theme); // overlay container don't change the background color by itself
+        });
       progressBar.progressBar$
         .subscribe( state => this.isRunningQuery = state);
   }

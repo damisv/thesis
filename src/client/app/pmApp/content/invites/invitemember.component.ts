@@ -5,7 +5,7 @@ import {Subject} from 'rxjs/Subject';
 import {Project} from '../../../models/project';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/zip';
-import {MatSnackBar} from '@angular/material';
+import {SnackbarService} from '../../../services/snackbar.service';
 
 @Component({
   selector: 'app-invite-member',
@@ -30,7 +30,7 @@ export class InviteMemberComponent {
 
   constructor (private inviteService: InviteService,
                private userService: UserService,
-               private snackBar: MatSnackBar
+               private snackBar: SnackbarService
                // private notificationService:NotificationService
   ) {
     this.userService.searchFor(this.searchTerm$)
@@ -39,12 +39,12 @@ export class InviteMemberComponent {
 
   onInvite(email: string) {
     if (email === this.userEmail) {
-      this.openSnackBar('You cannot invite yourself to this project');
+      this.snackBar.show('You cannot invite yourself to this project');
       return;
     }
     for (const member of this.project.team) {
       if (member.email === email) {
-        this.openSnackBar(member + 'already member');
+        this.snackBar.show(member + 'already member');
         return;
       }
     }
@@ -54,19 +54,14 @@ export class InviteMemberComponent {
       (registered: boolean, invited: boolean) => ({registered, invited}))
       .subscribe( res => {
         if (!res.registered) {
-          this.openSnackBar(email + 'does not exist');
+          this.snackBar.show(email + 'does not exist');
           return;
         }
         if (res.invited) {
-          this.openSnackBar(email + 'already invited');
+          this.snackBar.show(email + 'already invited');
           return;
         }
         this.addInvite.emit(email);
       });
-  }
-
-  // Private methods
-  private openSnackBar(message, action = '', duration = 2000) {
-    this.snackBar.open(message, action, {duration: duration});
   }
 }
