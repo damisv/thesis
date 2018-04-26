@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {InviteService} from '../../../services/invites.service';
 import {UserService} from '../../../services/user.service';
 import {Subject} from 'rxjs/Subject';
-import {Member, Project, ProjectPosition} from '../../../models/project';
+import { Project } from '../../../models/project';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/zip';
 import {SnackbarService} from '../../../services/snackbar.service';
@@ -36,11 +36,12 @@ export class InviteMemberComponent {
 
   @Input() project: Project;
   @Input() userEmail: string;
-  @Output() getTeam = new EventEmitter<Member[]>();
+  @Output() getTeam = new EventEmitter<string[]>();
 
   separatorKeysCodes = [ENTER, COMMA];
   searchTerm$ = new Subject<string>();
   membersAutocomplete: Observable<string[]>;
+  team = [];
 
   constructor (private inviteService: InviteService,
                private userService: UserService,
@@ -64,6 +65,12 @@ export class InviteMemberComponent {
         return;
       }
     }
+    for (const invite of this.team) {
+      if (invite === email) {
+        this.snackBar.show(invite + 'already queued for invite');
+        return;
+      }
+    }
     Observable.zip(this.userService.userIsRegistered(email),
       this.inviteService.userIsInvited(email, this.project._id),
       (registered: boolean, invited: boolean) => ({registered, invited}))
@@ -76,16 +83,17 @@ export class InviteMemberComponent {
           this.snackBar.show(email + 'already invited');
           return;
         }
-        this.project.team.push(new Member(ProjectPosition.member, email));
-        this.getTeam.emit(this.project.team);
+        this.team.push(email);
+        this.getTeam.emit(this.team);
         if (input) { input.value = ''; }
-      });
+      },
+      err => this.snackBar.show('Error occurred on searching email'));
   }
 
   remove(index: number) {
     if (index >= 0) {
-      this.project.team.splice(index, 1);
-      this.getTeam.emit(this.project.team);
+      this.team.splice(index, 1);
+      this.getTeam.emit(this.team);
     }
   }
 }

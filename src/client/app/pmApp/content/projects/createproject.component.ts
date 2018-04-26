@@ -2,7 +2,7 @@ import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@an
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ProjectService} from '../../../services/projects.service';
 import {UserService} from '../../../services/user.service';
-import {MatSnackBar} from '@angular/material';
+import {MatInput, MatSnackBar} from '@angular/material';
 import {Member, Project, ProjectPosition} from '../../../models/project';
 import {User} from '../../../models/user';
 import {Observable} from 'rxjs/Observable';
@@ -22,7 +22,6 @@ export class CreateprojectComponent implements OnInit {
   @Output() projectCreated = new EventEmitter<Project>();
 
   firstFormGroup: FormGroup;
-  searchTerm$ = new Subject<string>();
   membersToInvite: string[] = [];
 
   // Properties

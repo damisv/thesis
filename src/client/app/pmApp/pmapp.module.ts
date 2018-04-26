@@ -42,6 +42,7 @@ import {AgileComponent} from './content/assignments/project/agile/agile.componen
 import {AgileBoardComponent} from './content/assignments/project/agileBoard/agileBoard.component';
 import {CreateAssignmentComponent} from './content/assignments/project/createassignment.component';
 import {SnackbarService} from '../services/snackbar.service';
+import {ViewAssignmentComponent} from './content/assignments/project/viewassignment.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import {SnackbarService} from '../services/snackbar.service';
     OthersProfileComponent,
     MyAssignmentsComponent,
     CreateAssignmentComponent,
+    ViewAssignmentComponent,
     ProjectAssignmentsComponent,
     ProjectAssignmentComponent,
     AgileComponent,

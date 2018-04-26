@@ -21,6 +21,8 @@ import {ProjectAssignmentsComponent} from './content/assignments/project/project
 import {ProjectAssignmentComponent} from './content/assignments/project/classic/projectassignment.component';
 import {AgileComponent} from './content/assignments/project/agile/agile.component';
 import {AgileBoardComponent} from './content/assignments/project/agileBoard/agileBoard.component';
+import {ViewAssignmentComponent} from './content/assignments/project/viewassignment.component';
+import {CreateAssignmentComponent} from './content/assignments/project/createassignment.component';
 
 export const PMAPP_ROUTES: Routes = [
   {path: '', component: PMAppComponent, children: [
@@ -45,6 +47,7 @@ export const PMAPP_ROUTES: Routes = [
               { path: 'agile', component: AgileComponent, outlet: 'assignments'},
               { path: 'agile-board', component: AgileBoardComponent, outlet: 'assignments'}
             ]},
+          { path: 'assignmentview/:id', component: ViewAssignmentComponent},
           { path: 'team', component: TeamComponent},
           { path: 'timeline', component: TimelineComponent},
           { path: 'chat', component: ChatComponent},
@@ -52,6 +55,7 @@ export const PMAPP_ROUTES: Routes = [
           { path: '**', redirectTo: '404', pathMatch: 'full'},
           { path: '404', component: NotFoundErrorComponent}
         ]},
+      { path: 'assignmentview/:id', component: ViewAssignmentComponent},
       { path: '**', redirectTo: '404', pathMatch: 'full'},
       { path: '404', component: NotFoundErrorComponent}
     ]}

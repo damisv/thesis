@@ -16,7 +16,7 @@ import {areDatesCorrect} from '../../../../utils/utils';
 export class CreateAssignmentComponent implements OnInit {
   @Input() project: Project;
   @Output() createTask = new EventEmitter<Task>();
-  task = new Task(TaskType.task);
+  assignment = new Task(TaskType.task);
 
   step = 0;
   taskType = TaskType;
@@ -43,27 +43,29 @@ export class CreateAssignmentComponent implements OnInit {
   // Add assignees and chips
   add(input, value): void {
     if ((value || '').trim()) {
-      if (this.task.assignee_email.findIndex(value) === -1) {
-        this.task.assignee_email.push(value.trim());
+      if (this.assignment.assignee_email.findIndex(value) === -1) {
+        this.assignment.assignee_email.push(value.trim());
       }
     }
     if (input) { input.value = ''; }
   }
 
   remove(index: number) {
-    if (index >= 0) { this.task.assignee_email.splice(index, 1); }
+    if (index >= 0) { this.assignment.assignee_email.splice(index, 1); }
   }
 
   onCreate() {
-    if (!(this.task.name || '').trim()) {
+    if (!(this.assignment.name || '').trim()) {
       this.snackBar.show('Check name for this task.');
       return;
     }
-    if (!areDatesCorrect(this.task.date_start, this.task.date_end)) {
+    if (!areDatesCorrect(this.assignment.date_start, this.assignment.date_end)) {
       this.snackBar.show('Check dates before proceeding.');
       return;
     }
-    this.createTask.emit(this.task);
+    this.assignment.project_id = this.project._id;
+    this.assignment.project_name = this.project.name;
+    this.createTask.emit(this.assignment);
   }
 
   // Expansion Panels methods

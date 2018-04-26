@@ -8,20 +8,20 @@
     <ng-template matExpansionPanelContent>
       <div class="flex_container">
 
-        <mat-radio-group [(ngModel)]="task.type">
+        <mat-radio-group [(ngModel)]="assignment.type">
           <mat-radio-button [value]="taskType.task">Task</mat-radio-button>
           <mat-radio-button [value]="taskType.issue">Issue</mat-radio-button>
         </mat-radio-group>
 
         <mat-form-field>
-          <input matInput placeholder="Name" [(ngModel)]="task.name" required>
+          <input matInput placeholder="Name" [(ngModel)]="assignment.name" required>
         </mat-form-field>
 
         <mat-form-field>
           <mat-icon matSuffix>description</mat-icon>
           <textarea #description matInput placeholder="Description"
                     maxlength="2048" matTextareaAutosize
-                    matAutosizeMinRows="2" matAutosizeMaxRows="5" [(ngModel)]="task.description"></textarea>
+                    matAutosizeMinRows="2" matAutosizeMaxRows="5" [(ngModel)]="assignment.description"></textarea>
           <mat-hint align="end">{{description.value.length}} / 2048</mat-hint>
         </mat-form-field>
       </div>
@@ -40,12 +40,12 @@
     <ng-template matExpansionPanelContent>
       <div class="flex_container rows">
         <mat-form-field>
-          <input matInput [matDatepicker]="start" placeholder="Choose a date" [(ngModel)]="task.date_start" readonly>
+          <input matInput [matDatepicker]="start" placeholder="Choose a date" [(ngModel)]="assignment.date_start" readonly>
           <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
           <mat-datepicker #start></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
-          <input matInput [matDatepicker]="end" placeholder="Choose a date" [(ngModel)]="task.date_end" readonly>
+          <input matInput [matDatepicker]="end" placeholder="Choose a date" [(ngModel)]="assignment.date_end" readonly>
           <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
           <mat-datepicker #end></mat-datepicker>
         </mat-form-field>
@@ -67,7 +67,7 @@
       <div class="flex_container">
         <mat-form-field>
           <mat-chip-list #chipList>
-            <mat-chip *ngFor="let member of task?.assignee_email; let i = index;" selectable="true"
+            <mat-chip *ngFor="let member of assignment?.assignee_email; let i = index;" selectable="true"
                       removable="true" (remove)="remove(i)">
               {{member}}
               <mat-icon matChipRemove>cancel</mat-icon>

@@ -73,8 +73,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
                 private userService: UserService ,
                 private router: Router,
                 public snackBar: MatSnackBar,
-                private titleService: Title,
-                private taskService: TaskService) {
+                private titleService: Title) {
     }
 
     positionSearch(team) {

@@ -7,14 +7,14 @@
             <mat-panel-title>Company</mat-panel-title>
             <mat-panel-description>If you're developing for a Company, you could set that here<mat-icon>business</mat-icon></mat-panel-description>
           </mat-expansion-panel-header>
-          <!-- Content -->
-          <mat-form-field>
-            <input matInput placeholder="Project Company" [(ngModel)]="project.company" [ngModelOptions]="{standalone: true}">
-          </mat-form-field>
-          <!-- Content -->
-          <mat-action-row>
-            <button mat-button color="primary" (click)="nextStep()">Next</button>
-          </mat-action-row>
+          <ng-template matExpansionPanelContent>
+            <mat-form-field>
+              <input matInput placeholder="Project Company" [(ngModel)]="project.company" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+            <mat-action-row>
+              <button mat-button color="primary" (click)="nextStep()">Next</button>
+            </mat-action-row>
+          </ng-template>
         </mat-expansion-panel>
 
         <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
@@ -23,13 +23,13 @@
             <mat-panel-description>Set the privacy visibility for this project.<mat-icon>vpn_lock</mat-icon>
             </mat-panel-description>
           </mat-expansion-panel-header>
-          <!-- Content -->
-          <mat-slide-toggle #privacyToggle color="accent" (change)="changeProjectPrivacyType(privacyToggle.checked)">{{ project.typeOf }}</mat-slide-toggle>
-          <!-- Content -->
-          <mat-action-row>
-            <button mat-button color="warn" (click)="prevStep()">Previous</button>
-            <button mat-button color="primary" (click)="nextStep()">Next</button>
-          </mat-action-row>
+          <ng-template matExpansionPanelContent>
+            <mat-slide-toggle #privacyToggle color="accent" (change)="changeProjectPrivacyType(privacyToggle.checked)">{{ project.typeOf }}</mat-slide-toggle>
+            <mat-action-row>
+              <button mat-button color="warn" (click)="prevStep()">Previous</button>
+              <button mat-button color="primary" (click)="nextStep()">Next</button>
+            </mat-action-row>
+          </ng-template>
         </mat-expansion-panel>
 
         <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
@@ -39,27 +39,28 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
           <!-- Content -->
-          <div class="flex_container">
-            <form [formGroup]="firstFormGroup">
-            <mat-form-field>
-              <input matInput  required placeholder="Project Name" formControlName="projectName" [(ngModel)]="project.name">
-            </mat-form-field>
-            </form>
-            <mat-form-field>
-              <input matInput placeholder="Amount" type="number" value="{{slider.value}}" disabled>
-              <span matPrefix>$&nbsp;</span>
-              <span matSuffix>.00</span>
-            </mat-form-field>
-            <mat-slider #slider style="position:relative;width:100%" [(ngModel)]="project.budget" tickInterval="auto" [min]="0" [max]="50000" ></mat-slider>
-            <mat-form-field>
-              <textarea matInput  placeholder="This text should be concise and readable" [(ngModel)]="project.description" [ngModelOptions]="{standalone: true}"></textarea>
-            </mat-form-field>
-          </div>
-          <!-- Content -->
-          <mat-action-row>
-            <button mat-button color="warn" (click)="prevStep()">Previous</button>
-            <button mat-button color="primary" (click)="nextStep()">End</button>
-          </mat-action-row>
+          <ng-template matExpansionPanelContent>
+            <div class="flex_container">
+              <form [formGroup]="firstFormGroup">
+                <mat-form-field>
+                  <input matInput required placeholder="Project Name" formControlName="projectName" [(ngModel)]="project.name">
+                </mat-form-field>
+              </form>
+              <mat-form-field>
+                <input matInput placeholder="Amount" type="number" value="{{slider.value}}" disabled>
+                <span matPrefix>$&nbsp;</span>
+                <span matSuffix>.00</span>
+              </mat-form-field>
+              <mat-slider #slider style="position:relative;width:100%" [(ngModel)]="project.budget" tickInterval="auto" [min]="0" [max]="50000" ></mat-slider>
+              <mat-form-field>
+                <textarea matInput  placeholder="This text should be concise and readable" [(ngModel)]="project.description" [ngModelOptions]="{standalone: true}"></textarea>
+              </mat-form-field>
+            </div>
+            <mat-action-row>
+              <button mat-button color="warn" (click)="prevStep()">Previous</button>
+              <button mat-button color="primary" (click)="nextStep()">End</button>
+            </mat-action-row>
+          </ng-template>
         </mat-expansion-panel>
 
       </mat-accordion>
@@ -74,7 +75,9 @@
             <mat-panel-title>Invite members</mat-panel-title>
             <mat-panel-description>Invite users to work on your project</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-invite-member (addInvite)="onInvite($event)" [userEmail]="user.email" [project]="project" ></app-invite-member>
+          <ng-template matExpansionPanelContent>
+            <app-invite-member (addInvite)="onInvite($event)" [userEmail]="user.email" [project]="project" ></app-invite-member>
+          </ng-template>
         </mat-expansion-panel>
       <div>
         <button mat-button matStepperPrevious>Back</button>
@@ -89,14 +92,16 @@
         <mat-panel-title>{{project.name}}</mat-panel-title>
         <mat-panel-description>Review Info</mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
-        <input matInput placeholder="Company" [(ngModel)]="project.company" disabled>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Amount" type="number" [value]="project.budget" disabled>
-        <span matPrefix>$&nbsp;</span>
-        <span matSuffix>.00</span>
-      </mat-form-field>
+      <ng-template matExpansionPanelContent>
+        <mat-form-field>
+          <input matInput placeholder="Company" [(ngModel)]="project.company" disabled>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Amount" type="number" [value]="project.budget" disabled>
+          <span matPrefix>$&nbsp;</span>
+          <span matSuffix>.00</span>
+        </mat-form-field>
+      </ng-template>
     </mat-expansion-panel>
     <div>
       <button mat-button matStepperPrevious>Back</button>

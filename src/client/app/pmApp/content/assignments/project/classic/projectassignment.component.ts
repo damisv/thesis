@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Task, TaskType} from '../../../../../models/task';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {Project} from '../../../../../models/project';
@@ -39,6 +39,7 @@ export class ProjectAssignmentComponent implements AfterViewInit {
   statusFilter = new BehaviorSubject<FilterOption>({type: FilterType.status, value: 'all'});
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private projectService: ProjectService,
               private taskService: TaskService) {
     // FilterPredicate is the function that runs when table data is filtering
@@ -58,7 +59,7 @@ export class ProjectAssignmentComponent implements AfterViewInit {
 
   ngAfterViewInit() { this.dataSource.paginator = this.paginator; }
 
-  openTask(id: string) { console.log(id); }
+  openTask(id: string) { this.router.navigate(['assignmentview/' + id]); }
 
   changeStatusOf(task: Task) {
     this.taskService.changeStatus(task)

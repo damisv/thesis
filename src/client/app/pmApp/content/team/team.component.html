@@ -45,7 +45,8 @@
         <mat-card-title>Invite a member</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <app-invite-member (addInvite)="addInvite($event)" [userEmail]="userEmail" [project]="project" ></app-invite-member>
+        <app-invite-member (addInvite)="teamToInvite($event)" [userEmail]="userEmail" [project]="project" ></app-invite-member>
+        <button mat-raised-button (click)="onInvite()">Invite members</button>
       </mat-card-content>
     </mat-card>
   </div>

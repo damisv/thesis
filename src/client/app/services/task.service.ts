@@ -43,10 +43,23 @@ export class TaskService {
         .subscribe( values => this.assignments.next(values));
   }
 
+  // Get Task by ID
+  getBy(id: string) {
+    const req = new HttpRequest(HttpMethods.Get, 'assignments/' + id, {headers: getHeaders()});
+    return this.makeRequest(req)
+      .map(res => res.json());
+  }
+
   create(task: Task) {
     // if (typeof task.date_start !== 'undefined') { task.date_start = task.date_start.toISOString(); }
     // if (typeof task.date_end !== 'undefined') { task.date_end = task.date_end.toISOString(); }
-    const req = new HttpRequest(HttpMethods.Post, 'assignments/create', {task: task}, {headers: getHeaders()});
+    const req = new HttpRequest(HttpMethods.Post, 'assignments', {task: task}, {headers: getHeaders()});
+    return this.makeRequest(req)
+      .map(res => res.json());
+  }
+
+  edit(task: Task) {
+    const req = new HttpRequest(HttpMethods.Put, 'assignments', {task: task}, {headers: getHeaders()});
     return this.makeRequest(req)
       .map(res => res.json());
   }

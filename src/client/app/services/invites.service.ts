@@ -50,8 +50,8 @@ export class InviteService {
       .map(res => res.json());
   }
 
-  invite(invite: string, projectID: string) {
-    const req = new HttpRequest(HttpMethods.Post, 'invite', {invites: invite, projectID: projectID}, {headers: getHeaders()});
+  invite(invites: string[], projectID: string) {
+    const req = new HttpRequest(HttpMethods.Post, 'invite', {invites: invites, projectID: projectID}, {headers: getHeaders()});
     return this.makeRequest(req)
       .map(res => res.json());
   }
