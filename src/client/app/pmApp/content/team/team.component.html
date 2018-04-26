@@ -1,0 +1,53 @@
+<div  fxLayout
+      fxLayout.xs="column"
+      fxLayoutAlign="center"
+      fxLayoutGap="10px"
+      fxLayoutGap.xs="0">
+  <div fxFlex="auto">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Project Team</mat-card-title>
+        <mat-card-subtitle>With status also</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table #table [dataSource]="project?.team">
+          <ng-container matColumnDef="no.">
+            <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.index}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="position">
+            <mat-header-cell *matHeaderCellDef> Position </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="remove">
+            <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
+            <mat-cell *matCellDef="let element"><button mat-fab color="warn" (click)="removeMember(element.email, element.index)">Primary</button></mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-icon>history</mat-icon>Updated now
+      </mat-card-footer>
+    </mat-card>
+  </div>
+  <div fxFlex="auto">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Invite a member</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-invite-member (addInvite)="addInvite($event)" [userEmail]="userEmail" [project]="project" ></app-invite-member>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

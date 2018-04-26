@@ -1,0 +1,58 @@
+<mat-card>
+  <mat-card-title>Sign Up</mat-card-title>
+  <mat-card-subtitle>Please complete all steps to register.</mat-card-subtitle>
+  <mat-card-content>
+    <mat-horizontal-stepper [linear]="true" #stepper="matHorizontalStepper">
+      <mat-step [stepControl]="firstFormGroup" editable="true">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Fill your email and password for your new account.</ng-template>
+          <div fxLayout="column">
+            <mat-form-field [hideRequiredMarker]="false">
+              <input matInput placeholder="Email" formControlName="email" required (ngModelChange)="emailChanged()">
+              <mat-error *ngIf="firstFormGroup.get('email')?.invalid">{{setEmailFieldError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field [hideRequiredMarker]="false">
+              <input matInput placeholder="Password" formControlName="password" [type]="hide ? 'password' : 'text'" required [(ngModel)]="account.password" (ngModelChange)="checkPassMismatch()">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              <mat-error *ngIf="firstFormGroup.get('password').invalid">Min length: 6 chars !</mat-error>
+            </mat-form-field>
+            <mat-form-field [hideRequiredMarker]="false">
+              <input matInput placeholder="Retype Password" formControlName="retypePassword" [type]="hide ? 'password' : 'text'" required (ngModelChange)="checkPassMismatch()">
+              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              <mat-error *ngIf="firstFormGroup.get('retypePassword').hasError('mismatch')">Passwords don't match.</mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup" editable="true">
+        <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>Fill out your info.</ng-template>
+          <div fxLayout="column">
+            <mat-form-field [hideRequiredMarker]="false">
+              <input matInput placeholder="First Name" formControlName="firstName" required [(ngModel)]="user.firstName">
+            </mat-form-field>
+            <mat-form-field [hideRequiredMarker]="false">
+              <input matInput placeholder="Last Name" formControlName="lastName" required [(ngModel)]="user.lastName">
+            </mat-form-field>
+          </div>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Complete Sign Up.</ng-template>
+        You are now done.
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+          <button mat-button (click)="submit()">Register</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card-content>
+</mat-card>

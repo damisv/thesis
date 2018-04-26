@@ -1,0 +1,37 @@
+<div    fxLayout
+        fxLayout.xs="column"
+        fxLayoutAlign="center"
+        fxLayoutGap="10px"
+        fxLayoutGap.xs="0">
+  <div fxFlex="auto">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Assignments</mat-card-title>
+        <mat-card-subtitle></mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <nav mat-tab-nav-bar>
+          <a mat-tab-link
+             [routerLink]="[{outlets: {assignments: ['assignments']}}]"
+          routerLinkActive #rla="routerLinkActive"
+             [active]="rla.isActive">
+            Assignments
+          </a>
+          <a mat-tab-link
+             [routerLink]="[{outlets: {assignments: ['tasks']}}]"
+             routerLinkActive #tas="routerLinkActive"
+             [active]="tas.isActive">
+            Tasks
+          </a>
+          <a mat-tab-link
+             [routerLink]="[{outlets: {assignments: ['issues']}}]"
+             routerLinkActive #iss="routerLinkActive"
+             [active]="iss.isActive">
+            Issues
+          </a>
+        </nav>
+        <router-outlet name="assignments"></router-outlet>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

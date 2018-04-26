@@ -1,10 +1,5 @@
-import { DomSanitizer } from '@angular/platform-browser';
-import { NgModule, PLATFORM_ID, Inject } from '@angular/core';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { NgModule } from '@angular/core';
 import {
-  MatIconRegistry,
   MatToolbarModule,
   MatIconModule,
   MatButtonModule,
@@ -14,7 +9,12 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatDialogModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatMenuModule,
+  MatProgressBarModule,
+  MatStepperModule, MatTabsModule, MatTableModule, MatPaginatorModule, MatSelectModule, MatSnackBarModule, MatSlideToggleModule,
+  MatExpansionModule, MatDatepickerModule, MatNativeDateModule, MatSliderModule, MatAutocompleteModule, MatChipsModule, MatBadgeModule,
+  MatBottomSheetModule, MatGridListModule, MatCheckboxModule, MatRadioModule
 } from '@angular/material';
 
 @NgModule({
@@ -28,8 +28,27 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
+    MatSnackBarModule,
     MatTooltipModule,
-    HttpClientModule
+    MatMenuModule,
+    MatProgressBarModule,
+    MatStepperModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatSliderModule,
+    MatExpansionModule,
+    MatDatepickerModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
+    MatGridListModule,
+    MatCheckboxModule,
+    MatRadioModule
   ],
   exports: [
     MatToolbarModule,
@@ -41,7 +60,27 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
-    MatTooltipModule
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatStepperModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatSliderModule,
+    MatExpansionModule,
+    MatDatepickerModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
+    MatGridListModule,
+    MatCheckboxModule,
+    MatRadioModule
   ]
 })
 export class MaterialModule {}

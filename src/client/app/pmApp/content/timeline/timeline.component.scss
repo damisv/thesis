@@ -1,0 +1,32 @@
+.timeline {
+  height: auto;
+
+  & .timeline_content {
+    max-height: 70vh;
+    overflow: auto;
+    padding: 1em;
+
+    background: linear-gradient(230deg, rgb(75, 207, 147), rgb(75, 121, 207), rgb(162, 75, 207)) 0% 0% / 300% 300%;
+    background-size: 600% 600%;
+
+    -webkit-animation: AnimationName 10s ease infinite;
+    -moz-animation: AnimationName 10s ease infinite;
+    animation: AnimationName 10s ease infinite;
+
+    @-webkit-keyframes AnimationName {
+      0%{background-position:22% 0%}
+      50%{background-position:79% 100%}
+      100%{background-position:22% 0%}
+    }
+    @-moz-keyframes AnimationName {
+      0%{background-position:22% 0%}
+      50%{background-position:79% 100%}
+      100%{background-position:22% 0%}
+    }
+    @keyframes AnimationName {
+      0%{background-position:22% 0%}
+      50%{background-position:79% 100%}
+      100%{background-position:22% 0%}
+    }
+  }
+}

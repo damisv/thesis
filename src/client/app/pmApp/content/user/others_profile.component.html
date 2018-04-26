@@ -1,0 +1,24 @@
+<div fxLayout
+     fxLayout.xs="column"
+     fxLayoutAlign="center"
+     fxLayoutGap="10px"
+     fxLayoutGap.xs="0">
+    <div fxFlex>
+      <mat-card class="card">
+        <mat-card-header>
+          <img mat-card-avatar mat-card-sm-image src="../../assets/images/gates.jpg" alt="Thumbnail Image">
+          <mat-card-title matTooltip="{{profile?.username}}">{{ profile?.firstName }} {{ profile?.lastName }}</mat-card-title>
+          <mat-card-subtitle><a href="mailto:{{profile.email}}"><small>{{ profile.email}}</small></a></mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <!--<img mat-card-image src="../../../../assets/images/boulevard.jpg">-->
+          <p>From {{profile?.city}},{{profile?.country}}</p>
+          <p>A little about myself:</p>
+          <br>
+          <p>{{profile.description}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+</div>
+
+

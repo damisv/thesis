@@ -1,0 +1,83 @@
+<div    fxLayout
+        fxLayout.xs="column"
+        fxLayoutAlign="center"
+        fxLayoutGap="10px"
+        fxLayoutGap.xs="0">
+    <div fxFlex="auto">
+        <mat-card class="card" >
+            <mat-card-header>
+                <mat-card-title>
+                    Projects
+                </mat-card-title>
+                <mat-card-subtitle>
+                    <br>
+                    <mat-form-field>
+                      <mat-select placeholder="Filter" [(ngModel)]="position">
+                        <mat-option *ngFor="let position of positions" [value]="position">{{position}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-tab-group #tab>
+                    <mat-tab label="Data Table">
+                        <div class="table-container mat-elevation-z8">
+                            <mat-table #table [dataSource]="dataSource">
+                                <ng-container matColumnDef="Name">
+                                    <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (click)="openProjectDashboard(row._id)"> {{row.name}} </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Budget">
+                                    <mat-header-cell *matHeaderCellDef> Budget </mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> $ {{ row?.budget }}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Description">
+                                    <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{row.description}} </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Members">
+                                    <mat-header-cell *matHeaderCellDef> Team Members </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (click)="openProjectTeam(row._id)" > {{row?.team.length}} </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Progress">
+                                    <mat-header-cell *matHeaderCellDef> Progress </mat-header-cell>
+                                    <mat-cell *matCellDef="let row;let _i=index" >
+                                        <mat-progress-bar
+                                            color="primary"
+                                            mode="mode"
+                                            value="{{56}}">
+                                    </mat-progress-bar>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns; "></mat-row>
+                            </mat-table>
+                            <mat-paginator #paginator
+                                          [length]="projects.length"
+                                          [pageIndex]="0"
+                                          [pageSize]="5"
+                                          [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator>
+                        </div>
+                    </mat-tab>
+                    <!-- // Data table -->
+                    <mat-tab label="Create Project">
+                        <app-pmapp-createproject (projectCreated)="addProject($event)" [user]="user"></app-pmapp-createproject>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card-content>
+            <mat-card-footer>
+                <mat-divider></mat-divider>
+                <mat-icon>history</mat-icon> Updated {{ projectUpdated }}
+            </mat-card-footer>
+        </mat-card>
+    </div>
+</div>
+
+
+

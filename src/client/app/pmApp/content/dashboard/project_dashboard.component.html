@@ -1,0 +1,93 @@
+<div
+  fxLayout
+  fxLayout.lt-md="column"
+  fxLayoutAlign="center"
+  fxLayoutGap="10px"
+  fxLayoutGap.lt-md="0">
+  <div fxFlex="auto">
+    <mat-card class="card" >
+      <mat-card-header>
+        <mat-card-title>
+          Tasks Statistics
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex_container">
+          <div id="taskChartContainer" *ngIf="tasks.length > 0;else no_tasks_available"></div>
+          <ng-template #no_tasks_available>
+            <h4>There are no tasks on this project</h4>
+            <a mat-raised-button [routerLink]="['tasks']" >Create a new Task</a>
+          </ng-template>
+        </div>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-divider></mat-divider>
+        <mat-icon>history</mat-icon> Updated
+      </mat-card-footer>
+    </mat-card>
+  </div>
+  <div fxFlex="auto">
+    <mat-card class="card" >
+      <mat-card-header>
+        <mat-card-title>
+          Issues Statistics
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex_container">
+          <div id="issuesChartContainer" *ngIf="issues.length > 0;else no_issues_available"></div>
+          <ng-template #no_issues_available>
+            <h4>There are no tasks on this project</h4>
+            <a mat-raised-button [routerLink]="['tasks']" >Create a new Task</a>
+          </ng-template>
+        </div>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-divider></mat-divider>
+        <mat-icon>history</mat-icon> Updated
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>
+<div    fxLayout
+        fxLayout.lt-md="column"
+        fxLayoutAlign="center"
+        fxLayoutGap="10px"
+        fxLayoutGap.lt-md="0"
+        fxLayoutWrap="wrap">
+  <div fxFlex="auto">
+    <mat-card class="card" >
+      <mat-card-header>
+        <mat-card-title>
+          Milestones
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-divider></mat-divider>
+        <mat-icon>history</mat-icon> Updated
+      </mat-card-footer>
+    </mat-card>
+  </div>
+  <div fxFlex="auto">
+    <mat-card class="card" >
+      <mat-card-header>
+        <mat-card-title>
+          Fifth Card
+        </mat-card-title>
+        <mat-card-subtitle>
+          Fifth Card
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        This is the fifth card
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-divider></mat-divider>
+        <mat-icon>history</mat-icon> Updated
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>

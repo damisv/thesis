@@ -1,0 +1,20 @@
+<mat-nav-list>
+  <h3 mat-subheader>Unseen</h3>
+  <ng-template ngFor let-notification let-i="index" [ngForOf]="notifications">
+    <mat-list-item *ngIf="notification.status === 'false'" (click)="notification.status = 'true'">
+      <mat-icon mat-list-icon>{{(notification.type === 'task' ? 'format_list_bulleted' : (notification.type === 'issue' ? 'warning' : 'business_center'))}}</mat-icon>
+      <h4 mat-line>{{notification.type}}</h4>
+      <p mat-line> {{notification.date | date}} </p>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </ng-template>
+  <h3 mat-subheader>Seen</h3>
+  <ng-template ngFor let-notification let-i="index" [ngForOf]="notifications">
+    <mat-list-item *ngIf="notification.status !== 'false'">
+      <mat-icon mat-list-icon>{{(notification.type === 'task' ? 'format_list_bulleted' : (notification.type === 'issue' ? 'warning' : 'business_center'))}}</mat-icon>
+      <h4 mat-line>{{notification.type}}</h4>
+      <p mat-line> {{notification.date | date}} </p>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </ng-template>
+</mat-nav-list>

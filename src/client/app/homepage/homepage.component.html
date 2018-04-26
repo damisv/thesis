@@ -3,15 +3,23 @@
     <p style="font-weight: bold;">Project Management Web App</p>
     <span class="spacer"></span>
     <div>
-        <span>
-          <button mat-icon-button matTooltip="Top Section" (click)="scrollTo('wallpaper')" ><mat-icon>home</mat-icon></button>
+        <span *ngIf="!isMobile">
+          <button mat-icon-button matTooltip="Top Section" (click)="scrollTo('content')" ><mat-icon>home</mat-icon></button>
           <button mat-icon-button matTooltip="About" (click)="scrollTo('about')"><mat-icon>info</mat-icon></button>
           <button mat-icon-button matTooltip="Product" (click)="scrollTo('product')"><mat-icon>business_center</mat-icon></button>
           <button mat-icon-button matTooltip="Authenticate" (click)="scrollTo('authenticate')"><mat-icon>card_membership</mat-icon></button>
           <button mat-icon-button matTooltip="Our Team" (click)="scrollTo('team')"><mat-icon>group</mat-icon></button>
           <button mat-icon-button matTooltip="Contact Us" (click)="scrollTo('contact')"><mat-icon>contact_mail</mat-icon></button>
         </span>
-      <button mat-icon-button ><mat-icon>more_vert</mat-icon></button>
+      <button mat-icon-button [matMenuTriggerFor]="smallMenu" *ngIf="isMobile"><mat-icon>more_vert</mat-icon></button>
+      <mat-menu #smallMenu="matMenu">
+        <button mat-menu-item (click)="scrollTo('content')" ><mat-icon>home</mat-icon></button>
+        <button mat-menu-item (click)="scrollTo('about')"><mat-icon>info</mat-icon></button>
+        <button mat-menu-item (click)="scrollTo('product')"><mat-icon>business_center</mat-icon></button>
+        <button mat-menu-item (click)="scrollTo('authenticate')"><mat-icon>card_membership</mat-icon></button>
+        <button mat-menu-item (click)="scrollTo('team')"><mat-icon>group</mat-icon></button>
+        <button mat-menu-item (click)="scrollTo('contact')"><mat-icon>contact_mail</mat-icon></button>
+      </mat-menu>
     </div>
   </mat-toolbar>
   <div>
@@ -115,7 +123,8 @@
           <div fxFlex class="team_member">
             <mat-card>
               <mat-card-header>
-                <img mat-card-avatar mat-card-md-image src="../../assets/images/gates.jpg" alt="Thumbnail Image">
+                <img *ngIf="!isMobile" mat-card-avatar mat-card-md-image src="../../assets/images/gates.jpg" alt="Thumbnail Image">
+                <img *ngIf="isMobile" mat-card-avatar mat-card-sm-image src="../../assets/images/gates.jpg" alt="Thumbnail Image">
                 <mat-card-title class="title">Anastasios Gymnopoylos</mat-card-title>
                 <mat-card-subtitle class="description">Full Stack Developer</mat-card-subtitle>
               </mat-card-header>
@@ -132,7 +141,8 @@
           <div fxFlex class="team_member">
             <mat-card >
               <mat-card-header>
-                <img mat-card-avatar mat-card-md-image src="../../assets/images/jobs.jpg" alt="Thumbnail Image">
+                <img *ngIf="!isMobile" mat-card-avatar mat-card-md-image src="../../assets/images/jobs.jpg" alt="Thumbnail Image">
+                <img *ngIf="isMobile" mat-card-avatar mat-card-sm-image src="../../assets/images/jobs.jpg" alt="Thumbnail Image">
                 <mat-card-title class="title">Damian Anchidin</mat-card-title>
                 <mat-card-subtitle class="description">Full Stack Developer</mat-card-subtitle>
               </mat-card-header>

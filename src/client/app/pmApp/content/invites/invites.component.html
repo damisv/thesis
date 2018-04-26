@@ -1,0 +1,54 @@
+<div    fxLayout
+        fxLayout.xs="column"
+        fxLayoutAlign="center"
+        fxLayoutGap="10px"
+        fxLayoutGap.xs="0">
+  <div fxFlex="auto">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Invites</mat-card-title>
+        <mat-card-subtitle>Pending Ones Only</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p *ngIf="invites.length < 1">No invites received.</p>
+        <div class="table-container" *ngIf="invites.length > 0">
+          <mat-table #table [dataSource]="invites">
+            <ng-container matColumnDef="no.">
+              <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.index}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="position">
+              <mat-header-cell *matHeaderCellDef> Position </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="accept">
+              <mat-header-cell *matHeaderCellDef> Accept </mat-header-cell>
+              <mat-cell *matCellDef="let element"><button mat-fab color="primary" (click)="acceptInvite(element._id, element.index)">Primary</button></mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reject">
+              <mat-header-cell *matHeaderCellDef> Reject </mat-header-cell>
+              <mat-cell *matCellDef="let element"><button mat-fab color="warn" (click)="rejectInvite(element._id, element.index)">Primary</button></mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+      </mat-card-content>
+      <mat-card-actions></mat-card-actions>
+      <mat-card-footer>
+        <mat-divider></mat-divider>
+        <mat-icon>history</mat-icon>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>
+
+

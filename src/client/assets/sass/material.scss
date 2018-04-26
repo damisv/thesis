@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import '~angular-mgl-timeline/theme';
 
 @include mat-core();
 
@@ -12,6 +13,7 @@ $light-app-theme: mat-light-theme($light-app-primary, $light-app-accent, $light-
 
 .light-theme {
   @include angular-material-theme($light-app-theme);
+  @include mgl-timeline-theme($light-app-theme);
 }
 
 
@@ -25,6 +27,7 @@ $dark-app-theme: mat-dark-theme($dark-app-primary, $dark-app-accent, $dark-app-w
 
 .dark-theme {
   @include angular-material-theme($dark-app-theme);
+  @include mgl-timeline-theme($dark-app-theme);
 }
 
 .dark-theme #content {

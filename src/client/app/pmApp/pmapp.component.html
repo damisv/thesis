@@ -1,0 +1,61 @@
+<div id="content">
+  <mat-sidenav-container fullscreen>
+    <mat-sidenav #sidenav opened="true" mode="side" class="leftSideNav">
+      <mat-card>
+        <mat-card-header>
+          <img mat-card-avatar mat-card-sm-image src="../../assets/images/gates.jpg" alt="Thumbnail Image">
+          <mat-card-title>Firstname Lastname</mat-card-title>
+          <mat-card-subtitle>email</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
+      <mat-divider></mat-divider>
+      <router-outlet name="sidebar"></router-outlet>
+      <router-outlet name="projectSidebar"></router-outlet>
+    </mat-sidenav>
+    <mat-sidenav #notificationsSidenav opened="false" mode="over" position="end" class="rightSideNav">
+      <router-outlet name="notifications"></router-outlet>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <!-- Toolbar Menu -->
+      <mat-toolbar #navBar color="primary" class="aligner myTopToolbar">
+        <button matTooltip="Toggle Sidenav!" mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle Sidenav">
+          <mat-icon aria-hidden="true">menu</mat-icon>
+        </button>
+        <div style="flex-grow: 1;"></div>
+        <mat-form-field>
+          <mat-label>Search...</mat-label>
+          <input matInput placeholder="Search...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+        <div style="flex-grow: 1;"></div>
+        <button id="notifications" matTooltip="{{notifications}} unseen notifications !"
+                mat-icon-button (click)="notificationsSidenav.toggle()"
+                aria-label="View Notifications">
+          <mat-icon aria-hidden="true" matBadge="{{notifications}}" matBadgePosition="above after" matBadgeColor="warn">notifications</mat-icon>
+        </button>
+        <button mat-icon-button [matMenuTriggerFor]="themeMenu" matTooltip="Select a theme!" tabindex="-1">
+          <mat-icon>format_color_fill</mat-icon>
+        </button>
+        <mat-menu #themeMenu="matMenu">
+          <mat-grid-list cols="2">
+            <mat-grid-tile *ngFor="let theme of themes" (click)="changeTheme(theme)">
+              <mat-icon>color_lens</mat-icon>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </mat-menu>
+      </mat-toolbar>
+      <!-- End -->
+      <!-- App content -->
+      <app-particles></app-particles>
+      <div class="app-content">
+        <router-outlet></router-outlet>
+      </div>
+      <!-- end -->
+      <mat-toolbar class="myBottomToolbar">
+        <!--<div class="spacer"></div>-->
+        <p class="description">Copyright &copy; 2017 by  Anchidin Damian | Anastasios Gymnopoylos</p>
+      </mat-toolbar>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

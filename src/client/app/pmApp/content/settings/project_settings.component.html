@@ -1,0 +1,121 @@
+<button mat-fab matTooltip="Save settings" color="primary" class="btn-float" (click)="delete()"><mat-icon>save</mat-icon></button>
+<div
+  fxLayout
+  fxLayout.xs="column"
+  fxLayoutAlign="center"
+  fxLayoutGap="10px"
+  fxLayoutGap.xs="0">
+  <div fxFlex="auto">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Basic info</mat-card-title>
+        <mat-card-subtitle>Here are the basic info & setting that can be changed.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Company</mat-panel-title>
+              <mat-panel-description>If this project develops under a certain company, can be noted here.</mat-panel-description>
+            </mat-expansion-panel-header>
+              <mat-form-field>
+                <input matInput placeholder="Company" [(ngModel)]="project.company">
+              </mat-form-field>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Project Name</mat-panel-title>
+              <mat-panel-description>A descriptive name</mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-form-field>
+              <input matInput placeholder="Name" [(ngModel)]="project.name">
+            </mat-form-field>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Budget</mat-panel-title>
+              <mat-panel-description>Budget allocated to this project</mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-form-field>
+              <input matInput placeholder="Amount" type="number" value="{{slider.value}}" disabled>
+              <span matPrefix>$&nbsp;</span>
+              <span matSuffix>.00</span>
+            </mat-form-field>
+            <mat-slider #slider style="position:relative;width:100%" [(ngModel)]="project.budget" thumbLabel tickInterval="auto" [min]="0" [max]="50000" ></mat-slider>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Description</mat-panel-title>
+              <mat-panel-description>{{ project.description | truncate: 30 }}</mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-form-field style="width: 100%">
+              <textarea matInput #description matTextareaAutosize matAutosizeMinRows="2"
+                        matAutosizeMaxRows="5" placeholder="This text should be concise and readable" [(ngModel)]="project.description" maxlength="512"></textarea>
+              <mat-hint align="end">{{description.value.length}} / 256</mat-hint>
+            </mat-form-field>
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex="auto">
+    <mat-card style="background-color: #ad1457" class="card">
+      <mat-card-header>
+        <mat-card-title>Danger Zone</mat-card-title>
+        <mat-card-subtitle>These settings are dangerous</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Privacy</mat-panel-title>
+              <mat-panel-description>Privacy settings for this project.</mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Private option means that this project won't be visible for searching except the team.</p>
+            <mat-slide-toggle #privacyToggle [checked]="project.typeOf === 'private'" (change)="setPrivacy(privacyToggle.checked)">{{ project.typeOf }}</mat-slide-toggle>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Ownership</mat-panel-title>
+              <mat-panel-description>Transfer ownership to a team member</mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Transferring ownership may be dangerous as it cannot be undone by you.</p>
+            <mat-form-field>
+              <input matInput placeholder="Search Team">
+            </mat-form-field>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Lock</mat-panel-title>
+              <mat-panel-description>Lock this project temporary</mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Locking a project means that content can't be added to it, but it can be viewed.</p>
+            <mat-slide-toggle #lockToggle><mat-icon>{{ ( lockToggle.checked ? 'lock' : 'lock_open') }}</mat-icon></mat-slide-toggle>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Delete</mat-panel-title>
+              <mat-panel-description>Delete this project</mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>This is irreversible.Proceed carefully.</p>
+            <button mat-icon-button color="warn" (click)="delete()"><mat-icon>delete_forever</mat-icon></button>
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>
+
+

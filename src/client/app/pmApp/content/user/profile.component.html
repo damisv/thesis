@@ -1,0 +1,159 @@
+<div fxLayout
+     fxLayout.xs="column"
+     fxLayoutAlign="center"
+     fxLayoutGap="10px"
+     fxLayoutGap.xs="0">
+    <div fxFlex>
+        <mat-card class="card">
+            <mat-card-header>
+                <mat-card-title>
+                    Edit Profile
+                </mat-card-title>
+                <mat-card-subtitle>
+                    Edit your information
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-accordion class="example-headers-align">
+                <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Career Info</mat-panel-title>
+                    <mat-panel-description>Basic career info: company, position etc.<mat-icon>work</mat-icon></mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div class="flex_container">
+                    <mat-form-field>
+                      <mat-icon matSuffix>business</mat-icon>
+                      <input matInput placeholder="Company" disabled>
+                    </mat-form-field>
+                  </div>
+                  <mat-action-row>
+                    <button mat-button color="primary" (click)="nextStep()">Next</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Account Info</mat-panel-title>
+                    <mat-panel-description>Username & email. Privacy settings are found on Settings<mat-icon>account_box</mat-icon></mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div class="flex_container">
+                    <mat-form-field>
+                      <mat-icon matSuffix>perm_identity</mat-icon>
+                      <input matInput placeholder="Username" [(ngModel)]="user.username">
+                    </mat-form-field>
+                    <mat-form-field>
+                      <mat-icon matSuffix>email</mat-icon>
+                      <input matInput type="email" placeholder="Email" [(ngModel)]="user.email" disabled>
+                    </mat-form-field>
+                  </div>
+                  <mat-action-row>
+                    <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                    <button mat-button color="primary" (click)="nextStep()">Next</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Personal info</mat-panel-title>
+                    <mat-panel-description>Basic info about you<mat-icon>account_circle</mat-icon></mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div class="flex_container">
+                      <mat-form-field>
+                        <input matInput placeholder="First Name" [(ngModel)]="user.firstName">
+                      </mat-form-field>
+                      <mat-form-field>
+                        <input matInput placeholder="Last Name" [(ngModel)]="user.lastName">
+                      </mat-form-field>
+                    </div>
+                  <mat-action-row>
+                    <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                    <button mat-button color="primary" (click)="nextStep()">Next</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle="true">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Location</mat-panel-title>
+                    <mat-panel-description>Address of Residence<mat-icon>map</mat-icon>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div class="flex_container">
+                      <mat-form-field>
+                        <mat-icon matSuffix>my_location</mat-icon>
+                        <input matInput placeholder="Address" [(ngModel)]="user.address">
+                      </mat-form-field>
+                      <mat-form-field>
+                        <mat-icon matSuffix>local_post_office</mat-icon>
+                        <input matInput type="number" placeholder="Postal Code">
+                      </mat-form-field>
+                      <mat-form-field>
+                        <mat-icon matSuffix>location_city</mat-icon>
+                        <input matInput placeholder="City" [(ngModel)]="user.city">
+                      </mat-form-field>
+                      <mat-form-field>
+                      <input matInput placeholder="Country" aria-label="Country" [matAutocomplete]="auto" [formControl]="countryCtrl" [(ngModel)]="user.country">
+                      <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let country of filteredCountries | async" [value]="country.name">
+                          <img style="vertical-align:middle;" src="../../../../assets/flags/{{country.code.toLowerCase()}}.svg" height="15" />
+                          <span>{{ country.name }}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                  <mat-action-row>
+                    <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                    <button mat-button color="primary" (click)="nextStep()">Next</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel [expanded]="step === 4" (opened)="setStep(4)" hideToggle="true">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>About me</mat-panel-title>
+                    <mat-panel-description>Short description about you<mat-icon>description</mat-icon>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div class="flex_container">
+                  <mat-form-field>
+                    <mat-icon matSuffix>description</mat-icon>
+                    <textarea #description matInput placeholder="Description" [(ngModel)]="user.description" maxlength="256" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="5"></textarea>
+                    <mat-hint align="start"><strong>Don't disclose personal info</strong> </mat-hint>
+                    <mat-hint align="end">{{description.value.length}} / 256</mat-hint>
+                  </mat-form-field>
+                  <mat-action-row>
+                    <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                    <button mat-button color="primary" (click)="nextStep()">End</button>
+                  </mat-action-row>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+
+            </mat-card-content>
+            <mat-card-actions>
+                <div style="flex:1 1 auto;"></div>
+                <button mat-icon-button matTooltip="Save changes" (click)="onSubmit()"><mat-icon>save</mat-icon></button>
+            </mat-card-actions>
+            <mat-card-footer>
+                <mat-divider></mat-divider>
+                <mat-icon>history</mat-icon>Last updated : 5 days ago
+            </mat-card-footer>
+        </mat-card>
+    </div>
+    <!--<div fxFlex>-->
+        <!--<mat-card class="card">-->
+            <!--<mat-card-header>-->
+                <!--<div mat-card-avatar class="header-image" ></div>-->
+                <!--<mat-card-title matTooltip="{{profile?.username}}">{{ profile?.firstName }} {{ profile?.lastName }}</mat-card-title>-->
+                <!--<mat-card-subtitle><a href="mailto:{{profile.email}}"><small>{{ profile.email}}</small></a></mat-card-subtitle>-->
+            <!--</mat-card-header>-->
+            <!--<img mat-card-image src="/img/city.jpg">-->
+            <!--<mat-card-content>-->
+                <!--<p>-->
+                    <!--A little about myself:-->
+                <!--</p><br>-->
+                <!--<p>{{profile.description}}</p>-->
+                <!--<p>Active projects:{{activeProjects}}</p>-->
+            <!--</mat-card-content>-->
+        <!--</mat-card>-->
+    <!--</div>-->
+</div>
+

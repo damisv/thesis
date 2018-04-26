@@ -1,0 +1,105 @@
+<div
+  fxLayout
+  fxLayout.xs="column"
+  fxLayoutAlign="center"
+  fxLayoutGap="10px"
+  fxLayoutGap.xs="0">
+  <div fxFlex="auto">
+    <mat-card class="card chat-container">
+          <mat-sidenav-container fullscreen>
+            <mat-sidenav #chatSidenav mode="side" opened style="width: 25vh">
+              <mat-toolbar color="primary" style="transition: all 1.5s ease">
+                <button mat-button [matMenuTriggerFor]="menu">Preferences<mat-icon>arrow_drop_down</mat-icon></button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item>Set a status</button>
+                  <button mat-menu-item>Profile &amp; account</button>
+                  <button mat-menu-item>Help &amp; feedback</button>
+                </mat-menu>
+                <button mat-icon-button [matMenuTriggerFor]="notifyMenu"><mat-icon>notifications_off</mat-icon></button>
+                <mat-menu #notifyMenu="matMenu" x-position="before">
+                  <button mat-menu-item>Do not disturb ON</button>
+                  <button mat-menu-item>Turn OFF</button>
+                  <button mat-menu-item>Adjust schedule...</button>
+                </mat-menu>
+              </mat-toolbar>
+              <mat-nav-list>
+                <mat-list-item (click)="sorted = true">
+                  <mat-icon matListIcon>sort</mat-icon>
+                  <p matLine>All Unreads</p>
+                </mat-list-item>
+                <mat-list-item (click)="sorted = false">
+                  <mat-icon mat-list-icon>chat</mat-icon>
+                  <p matLine>All Threads</p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>STARRED (2)</h3>
+                <mat-list-item>
+                  <a mat-list-item><mat-icon mat-list-icon>#</mat-icon>FirstProject</a>
+                </mat-list-item>
+                <mat-list-item>
+                  <a mat-list-item><mat-icon mat-list-icon>#</mat-icon>SecondProject</a>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>CHANNELS ({{threads.length}})</h3>
+                <ng-template ngFor let-thread [ngForOf]="threads">
+                  <mat-list-item *ngIf="thread.read || !sorted"
+                                 [ngStyle]="{'font-weight': thread.read ? 'normal' : 'bold' }"
+                                 (click)="currentThread$.next(thread)" >
+                    <a mat-list-item><mat-icon mat-list-icon>#</mat-icon>{{thread.name}}</a>
+                  </mat-list-item>
+                </ng-template>
+                <mat-divider></mat-divider>
+              </mat-nav-list>
+            </mat-sidenav>
+            <mat-sidenav-content>
+              <mat-toolbar color="accent" class="messages-toolbar top">
+                <button matTooltip="Toggle Sidenav!" mat-icon-button (click)="chatSidenav.toggle()" aria-label="Toggle Sidenav">
+                <mat-icon aria-hidden="true">menu</mat-icon>
+              </button>
+              </mat-toolbar>
+              <div style="overflow: auto;height: 83%" #messagesContainer [scrollTop]="messagesContainer.scrollHeight">
+                <mat-card class="card messages-container">
+                  <mat-list>
+                    <ng-template ngFor let-item let-i="index" let-last="last" [ngForOf]="array">
+                      <mat-list-item class="message">
+                        <ng-template [ngIf]="i > 0 ? array[i-1].sender !== item.sender : true ">
+                          <div>
+                            <img matListAvatar src="../../../../assets/images/gates.jpg"/>
+                            <h3 matLine>Firstname Lastname {{item.sender}}</h3>
+                            <h4 matLine>2:35 pm</h4>
+                          </div>
+                        </ng-template>
+                        <p>
+                        <span>
+                          {{ 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' +
+                          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' +
+                          'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.' +
+                          ' Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' }}
+                        </span>
+                        </p>
+                      </mat-list-item>
+                      <!--<ng-template [ngIf]="last ? "></ng-template>-->
+                      <mat-divider *ngIf="!last ? array[i+1].sender !== item.sender : false"></mat-divider>
+                    </ng-template>
+                  </mat-list>
+                </mat-card>
+              </div>
+              <mat-toolbar class="messages-toolbar bottom">
+                <button mat-icon-button matTooltip="Add content" matTooltipPosition="after" [matMenuTriggerFor]="addContent"><mat-icon>add</mat-icon></button>
+                <mat-menu #addContent="matMenu">
+                  <button mat-menu-item>Code or text snippet</button>
+                  <button mat-menu-item>Google Docs file</button>
+                  <button mat-menu-item>Post</button>
+                  <button mat-menu-item>Google Drive</button>
+                  <button mat-menu-item>Upload file</button>
+                </mat-menu>
+                <mat-form-field floatLabel="never" style="width: 100%;">
+                  <textarea matInput placeholder="Send a message to this channel thread ..." matTextareaAutosize matAutosizeMaxRows="2" [(ngModel)]="messageInput"></textarea>
+                </mat-form-field>
+                <button mat-icon-button (click)="sendMessage()" [disabled]="messageInput ===' ' || messageInput === null"><mat-icon>send</mat-icon></button>
+              </mat-toolbar>
+            </mat-sidenav-content>
+          </mat-sidenav-container>
+    </mat-card>
+  </div>
+</div>

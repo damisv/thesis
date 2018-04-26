@@ -1,0 +1,101 @@
+<div class="example-container mat-elevation-z8">
+  <mat-sidenav-container class="example-container">
+    <mat-sidenav #filterOptions closed mode="side" style="width: 20em">
+      <mat-toolbar color="accent">Filter Options</mat-toolbar>
+      <div class="flex_container">
+        <mat-form-field>
+          <mat-select placeholder="Assignment Type">
+            <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
+          </mat-select>
+        </mat-form-field> <!-- By type -->
+
+        <mat-form-field>
+          <mat-select #assigner placeholder="Assigner" multiple>
+            <mat-select-trigger>
+              {{assigner.value ? assigner.value[0] : ''}}
+              <span *ngIf="assigner.value?.length > 1">(+{{assigner.value.length - 1}} others)</span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let member of project?.team" [value]="member.email">{{ member.email }}</mat-option>
+          </mat-select>
+        </mat-form-field> <!-- By assigner -->
+
+        <mat-form-field>
+          <mat-select #assignee placeholder="Assignee" multiple>
+            <mat-select-trigger>
+              {{assignee.value ? assignee.value[0] : ''}}
+              <span *ngIf="assignee.value?.length > 1">(+{{assignee.value.length - 1}} others)</span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let member of project?.team" [value]="member.email">{{ member.email }}</mat-option>
+          </mat-select>
+        </mat-form-field> <!-- By assignee -->
+
+        <button mat-icon-button><mat-icon>autorenew</mat-icon></button>
+      </div>
+
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar color="accent" class="filter_toolbar">
+        <mat-toolbar-row>
+          <button mat-icon-button (click)="filterOptions.toggle()"><mat-icon>filter_list</mat-icon></button>
+          <mat-radio-group>
+            <mat-radio-button color="primary" value="all" (change)="filterBy(filterType.status, $event.value)">All</mat-radio-button>
+            <mat-radio-button color="primary" value="false" (change)="filterBy(filterType.status, $event.value)">Completed</mat-radio-button>
+            <mat-radio-button color="primary" value="true" (change)="filterBy(filterType.status, $event.value)">Open</mat-radio-button>
+          </mat-radio-group>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+          <mat-form-field>
+            <input matInput (keyup)="filterBy(filterType.name, $event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <div style="min-height: 35em;">
+        <mat-table #table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="mat-column-select">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            [(ngModel)]="element.completed"></mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{taskType[element.type]}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.name}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="assigner_email">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Assigner </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.assigner_email}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="assignee">
+            <mat-header-cell *matHeaderCellDef> Assignees </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.assignee_email?.length}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="end_date">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.date_end}} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let element; columns: displayedColumns;"
+                   (click)="openTask(element._id)">
+          </mat-row>
+        </mat-table>
+      </div>
+      <mat-paginator #paginator
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 20]"
+                     [showFirstLastButtons]="true">
+      </mat-paginator>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

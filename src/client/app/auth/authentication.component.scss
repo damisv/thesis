@@ -1,0 +1,56 @@
+.transparentToolbar {
+  background-color: transparent !important;
+  color: #1976D2 !important;
+}
+#wallpaper {
+  background: url('../../assets/images/boulevard.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.header {
+  height: 50vh;
+  color: #E3F2FD;
+}
+/*
+ Main content canvas
+ */
+.main-dark {
+  background: #424242;
+  * {
+    .title {
+      color: #FFFFFF;
+    }
+    .description {
+      color: lightgray;
+    }
+  }
+}
+.main-light {
+  background: #FFFFFF;
+  * {
+    .title {
+      color: #3C4858;
+    }
+    .description {
+      color: #999999;
+    }
+  }
+}
+.main {
+  position: relative;
+  z-index: 3;
+  justify-content: center;
+  justify-items: center;
+  display: flex;
+  text-align: center;
+}
+.main-raised {
+  margin: -60px auto 0;
+  max-width: 60%;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.24), 0 6px 30px 5px rgba(0, 0, 0, 0.32), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
+}
+.spacer {
+  flex: 1 1 auto;
+}

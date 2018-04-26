@@ -1,0 +1,45 @@
+.active {
+  background: rgba(255, 255, 255, 0.23);
+}
+.spacer {
+  flex: 1 1 auto;
+}
+.aligner {
+  display: flex;
+  justify-content: space-between;
+}
+.myTopToolbar {
+  transition: all 1.5s ease;
+  position: sticky;
+  z-index: 999;
+  top: 0;
+  border-radius: 6px!important;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+  0 6px 30px 5px rgba(0, 0, 0, 0.12),
+  0 8px 10px -5px rgba(0, 0, 0, 0.2) !important;
+}
+.leftSideNav {
+  width: 15em;
+  border-radius: 6px!important;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2) !important;
+}
+.rightSideNav {
+  width: 15em;
+  border-radius: 6px !important;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2) !important;
+}
+.myBottomToolbar {
+  transition: all 1.5s ease;
+  position: fixed;
+  z-index: 999;
+  bottom: 0;
+  border-radius: 6px!important;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+  0 6px 30px 5px rgba(0, 0, 0, 0.12),
+  0 8px 10px -5px rgba(0, 0, 0, 0.2) !important;
+}
+.app-content {
+  margin: 2em 2em 6em 2em;
+}
+
+

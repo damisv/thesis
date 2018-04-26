@@ -1,0 +1,33 @@
+<div id="content">
+  <mat-toolbar color="primary" style="transition: all 1.5s ease;position: sticky;z-index:999;top:0" [ngClass]="{'transparentToolbar': isTop}">
+    <p style="font-weight: bold;">Project Management Web App</p>
+    <span class="spacer"></span>
+    <div>
+      <button mat-icon-button matTooltip="Top Section"><mat-icon>home</mat-icon></button>
+    </div>
+  </mat-toolbar>
+  <div>
+    <div id="wallpaper" class="header"></div>
+    <div fxFlexAlign="center" class="main main-raised" [ngClass]="{'main-dark': isDark, 'main-light': !isDark}">
+      <div style="width: 80%">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <mat-toolbar>
+      <div fxLayout
+           fxLayout.xs="row"
+           fxLayoutAlign="left"
+           fxLayoutGap="1em">
+        <div><a mat-icon-button><i class="fab fa-github fa-2x"></i><br><span class="description">Visit our repo</span></a></div>
+        <div><a mat-icon-button><i class="fas fa-university fa-2x"></i><br><span class="description">University</span></a></div>
+        <div><a mat-icon-button><i class="fas fa-question-circle fa-2x"></i><br><span class="description">FAQ</span></a></div>
+      </div>
+      <mat-toolbar-row>
+        <div class="spacer"></div>
+        <p class="description">Copyright &copy; 2017 by  Anchidin Damian | Anastasios Gymnopoylos</p>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </footer>
+</div>

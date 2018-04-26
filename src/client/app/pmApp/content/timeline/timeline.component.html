@@ -1,0 +1,34 @@
+<div    fxLayout="column"
+        fxLayoutAlign="center"
+        fxLayoutGap="10px">
+  <div fxFlex>
+    <mat-card class="card timeline">
+      <mat-card-header>
+        <mat-card-title>Timeline</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="timeline_content" #timeline [scrollTop]="timeline.scrollHeight" >
+          <div *ngIf="timelineLogs.length > 0;else no_logs_available">
+            <mgl-timeline [toggle]="true" [alternate]="true">
+              <mgl-timeline-entry *ngFor="let log of timelineLogs">
+                <mgl-timeline-entry-header>
+                  <div>{{log.name}}</div>
+                </mgl-timeline-entry-header>
+                <mgl-timeline-entry-content>
+                  <div>
+                    <div>{{log.description}}</div>
+                  </div>
+                </mgl-timeline-entry-content>
+                <mgl-timeline-entry-dot color="primary" [size]="20"></mgl-timeline-entry-dot>
+                <mgl-timeline-entry-side>{{log.date}}</mgl-timeline-entry-side>
+              </mgl-timeline-entry>
+            </mgl-timeline>
+          </div>
+          <ng-template #no_logs_available>
+            <h4>There are no important actions logged on this project</h4>
+          </ng-template>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

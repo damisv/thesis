@@ -1,8 +1,8 @@
 import { Component, PLATFORM_ID, Inject } from '@angular/core';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {MaterialTheme, ThemeService} from './services/themeService';
+import {MaterialTheme, ThemeService} from './services/theme.service';
 import {distinctUntilChanged} from 'rxjs/operators';
+import {ProgressBarService} from './services/progressbar.service';
 
 /**
  * This is the base component of the application.
@@ -15,13 +15,17 @@ import {distinctUntilChanged} from 'rxjs/operators';
 })
 export class AppComponent {
   theme = MaterialTheme.light;
+  isRunningQuery: boolean;
 
   constructor(private overlayContainer: OverlayContainer,
               @Inject(PLATFORM_ID) private platform: Object,
-              private themeService: ThemeService) {
-      themeService.currentTheme
+              private themeService: ThemeService,
+              private progressBar: ProgressBarService) {
+      themeService.currentTheme$
         .pipe(distinctUntilChanged())
         .subscribe(theme => this.theme = theme);
+      progressBar.progressBar$
+        .subscribe( state => this.isRunningQuery = state);
   }
 }
 
