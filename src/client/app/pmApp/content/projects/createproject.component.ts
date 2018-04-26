@@ -9,6 +9,7 @@ import {Observable} from 'rxjs/Observable';
 import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 import {Subject} from 'rxjs/Subject';
+import {SnackbarService} from '../../../services/snackbar.service';
 
 @Component({
   selector: 'app-pmapp-createproject',
@@ -30,8 +31,7 @@ export class CreateprojectComponent implements OnInit {
   constructor (private _formBuilder: FormBuilder,
                private projectService: ProjectService,
                private userService: UserService,
-               public snackBar: MatSnackBar,
-               // private notificationService:NotificationService
+               public snackBar: SnackbarService,
   ) {
     this.project = new Project('');
     this.project.typeOf = 'public';
@@ -56,23 +56,10 @@ export class CreateprojectComponent implements OnInit {
       );
   }
 
-  onInvite(email: string) {
-    this.membersToInvite.push(email);
-    this.openSnackBar(email + ' added to invites');
-  }
-
-  removeInvite(member: string) {
-    this.membersToInvite.splice(this.membersToInvite.indexOf(member), 1);
-    this.openSnackBar('Invited member removed');
-  }
+  onInvite(team: string[]) { this.membersToInvite = team; }
 
   changeProjectPrivacyType(status) {
     this.project.typeOf = status ? 'private' : 'public';
-  }
-
-  // Private methods
-  private openSnackBar(message, action = '', duration = 2000) {
-    this.snackBar.open(message, action, {duration: duration});
   }
 
   // Expansion Panels methods

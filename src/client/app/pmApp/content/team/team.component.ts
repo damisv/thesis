@@ -27,11 +27,11 @@ export class TeamComponent {
       .subscribe(res => this.projectService.remove(index));
   }
 
-  addInvite(member: string) {
-    this.inviteService.invite(member, this.project._id)
-      .subscribe(
-        _ => {}, // add to team
-        err => {}// this.notificationService.create("error"," Error Invite failed","Error! Unable to send invite to "+email,"error");
-      );
+  addInvite(team: string[]) {
+    // this.inviteService.invite(member, this.project._id)
+    //   .subscribe(
+    //     _ => {},
+    //     err => {}// this.notificationService.create("error"," Error Invite failed","Error! Unable to send invite to "+email,"error");
+    //   );
   }
 }

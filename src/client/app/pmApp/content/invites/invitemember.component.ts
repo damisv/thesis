@@ -2,42 +2,58 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {InviteService} from '../../../services/invites.service';
 import {UserService} from '../../../services/user.service';
 import {Subject} from 'rxjs/Subject';
-import {Project} from '../../../models/project';
+import {Member, Project, ProjectPosition} from '../../../models/project';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/zip';
 import {SnackbarService} from '../../../services/snackbar.service';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-invite-member',
   template: `<mat-form-field>
-    <input (keyup.enter)="onInvite($event.target.value)" (keyup)="searchTerm$.next($event.target.value)"
-           matInput placeholder="Invite member" [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option (click)="onInvite($event.target.value)" *ngFor="let member of membersAutocomplete | async" [value]="member">
-        <span>{{ member }}</span>
-      </mat-option>
-    </mat-autocomplete>
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let member of project?.team; let i = index;" selectable="true"
+                removable="true" (remove)="remove(i)">
+        {{member.email}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+
+      <input #addAssignee placeholder="Add members to invite" matInput
+             [matAutocomplete]="teamAuto"
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="add($event.input, $event.value)"
+             (keyup)="searchTerm$.next($event.target.value)">
+      <mat-autocomplete #teamAuto="matAutocomplete">
+        <mat-option *ngFor="let member of membersAutocomplete | async" (click)="add(addAssignee, member)" [value]="member">
+          {{ member }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-chip-list>
   </mat-form-field>`
 })
 export class InviteMemberComponent {
 
   @Input() project: Project;
   @Input() userEmail: string;
-  @Output() addInvite = new EventEmitter<string>();
+  @Output() getTeam = new EventEmitter<Member[]>();
 
+  separatorKeysCodes = [ENTER, COMMA];
   searchTerm$ = new Subject<string>();
-  membersAutocomplete: string[];
+  membersAutocomplete: Observable<string[]>;
 
   constructor (private inviteService: InviteService,
                private userService: UserService,
-               private snackBar: SnackbarService
-               // private notificationService:NotificationService
-  ) {
+               private snackBar: SnackbarService) {
     this.userService.searchFor(this.searchTerm$)
       .subscribe( value => this.membersAutocomplete = value);
   }
 
-  onInvite(email: string) {
+  add(input, email) {
+    if (!(email || '').trim()) {
+      this.snackBar.show('Not a valid email.');
+      return;
+    }
     if (email === this.userEmail) {
       this.snackBar.show('You cannot invite yourself to this project');
       return;
@@ -48,7 +64,6 @@ export class InviteMemberComponent {
         return;
       }
     }
-    if (email == null || email === '') { return; }
     Observable.zip(this.userService.userIsRegistered(email),
       this.inviteService.userIsInvited(email, this.project._id),
       (registered: boolean, invited: boolean) => ({registered, invited}))
@@ -61,7 +76,16 @@ export class InviteMemberComponent {
           this.snackBar.show(email + 'already invited');
           return;
         }
-        this.addInvite.emit(email);
+        this.project.team.push(new Member(ProjectPosition.member, email));
+        this.getTeam.emit(this.project.team);
+        if (input) { input.value = ''; }
       });
+  }
+
+  remove(index: number) {
+    if (index >= 0) {
+      this.project.team.splice(index, 1);
+      this.getTeam.emit(this.project.team);
+    }
   }
 }

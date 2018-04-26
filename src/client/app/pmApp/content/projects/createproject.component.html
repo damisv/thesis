@@ -64,13 +64,11 @@
 
       </mat-accordion>
       <div>
-        <!--<button mat-button matStepperNext>Next</button>-->
+        <button mat-button matStepperNext>Next</button>
       </div>
   </mat-step>
   <mat-step>
       <ng-template matStepLabel>Invites</ng-template>
-      <mat-accordion>
-
         <mat-expansion-panel [expanded]="false">
           <mat-expansion-panel-header>
             <mat-panel-title>Invite members</mat-panel-title>
@@ -78,21 +76,9 @@
           </mat-expansion-panel-header>
           <app-invite-member (addInvite)="onInvite($event)" [userEmail]="user.email" [project]="project" ></app-invite-member>
         </mat-expansion-panel>
-
-        <mat-expansion-panel [expanded]="false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>Invited Members</mat-panel-title>
-            <mat-panel-description>Total: {{ membersToInvite.length }}</mat-panel-description>
-          </mat-expansion-panel-header>
-          <p *ngIf="membersToInvite.length < 1">You have not invited yet someone to this project</p>
-          <mat-chip-list *ngFor="let member of membersToInvite">
-            <mat-chip matTooltip="Remove" (click)="removeInvite(member)" color="primary" selected="true">{{ member }}</mat-chip>
-          </mat-chip-list>
-        </mat-expansion-panel>
-      </mat-accordion>
       <div>
-        <!--<button mat-button matStepperPrevious>Back</button>-->
-        <!--<button mat-button matStepperNext>Next</button>-->
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
   </mat-step>
   <mat-step>
@@ -113,7 +99,7 @@
       </mat-form-field>
     </mat-expansion-panel>
     <div>
-      <!--<button mat-button matStepperPrevious>Back</button>-->
+      <button mat-button matStepperPrevious>Back</button>
       <button mat-button (click)="stepper.reset()">Reset</button>
       <button mat-raised-button color="accent" (click)="onSubmit()">Done</button>
     </div>
