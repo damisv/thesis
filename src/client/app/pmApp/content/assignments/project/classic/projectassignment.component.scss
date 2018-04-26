@@ -6,7 +6,7 @@
 }
 .filter_toolbar {
   z-index: 999;
-  & mat-form-field { width: 100%;}
+  & .name_filter { width: 100%;}
 }
 .mat-table {
   overflow: auto;

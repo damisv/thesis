@@ -18,16 +18,16 @@
             Assignments
           </a>
           <a mat-tab-link
-             [routerLink]="[{outlets: {assignments: ['tasks']}}]"
+             [routerLink]="[{outlets: {assignments: ['agile']}}]"
              routerLinkActive #tas="routerLinkActive"
              [active]="tas.isActive">
-            Tasks
+            Agile
           </a>
           <a mat-tab-link
-             [routerLink]="[{outlets: {assignments: ['issues']}}]"
+             [routerLink]="[{outlets: {assignments: ['agile-board']}}]"
              routerLinkActive #iss="routerLinkActive"
              [active]="iss.isActive">
-            Issues
+            Agile Board
           </a>
         </nav>
         <router-outlet name="assignments"></router-outlet>

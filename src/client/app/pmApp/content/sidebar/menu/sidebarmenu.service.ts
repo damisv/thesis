@@ -27,9 +27,9 @@ export const userSideNav = [
 ];
 export const projectSideNav = [
   new Option('dashboard', 'dashboard', 'Dashboard', 'Project Live Stats'),
-  new Option('tasks', 'format_list_bulleted', 'Tasks', 'All tasks which belong to this project'),
+  new Option('assignments', 'format_list_bulleted', 'Assignments', 'All assignments which belong to this project'),
   new Option('gantt', 'show_chart', 'Gantt', 'Gantt chart view for project tasks'),
-  new Option('issues', 'warning', 'Issues', 'All issues which belong to this project'),
+  // new Option('issues', 'warning', 'Issues', 'All issues which belong to this project'),
   new Option('team', 'group', 'Team', 'Members who contribute'),
   new Option('timeline', 'timeline', 'Action Log', 'Timeline feed'),
   new Option('chat', 'chat', 'Chat', 'Project Threads'),

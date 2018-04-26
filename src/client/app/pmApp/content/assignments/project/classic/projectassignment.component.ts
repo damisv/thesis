@@ -1,8 +1,13 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Task, TaskType} from '../../../models/task';
+import {Task, TaskType} from '../../../../../models/task';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {Project} from '../../../models/project';
+import {Project} from '../../../../../models/project';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import {applyFilter, FilterOption, FilterType} from '../../../../../utils/utils';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-pmapp-project-assignments-single',
@@ -13,7 +18,6 @@ export class ProjectAssignmentComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  data: string;
   taskType = TaskType;
   types = Object.keys(TaskType);
   filterType = FilterType;
@@ -53,40 +57,28 @@ export class ProjectAssignmentComponent implements AfterViewInit {
   ]);
   project: Project;
 
+  // Filter Observables
+  nameFilter = new BehaviorSubject<FilterOption>({type: FilterType.name, value: ''});
+  typeFilter = new BehaviorSubject<FilterOption>({type: FilterType.type, value: 'all'});
+  statusFilter = new BehaviorSubject<FilterOption>({type: FilterType.status, value: 'all'});
+
   constructor(private route: ActivatedRoute) {
-    this.route.data
-      .subscribe(data => this.data = data.type );
+    // FilterPredicate is the function that runs when table data is filtering
     this.dataSource.filterPredicate =
-      (data: Task, filter: string) => this.applyFilter(JSON.parse(filter), data);
+      (data: Task, filter: string) => applyFilter(JSON.parse(filter), data);
+    // Three Observables for the latest value changes on the front filters (the ones above table data).
+    Observable.combineLatest(this.nameFilter.asObservable().pipe(map( value => new FilterOption(value.type, value.value))),
+      this.typeFilter.asObservable().pipe(map( value => new FilterOption(value.type, value.value))),
+      this.statusFilter.asObservable().pipe(map( value => new FilterOption(value.type, value.value))),
+      (name: FilterOption, type: FilterOption, status: FilterOption) => ({name, type, status}))
+        .subscribe( filters => this.filterBy(FilterType.nameTypeStatus, filters));
   }
 
-  filterBy(type: FilterType, value) { this.dataSource.filter = JSON.stringify(new FilterOption(type, value)); }
+  // Method which is called for filtering
+  /// The value given is a string because FilterPredicate receives string only
+  private filterBy(type: FilterType, value) { this.dataSource.filter = JSON.stringify(new FilterOption(type, value)); }
 
   ngAfterViewInit() { this.dataSource.paginator = this.paginator; }
 
   openTask(id: string) { console.log(id); }
-
-  applyFilter(filter: FilterOption, task: Task): boolean {
-    switch (filter.type) {
-      case FilterType.status:
-        return filter.value === 'all' ? true : filter.value === true.toString(); // dev
-      case FilterType.name:
-        // let temp = filter.value.trim();
-        // temp = temp.toLowerCase();
-        return task.name.trim().toLowerCase().includes(filter.value) ||
-          task.assigner_email.toLowerCase().includes(filter.value) ||
-          task.assignee_email.includes(filter.value);
-      case FilterType.assigner:
-        return task.assigner_email === filter.value;
-      case FilterType.assignee:
-        return task.assignee_email.includes(filter.value);
-    }
-  }
-}
-
-class FilterOption {
-  constructor(public type: FilterType, public value: any) {}
-}
-enum FilterType {
-  status, name, assigner, assignee
 }

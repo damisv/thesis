@@ -1,4 +1,5 @@
 import {HttpHeaders} from '@angular/common/http';
+import {Task} from '../models/task';
 
 export enum HttpMethods {
   Get = 'GET',
@@ -13,6 +14,39 @@ export function getHeaders(): HttpHeaders {
     return new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
   }
   return new HttpHeaders({'Content-Type': 'application/json'});
+}
+
+// Assignments Filters
+export class FilterOption {
+  constructor(public type: FilterType, public value: any) {}
+}
+export enum FilterType {
+  status, name, type, assigner, assignee, nameTypeStatus
+}
+export function applyFilter(filter: FilterOption, task: Task): boolean {
+  switch (filter.type) {
+    case FilterType.status: return filterByStatus(task, filter.value);
+    case FilterType.name: return filterByString(task, filter.value);
+    case FilterType.assigner: return task.assigner_email === filter.value;
+    case FilterType.assignee: return task.assignee_email.filter(email => email.includes(filter.value)).length > 0;
+    case FilterType.type: return filterByType(task, filter.value);
+    case FilterType.nameTypeStatus:
+      return filterByString(task, filter.value.name.value) &&
+        filterByStatus(task, filter.value.status.value) &&
+        filterByType(task, filter.value.type.value);
+  }
+}
+function filterByString(task: Task, value): boolean {
+  if (value === '' || value === null || value === undefined) { return true; }
+  return task.name.trim().toLowerCase().includes(value) ||
+    task.assigner_email.toLowerCase().includes(value) ||
+    task.assignee_email.filter(email => email.toLowerCase().includes(value)).length > 0;
+}
+function filterByStatus(task: Task, value): boolean {
+  return value === 'all' ? true : value === task.completed.toString();
+}
+function filterByType(task: Task, value): boolean {
+  return value === 'all' ? true : task.type === value;
 }
 
 // Highcharts functions

@@ -17,8 +17,10 @@ import {ProjectSidebarComponent} from './content/sidebar/menu/projectsidebar.com
 import {TimelineComponent} from './content/timeline/timeline.component';
 import {TeamComponent} from './content/team/team.component';
 import {MyAssignmentsComponent} from './content/assignments/myassignments.component';
-import {ProjectAssignmentsComponent} from './content/assignments/projectassignments.component';
-import {ProjectAssignmentComponent} from './content/assignments/projectassignment.component';
+import {ProjectAssignmentsComponent} from './content/assignments/project/projectassignments.component';
+import {ProjectAssignmentComponent} from './content/assignments/project/classic/projectassignment.component';
+import {AgileComponent} from './content/assignments/project/agile/agile.component';
+import {AgileBoardComponent} from './content/assignments/project/agileBoard/agileBoard.component';
 
 export const PMAPP_ROUTES: Routes = [
   {path: '', component: PMAppComponent, children: [
@@ -39,10 +41,9 @@ export const PMAPP_ROUTES: Routes = [
           { path: '', component: ProjectSidebarComponent, outlet: 'projectSidebar'},
           { path: 'dashboard', component: ProjectDashboardComponent},
           { path: 'assignments', component: ProjectAssignmentsComponent, children: [
-              { path: '', redirectTo: 'assignments', pathMatch: 'full'},
-              { path: 'assignments', component: ProjectAssignmentComponent, outlet: 'assignments', data: {type: 'assignments'}},
-              { path: 'tasks', component: ProjectAssignmentComponent, outlet: 'assignments', data: {type: 'task'}},
-              { path: 'issues', component: ProjectAssignmentComponent, outlet: 'assignments', data: {type: 'issue'}}
+              { path: 'assignments', component: ProjectAssignmentComponent, outlet: 'assignments'},
+              { path: 'agile', component: AgileComponent, outlet: 'assignments'},
+              { path: 'agile-board', component: AgileBoardComponent, outlet: 'assignments'}
             ]},
           { path: 'team', component: TeamComponent},
           { path: 'timeline', component: TimelineComponent},

@@ -10,7 +10,7 @@ export class Task {
                 public dependencies?: [Dependency],
                 public date_start?: Date,
                 public date_end?: Date,
-                public completed?: boolean,
+                public completed: boolean = false,
                 public _id?: string,
                 public date_created?: Date,
                 ) {}

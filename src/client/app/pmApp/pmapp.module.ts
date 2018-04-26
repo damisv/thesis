@@ -36,8 +36,10 @@ import {TeamComponent} from './content/team/team.component';
 import {InviteService} from '../services/invites.service';
 import {InviteMemberComponent} from './content/invites/invitemember.component';
 import {MyAssignmentsComponent} from './content/assignments/myassignments.component';
-import {ProjectAssignmentsComponent} from './content/assignments/projectassignments.component';
-import {ProjectAssignmentComponent} from './content/assignments/projectassignment.component';
+import {ProjectAssignmentsComponent} from './content/assignments/project/projectassignments.component';
+import {ProjectAssignmentComponent} from './content/assignments/project/classic/projectassignment.component';
+import {AgileComponent} from './content/assignments/project/agile/agile.component';
+import {AgileBoardComponent} from './content/assignments/project/agileBoard/agileBoard.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,8 @@ import {ProjectAssignmentComponent} from './content/assignments/projectassignmen
     MyAssignmentsComponent,
     ProjectAssignmentsComponent,
     ProjectAssignmentComponent,
+    AgileComponent,
+    AgileBoardComponent,
     ChatComponent,
     CalendarComponent,
     ExampleComponent,

@@ -37,15 +37,24 @@
       <mat-toolbar color="accent" class="filter_toolbar">
         <mat-toolbar-row>
           <button mat-icon-button (click)="filterOptions.toggle()"><mat-icon>filter_list</mat-icon></button>
-          <mat-radio-group>
-            <mat-radio-button color="primary" value="all" (change)="filterBy(filterType.status, $event.value)">All</mat-radio-button>
-            <mat-radio-button color="primary" value="false" (change)="filterBy(filterType.status, $event.value)">Completed</mat-radio-button>
-            <mat-radio-button color="primary" value="true" (change)="filterBy(filterType.status, $event.value)">Open</mat-radio-button>
+          <div style="flex: 1 1 auto;"></div>
+          <mat-radio-group value="all" (change)="typeFilter.next({type: filterType.type, value: $event.value})">
+            <mat-radio-button color="primary" value="all">All</mat-radio-button>
+            <mat-radio-button color="primary" [value]="taskType.task">Task</mat-radio-button>
+            <mat-radio-button color="primary" [value]="taskType.issue">Issue</mat-radio-button>
           </mat-radio-group>
+          <div style="flex: 1 1 auto;"></div>
+          <mat-form-field>
+            <mat-select placeholder="Status" color="primary" (change)="statusFilter.next({type: filterType.status, value: $event.value})" value="all">
+              <mat-option value="all">All</mat-option>
+              <mat-option value="true">Closed</mat-option>
+              <mat-option value="false">Open</mat-option>
+            </mat-select>
+          </mat-form-field>
         </mat-toolbar-row>
         <mat-toolbar-row>
-          <mat-form-field>
-            <input matInput (keyup)="filterBy(filterType.name, $event.target.value)" placeholder="Filter">
+          <mat-form-field class="name_filter">
+            <input matInput (keyup)="nameFilter.next({type: filterType.name, value: $event.target.value})" placeholder="Filter">
           </mat-form-field>
         </mat-toolbar-row>
       </mat-toolbar>
