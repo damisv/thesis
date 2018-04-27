@@ -46,7 +46,7 @@
       </mat-expansion-panel-header>
       <div class="flex_container">
         <mat-form-field>
-          <mat-select placeholder="Type" [(ngModel)]="event.color">
+          <mat-select placeholder="Type" [(ngModel)]="event.color" (ngModelChange)="addMetaType()">
             <mat-option [value]="colors.red">Danger</mat-option>
             <mat-option [value]="colors.blue">Info</mat-option>
             <mat-option [value]="colors.yellow">Warning</mat-option>
@@ -58,6 +58,5 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button (click)="create(true)" *ngIf="createDialog">Create</button>
-  <button mat-raised-button (click)="save(false)" *ngIf="!createDialog">Save</button>
+  <button mat-raised-button (click)="close()">{{ createDialog ? 'Create' : 'Save' }}</button>
 </mat-dialog-actions>

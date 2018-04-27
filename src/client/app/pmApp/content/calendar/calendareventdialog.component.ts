@@ -20,7 +20,7 @@ import {SnackbarService} from '../../../services/snackbar.service';
 export class CalendarEventDialogComponent {
   event = new MyCalendarEvent();
   projects: Project[] = [];
-  createDialog = true;
+  createDialog = true; // if this Dialog is for creating or not
 
   colors = colors;
   panelColor = 'red';
@@ -36,15 +36,16 @@ export class CalendarEventDialogComponent {
     this.projects = data.projects;
   }
 
-  changePanelClass() {
-    this.panelColor = this.event.color === colors.red ? 'red' : this.event.color === colors.blue ? 'blue' : 'yellow' ;
+  addMetaType() {
+    this.event.meta = { type: this.event.color === colors.red ? 'danger' : this.event.color === colors.yellow ? 'warning' : 'info' };
   }
 
-  close(status: boolean) {
+  close() {
+    console.log(this.event.start + '===' + this.event.end);
     if (!areDatesCorrect(this.event.start, this.event.end)) {
       this.snackBar.show('Check Dates. Start shouldn\'t be bigger than end.');
       return;
     }
-    this.dialogRef.close({event: this.event, create: status, projectID: this.projectID ? this.projectID : null});
+    this.dialogRef.close({event: this.event, create: this.createDialog, projectID: this.projectID ? this.projectID : null});
   }
 }

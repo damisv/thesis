@@ -1,3 +1,76 @@
+<context-menu #basicMenu>
+  <ng-template contextMenuItem (execute)="addEvent($event.item)">
+    Add event
+  </ng-template>
+</context-menu>
+
+<ng-template
+  #monthCellTemplate
+  let-day="day"
+  let-openDay="openDay"
+  let-locale="locale"
+  let-tooltipPlacement="tooltipPlacement"
+  let-highlightDay="highlightDay"
+  let-unhighlightDay="unhighlightDay"
+  let-eventClicked="eventClicked">
+
+  <div class="fill-height" [contextMenu]="basicMenu" [contextMenuSubject]="day.date">
+    <div class="cal-cell-top">
+      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+      <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div class="cal-events">
+      <div
+        class="cal-event"
+        *ngFor="let event of day.events"
+        [style.backgroundColor]="event.color.primary"
+        [ngClass]="event?.cssClass"
+        (mouseenter)="highlightDay.emit({event: event})"
+        (mouseleave)="unhighlightDay.emit({event: event})"
+        [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
+        [tooltipPlacement]="tooltipPlacement"
+        (click)="$event.stopPropagation(); eventClicked.emit({event: event})">
+        <div class="cell-totals">
+          <ng-template ngFor let-group [ngForOf]="day.eventGroups">
+            <div class="badge {{group[0]}}"><span>{{ group[1].length }}</span></div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #weekHeaderTemplate let-days="days" let-locale="locale" let-dayHeaderClicked="dayHeaderClicked">
+  <div class="cal-day-headers">
+    <div
+      class="cal-header"
+      *ngFor="let day of days"
+      [class.cal-past]="day.isPast"
+      [class.cal-today]="day.isToday"
+      [class.cal-future]="day.isFuture"
+      [class.cal-weekend]="day.isWeekend"
+      [class.cal-drag-over]="day.dragOver"
+      (click)="dayHeaderClicked.emit({day: day})"
+      [contextMenu]="basicMenu"
+      [contextMenuSubject]="day.date">
+      <b>{{ day.date | calendarDate:'weekViewColumnHeader':locale }}</b><br>
+      <span>{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #dayHourSegmentTemplate let-segment="segment" let-locale="locale">
+  <div
+    class="cal-hour-segment"
+    [ngClass]="segment.cssClass"
+    [contextMenu]="basicMenu"
+    [contextMenuSubject]="segment.date">
+    <div [hidden]="!segment.isStart" class="cal-time">
+      {{ segment.date | calendarDate:'dayViewHour':locale }}
+    </div>
+  </div>
+</ng-template>
+
 <div    fxLayout
         fxLayout.xs="column"
         fxLayoutAlign="center"
@@ -11,27 +84,27 @@
           <h1 *ngIf="period.match('day')">{{ viewDate | date: 'd MMMM of y'}}</h1>
         </mat-card-title>
         <mat-card-subtitle>
-          <div class="flex_container">
+          <div class="spacer"></div>
             <mat-button-toggle-group (change)="period = $event.value">
               <mat-button-toggle value="month">Month</mat-button-toggle>
               <mat-button-toggle value="week">Week</mat-button-toggle>
               <mat-button-toggle value="day">Day</mat-button-toggle>
             </mat-button-toggle-group>
-            <div>
-              <button mat-raised-button color="primary"
-                      mwlCalendarPreviousView
-                      [view]="period"
-                      [(viewDate)]="viewDate"
-                      (viewDateChange)="activeDayIsOpen = false">Previous</button>
-              <button mat-raised-button color="accent"
-                      mwlCalendarToday
-                      [(viewDate)]="viewDate">Today</button>
-              <button mat-raised-button color="primary"
-                      mwlCalendarNextView
-                      [view]="period"
-                      [(viewDate)]="viewDate"
-                      (viewDateChange)="activeDayIsOpen = false">Next</button>
-            </div>
+          <div class="spacer"></div>
+          <div class="flex_container">
+            <button mat-raised-button color="primary"
+                    mwlCalendarPreviousView
+                    [view]="period"
+                    [(viewDate)]="viewDate"
+                    (viewDateChange)="activeDayIsOpen = false">Previous</button>
+            <button mat-raised-button color="accent"
+                    mwlCalendarToday
+                    [(viewDate)]="viewDate">Today</button>
+            <button mat-raised-button color="primary"
+                    mwlCalendarNextView
+                    [view]="period"
+                    [(viewDate)]="viewDate"
+                    (viewDateChange)="activeDayIsOpen = false">Next</button>
           </div>
         </mat-card-subtitle>
       </mat-card-header>
@@ -45,7 +118,9 @@
             [activeDayIsOpen]="activeDayIsOpen"
             (dayClicked)="dayClicked($event.day)"
             (eventClicked)="handleEvent(actionType.edit, $event.event)"
-            (eventTimesChanged)="eventTimesChanged($event)">
+            (eventTimesChanged)="eventTimesChanged($event)"
+            [cellTemplate]="monthCellTemplate">
+            (beforeViewRender)="beforeMonthViewRender($event)">
           </mwl-calendar-month-view>
           <mwl-calendar-week-view
             *ngSwitchCase="'week'"
@@ -53,7 +128,8 @@
             [events]="events"
             [refresh]="refresh"
             (eventClicked)="handleEvent(actionType.edit, $event.event)"
-            (eventTimesChanged)="eventTimesChanged($event)">
+            (eventTimesChanged)="eventTimesChanged($event)"
+            [headerTemplate]="weekHeaderTemplate">
           </mwl-calendar-week-view>
           <mwl-calendar-day-view
             *ngSwitchCase="'day'"
@@ -61,7 +137,8 @@
             [events]="events"
             [refresh]="refresh"
             (eventClicked)="handleEvent(actionType.edit, $event.event)"
-            (eventTimesChanged)="eventTimesChanged($event)">
+            (eventTimesChanged)="eventTimesChanged($event)"
+            [hourSegmentTemplate]="dayHourSegmentTemplate">
           </mwl-calendar-day-view>
         </div>
       </mat-card-content>

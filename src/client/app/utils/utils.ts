@@ -21,7 +21,7 @@ export function getHeaders(): HttpHeaders {
 /// this should be done as an extension to Date
 export function areDatesCorrect(date1: Date, date2: Date): boolean {
   if (!date1 || !date2) { return false; }
-  return date1.getMilliseconds() < date2.getMilliseconds();
+  return date1.getTime() <= date2.getTime();
 }
 
 // Assignments Filters

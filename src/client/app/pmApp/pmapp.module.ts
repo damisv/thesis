@@ -44,6 +44,7 @@ import {CreateAssignmentComponent} from './content/assignments/project/createass
 import {SnackbarService} from '../services/snackbar.service';
 import {ViewAssignmentComponent} from './content/assignments/project/viewassignment.component';
 import {CalendarModule} from 'angular-calendar';
+import {ContextMenuModule} from 'ngx-contextmenu';
 import {CalendarEventDialogComponent} from './content/calendar/calendareventdialog.component';
 import {CalendarService} from '../services/calendar.service';
 
@@ -86,7 +87,8 @@ import {CalendarService} from '../services/calendar.service';
     MyParticlesModule,
     TruncateModule,
     MglTimelineModule,
-    CalendarModule.forRoot()
+    CalendarModule.forRoot(),
+    ContextMenuModule.forRoot({ autoFocus: true })
   ],
   providers: [
     SidebarMenuService,

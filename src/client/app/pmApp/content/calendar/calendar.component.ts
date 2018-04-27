@@ -1,14 +1,14 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ViewChild} from '@angular/core';
 import {startOfDay, endOfDay, subDays, addDays, endOfMonth,
   isSameDay, isSameMonth, addHours} from 'date-fns';
-import { CalendarEventAction, CalendarEventTimesChangedEvent} from 'angular-calendar';
+import { CalendarEventAction, CalendarEventTimesChangedEvent,  CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs/Subject';
 import {colors} from '../../../utils/utils';
 import {EventActionType, MyCalendarEvent} from '../../../models/calendarEvent';
 import {CalendarService} from '../../../services/calendar.service';
 import {ProjectService} from '../../../services/projects.service';
 import {Observable} from 'rxjs/Observable';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatMenu} from '@angular/material';
 import {Project} from '../../../models/project';
 import {CalendarEventDialogComponent} from './calendareventdialog.component';
 
@@ -44,6 +44,8 @@ export class CalendarComponent {
 
   events: MyCalendarEvent[] = [
     new MyCalendarEvent(subDays(startOfDay(new Date()), 1), addDays(new Date(), 1), 'A 3 day event', colors.red, this.actions),
+    new MyCalendarEvent(subDays(startOfDay(new Date()), 1), addDays(new Date(), 1), 'A 3 day event', colors.blue, this.actions, {type: 'info'}),
+    new MyCalendarEvent(subDays(startOfDay(new Date()), 1), addDays(new Date(), 1), 'A 3 day event', colors.red, this.actions)
   ];
 
   private projects: Project[] = [];
@@ -58,6 +60,17 @@ export class CalendarComponent {
         //this.events = events.my.concat(events.project);
         //this.refresh.next();
       });
+  }
+
+  beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
+    body.forEach(cell => {
+      const groups: any = {};
+      cell.events.forEach((event: MyCalendarEvent) => {
+        groups[event.meta.type] = groups[event.meta.type] || [];
+        groups[event.meta.type].push(event);
+      });
+      cell['eventGroups'] = Object.entries(groups);
+    });
   }
 
   handleEvent(action: EventActionType, event: MyCalendarEvent): void {
@@ -95,7 +108,7 @@ export class CalendarComponent {
   }
 
   // Add event
-  addEvent() { this.viewAndEdit(); }
+  addEvent(startDate) { this.viewAndEdit(new MyCalendarEvent(startDate)); }
 
   // Private methods
   private viewAndEdit(event: MyCalendarEvent = null) {
