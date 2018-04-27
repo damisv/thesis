@@ -18,7 +18,7 @@ import {CreateprojectComponent} from './content/projects/createproject.component
 import {InvitesComponent} from './content/invites/invite.component';
 import {ProfileComponent} from './content/user/profile.component';
 import {OthersProfileComponent} from './content/user/others_profile.component';
-import {CalendarComponent, ExampleComponent} from './content/calendar/calendar.component';
+import {CalendarComponent} from './content/calendar/calendar.component';
 import {ChatComponent} from './content/chat/chat.component';
 import {ChatService} from '../services/chat.service';
 import {TruncateModule} from '@yellowspot/ng-truncate';
@@ -43,6 +43,9 @@ import {AgileBoardComponent} from './content/assignments/project/agileBoard/agil
 import {CreateAssignmentComponent} from './content/assignments/project/createassignment.component';
 import {SnackbarService} from '../services/snackbar.service';
 import {ViewAssignmentComponent} from './content/assignments/project/viewassignment.component';
+import {CalendarModule} from 'angular-calendar';
+import {CalendarEventDialogComponent} from './content/calendar/calendareventdialog.component';
+import {CalendarService} from '../services/calendar.service';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,7 @@ import {ViewAssignmentComponent} from './content/assignments/project/viewassignm
     AgileBoardComponent,
     ChatComponent,
     CalendarComponent,
-    ExampleComponent,
+    CalendarEventDialogComponent,
     ProjectSettingsComponent,
     TimelineComponent,
     NotificationsComponent,
@@ -82,7 +85,8 @@ import {ViewAssignmentComponent} from './content/assignments/project/viewassignm
     FlexLayoutModule,
     MyParticlesModule,
     TruncateModule,
-    MglTimelineModule
+    MglTimelineModule,
+    CalendarModule.forRoot()
   ],
   providers: [
     SidebarMenuService,
@@ -90,11 +94,12 @@ import {ViewAssignmentComponent} from './content/assignments/project/viewassignm
     ProjectService,
     TaskService,
     ChatService,
+    CalendarService,
     InviteService,
     TimelineService,
     SnackbarService
   ],
-  entryComponents: [ExampleComponent]
+  entryComponents: [CalendarEventDialogComponent]
 })
 
 export class PMAppModule {}

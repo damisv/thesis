@@ -14,6 +14,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {TaskService} from './task.service';
 import {TaskType} from '../models/task';
 import {filter} from 'rxjs/operators';
+import {CalendarService} from './calendar.service';
 
 @Injectable()
 export class ProjectService {
@@ -29,8 +30,12 @@ export class ProjectService {
   constructor(private http: HttpClient,
               private progressBarService: ProgressBarService,
               private taskService: TaskService,
+              private calendarService: CalendarService,
               private dialog: MatDialog) {
-    this.project$.subscribe(project => this.taskService.getFor(project._id));
+    this.project$.subscribe(project => {
+      this.taskService.getFor(project._id);
+      this.calendarService.getFor(project._id);
+    });
   }
 
   giveProjects(projects: Project[]) {

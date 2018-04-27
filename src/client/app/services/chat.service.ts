@@ -68,12 +68,12 @@ export class ChatService {
         .finally( () => this.progressBarService.availableProgress(false));
     }
 
-  private throwError(error) {
-    this.progressBarService.availableProgress(false);
-    const errorData = new Error(error.title, error.error.message);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = errorData;
-    const dialogError = this.dialog.open(ErrorDialogComponent, dialogConfig);
-    dialogError.afterClosed().subscribe(_ => {});
-  }
+    private throwError(error) {
+      this.progressBarService.availableProgress(false);
+      const errorData = new Error(error.title, error.error.message);
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = errorData;
+      const dialogError = this.dialog.open(ErrorDialogComponent, dialogConfig);
+      dialogError.afterClosed().subscribe(_ => {});
+    }
 }

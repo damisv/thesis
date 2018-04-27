@@ -1,30 +1,132 @@
-import {Component} from '@angular/core';
-import {MatBottomSheet, MatBottomSheetRef} from '@angular/material';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {startOfDay, endOfDay, subDays, addDays, endOfMonth,
+  isSameDay, isSameMonth, addHours} from 'date-fns';
+import { CalendarEventAction, CalendarEventTimesChangedEvent} from 'angular-calendar';
+import {Subject} from 'rxjs/Subject';
+import {colors} from '../../../utils/utils';
+import {EventActionType, MyCalendarEvent} from '../../../models/calendarEvent';
+import {CalendarService} from '../../../services/calendar.service';
+import {ProjectService} from '../../../services/projects.service';
+import {Observable} from 'rxjs/Observable';
+import {MatDialog} from '@angular/material';
+import {Project} from '../../../models/project';
+import {CalendarEventDialogComponent} from './calendareventdialog.component';
 
 @Component({
   selector: 'app-pmapp-calendar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent {
-  constructor(private bottomSheet: MatBottomSheet) {}
+  actionType = EventActionType;
+  period = 'month';
+  viewDate: Date = new Date();
 
-  selectedDate(event) {
-    console.log(event);
-    this.bottomSheet.open(ExampleComponent);
+  activeDayIsOpen = true;
+
+  refresh: Subject<any> = new Subject();
+
+  actions: CalendarEventAction[] = [
+    {
+      label: '<i class="material-icons">mode_edit</i>',
+      onClick: ({ event }: { event: MyCalendarEvent }): void => {
+        this.handleEvent(EventActionType.edit, event);
+      }
+    },
+    {
+      label: '<i class="material-icons">delete</i>',
+      onClick: ({ event }: { event: MyCalendarEvent }): void => {
+        this.handleEvent(EventActionType.delete, event);
+      }
+    }
+  ];
+
+  events: MyCalendarEvent[] = [
+    new MyCalendarEvent(subDays(startOfDay(new Date()), 1), addDays(new Date(), 1), 'A 3 day event', colors.red, this.actions),
+  ];
+
+  private projects: Project[] = [];
+
+  constructor(private calendarService: CalendarService,
+              private projectService: ProjectService,
+              private dialog: MatDialog) {
+    projectService.projects$.subscribe(projects => this.projects = projects); // need projects for creating
+    Observable.combineLatest(this.calendarService.myEvents$, this.calendarService.projectEvents$,
+      (myEvents: MyCalendarEvent[], projectEvents: MyCalendarEvent[]) => ({my: myEvents, project: projectEvents}))
+      .subscribe( events => {
+        //this.events = events.my.concat(events.project);
+        //this.refresh.next();
+      });
   }
-}
 
-@Component({
-  selector: 'app-bottom-sheet-overview-example-sheet',
-  template: `<p>this is a bottom sheet <button (click)="openLink($event)">PRESs</button></p>`,
-  styles: [`.mat-bottom-sheet-container { background: #424242 !important; }`]
-})
-export class ExampleComponent {
-  constructor(private bottomSheetRef: MatBottomSheetRef<ExampleComponent>) {}
+  handleEvent(action: EventActionType, event: MyCalendarEvent): void {
+    switch (action) {
+      case EventActionType.edit:
+        this.viewAndEdit(event);
+        break;
+      case EventActionType.delete:
+        this.delete(event);
+        break;
+    }
+  }
 
-  openLink(event: MouseEvent): void {
-    this.bottomSheetRef.dismiss();
-    event.preventDefault();
+  // Clicked a day
+  dayClicked({ date, events }: { date: Date; events: MyCalendarEvent[] }): void {
+    if (isSameMonth(date, this.viewDate)) {
+      if (
+        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
+        events.length === 0
+      ) {
+        this.activeDayIsOpen = false;
+      } else {
+        this.activeDayIsOpen = true;
+        this.viewDate = date;
+      }
+    }
+  }
+
+  // When event dragged changed it's date
+  eventTimesChanged({event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
+    event.start = newStart;
+    event.end = newEnd;
+    this.calendarService.edit(event)
+      .subscribe(_ => this.refresh.next());
+  }
+
+  // Add event
+  addEvent() { this.viewAndEdit(); }
+
+  // Private methods
+  private viewAndEdit(event: MyCalendarEvent = null) {
+    const viewDialog = this.dialog.open(CalendarEventDialogComponent,
+      { data: {event: event, projects: this.projects}});
+    viewDialog.afterClosed().subscribe( result => {
+      if (result) {
+        if (result.create) {
+          this.calendarService.create(result.event, result.projectID)
+            .subscribe(value => {
+              const tempEvent = result.event;
+              tempEvent._id = value._id;
+              this.events.push(tempEvent);
+              this.refresh.next();
+            });
+        } else {
+          this.calendarService.edit(result.event)
+            .subscribe(_ => {
+              const tempIndex = this.events.findIndex(val => val === event);
+              this.events[tempIndex] = result.event;
+              this.refresh.next();
+            });
+        }
+      }
+    });
+  }
+  private delete(event: MyCalendarEvent) {
+    this.calendarService.delete(event)
+      .subscribe( _ => {
+        this.events = this.events.filter(iEvent => iEvent !== event);
+        this.refresh.next();
+      });
   }
 }

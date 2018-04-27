@@ -6,11 +6,64 @@
   <div fxFlex="auto">
     <mat-card class="card" >
       <mat-card-header>
-        <mat-card-title>Calendar</mat-card-title>
-        <mat-card-subtitle>Material</mat-card-subtitle>
+        <mat-card-title>
+          <h1 *ngIf="!period.match('day') ">{{ viewDate | date:'MMMM y' }}</h1>
+          <h1 *ngIf="period.match('day')">{{ viewDate | date: 'd MMMM of y'}}</h1>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <div class="flex_container">
+            <mat-button-toggle-group (change)="period = $event.value">
+              <mat-button-toggle value="month">Month</mat-button-toggle>
+              <mat-button-toggle value="week">Week</mat-button-toggle>
+              <mat-button-toggle value="day">Day</mat-button-toggle>
+            </mat-button-toggle-group>
+            <div>
+              <button mat-raised-button color="primary"
+                      mwlCalendarPreviousView
+                      [view]="period"
+                      [(viewDate)]="viewDate"
+                      (viewDateChange)="activeDayIsOpen = false">Previous</button>
+              <button mat-raised-button color="accent"
+                      mwlCalendarToday
+                      [(viewDate)]="viewDate">Today</button>
+              <button mat-raised-button color="primary"
+                      mwlCalendarNextView
+                      [view]="period"
+                      [(viewDate)]="viewDate"
+                      (viewDateChange)="activeDayIsOpen = false">Next</button>
+            </div>
+          </div>
+        </mat-card-subtitle>
       </mat-card-header>
-      <mat-card-content>
-        <mat-calendar (selectedChange)="selectedDate($event)" ></mat-calendar>
+      <mat-card-content style="min-height: 25em;max-height: 60em;overflow: auto">
+        <div [ngSwitch]="period">
+          <mwl-calendar-month-view
+            *ngSwitchCase="'month'"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            [activeDayIsOpen]="activeDayIsOpen"
+            (dayClicked)="dayClicked($event.day)"
+            (eventClicked)="handleEvent(actionType.edit, $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-month-view>
+          <mwl-calendar-week-view
+            *ngSwitchCase="'week'"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            (eventClicked)="handleEvent(actionType.edit, $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-week-view>
+          <mwl-calendar-day-view
+            *ngSwitchCase="'day'"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            (eventClicked)="handleEvent(actionType.edit, $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-day-view>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

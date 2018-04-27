@@ -20,9 +20,8 @@ export function getHeaders(): HttpHeaders {
 // Checks if date1 is less than date2, and that both of them aren't null/undefined
 /// this should be done as an extension to Date
 export function areDatesCorrect(date1: Date, date2: Date): boolean {
-  if (!date1) { return false; }
-  if (date2) { return date1.getMilliseconds() < date2.getMilliseconds(); }
-  return true;
+  if (!date1 || !date2) { return false; }
+  return date1.getMilliseconds() < date2.getMilliseconds();
 }
 
 // Assignments Filters
@@ -78,6 +77,22 @@ export function getCorrectDays(date) {
   dateTemp.setUTCMilliseconds(0);
   return dateTemp.getTime();
 }
+
+// Const colors
+export const colors: any = {
+  red: {
+    primary: '#ad2121',
+    secondary: '#FAE3E3'
+  },
+  blue: {
+    primary: '#1e90ff',
+    secondary: '#D1E8FF'
+  },
+  yellow: {
+    primary: '#e3bc08',
+    secondary: '#FDF1BA'
+  }
+};
 
 // Countries with their code
 export const countryCodes = [

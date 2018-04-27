@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>{{event.title}}</h2>
+<mat-dialog-content>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Info</mat-panel-title>
+        <mat-panel-description>Set title and if belongs to project set here.</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="flex_container">
+        <mat-form-field>
+          <input matInput placeholder="Title" [(ngModel)]="event.title">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Project" [(ngModel)]="projectID">
+            <mat-option [value]="null">None</mat-option>
+            <mat-option *ngFor="let project of projects" [value]="project._id">
+              {{ project.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Dates</mat-panel-title>
+        <mat-panel-description>Set start and end date<mat-icon>date_range</mat-icon></mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="flex_container">
+        <mat-form-field>
+          <input matInput [matDatepicker]="start" placeholder="Start date" [(ngModel)]="event.start" disabled>
+          <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+          <mat-datepicker #start disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="end" placeholder="End" [(ngModel)]="event.end" disabled>
+          <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
+          <mat-datepicker #end disabled="false"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Type</mat-panel-title>
+        <mat-panel-description>Set type of event<mat-icon>date_range</mat-icon></mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="flex_container">
+        <mat-form-field>
+          <mat-select placeholder="Type" [(ngModel)]="event.color">
+            <mat-option [value]="colors.red">Danger</mat-option>
+            <mat-option [value]="colors.blue">Info</mat-option>
+            <mat-option [value]="colors.yellow">Warning</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="create(true)" *ngIf="createDialog">Create</button>
+  <button mat-raised-button (click)="save(false)" *ngIf="!createDialog">Save</button>
+</mat-dialog-actions>
