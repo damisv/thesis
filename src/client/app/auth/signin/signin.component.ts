@@ -35,7 +35,7 @@ export class SigninComponent implements OnInit {
       'email': ['', [Validators.required, Validators.email]],
       'password': ['', Validators.required]
     });
-    // localStorage.removeItem('token');
+    if (localStorage.getItem('token') !== null) { localStorage.removeItem('token'); }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/app';
   }
 

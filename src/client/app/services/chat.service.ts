@@ -15,45 +15,44 @@ export class ChatThread {
 
 @Injectable()
 export class ChatService {
-    // Rx Properties
-    private threads = new BehaviorSubject(new Map<string, ChatThread>());
-    threads$ = this.threads.asObservable();
+  // Static Properties
+  private static base = 'api/chat';
 
-    constructor(private http: HttpClient,
-                private progressBarService: ProgressBarService,
-                private projectService: ProjectService) {
-      // Everytime a project will be added, the service will retrieve it ChatThread
-      // this.projectService.projects$.subscribe( projects =>
-      //   this.getThreads(projects.map( value => value._id )).subscribe(threads => this.threads.next(threads))
-      // );
-    }
+  // Rx Properties
+  private threads = new BehaviorSubject(new Map<string, ChatThread>());
+  threads$ = this.threads.asObservable();
 
-    /*
-    Public methods
-     */
-    send(message: Message) {
-      const req = new HttpRequest(HttpMethods.Post, 'chat', JSON.stringify({message: Message}));
-      return this.makeRequest(req);
-    }
+  constructor(private http: HttpClient,
+              private progressBarService: ProgressBarService,
+              private projectService: ProjectService) {
+    // Everytime a project will be added, the service will retrieve it ChatThread
+    // this.projectService.projects$.subscribe( projects =>
+    //   this.getThreads(projects.map( value => value._id )).subscribe(threads => this.threads.next(threads))
+    // );
+  }
 
-    receivedOnProject(message: Message) { this.threads.value[message.receiver].lastMessages.push(message); }
+  // Public methods
+  send(message: Message) {
+    const req = new HttpRequest(HttpMethods.Post, ChatService.base, JSON.stringify({message: Message}));
+    return this.makeRequest(req);
+  }
 
-    getMessages(id: string) {
-      const req = new HttpRequest(HttpMethods.Get, 'chat/' + id);
-      return this.makeRequest(req);
-    }
+  receivedOnProject(message: Message) { this.threads.value[message.receiver].lastMessages.push(message); }
 
-    /*
-    Private methods
-     */
-    private getThreads(projectIDs: string[]) {
-      const req = new HttpRequest(HttpMethods.Post, 'chat/threads', JSON.stringify({projectIDs: projectIDs}));
-      return this.makeRequest(req);
-    }
+  getMessages(id: string) {
+    const req = new HttpRequest(HttpMethods.Get, `${ChatService.base}/` + id);
+    return this.makeRequest(req);
+  }
 
-    private makeRequest(req: HttpRequest<any>): Observable<any> {
-      this.progressBarService.availableProgress(true);
-      return this.http.request(req)
-        .finally( () => this.progressBarService.availableProgress(false));
-    }
+  // Private methods
+  private getThreads(projectIDs: string[]) {
+    const req = new HttpRequest(HttpMethods.Post, `${ChatService.base}/threads`, JSON.stringify({projectIDs: projectIDs}));
+    return this.makeRequest(req);
+  }
+
+  private makeRequest(req: HttpRequest<any>): Observable<any> {
+    this.progressBarService.availableProgress(true);
+    return this.http.request(req)
+      .finally( () => this.progressBarService.availableProgress(false));
+  }
 }

@@ -13,6 +13,9 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class TaskService {
+  // Static Properties
+  private static base = 'api/assignment';
+  // Rx Properties
   // Current task for editing or viewing
   private task = new Subject<Task>();
   task$ = this.task.asObservable();
@@ -26,37 +29,37 @@ export class TaskService {
 
   // Get All User Task by type (task, issues, feedback)
   get(type: TaskType) {
-    const req = new HttpRequest(HttpMethods.Get, 'assignments/' + TaskType[type]);
+    const req = new HttpRequest(HttpMethods.Get, `${TaskService.base}/` + TaskType[type]);
     return this.makeRequest(req);
   }
 
   // Get All Project Assignments
   getFor(projectID: string) {
-      const req = new HttpRequest(HttpMethods.Get, 'assignments/project/' + projectID);
+      const req = new HttpRequest(HttpMethods.Get, `${TaskService.base}/project/` + projectID);
       return this.makeRequest(req)
         .subscribe( values => this.assignments.next(values));
   }
 
   // Get Task by ID
   getBy(id: string) {
-    const req = new HttpRequest(HttpMethods.Get, 'assignments/' + id);
+    const req = new HttpRequest(HttpMethods.Get, `${TaskService.base}/` + id);
     return this.makeRequest(req);
   }
 
   create(task: Task) {
     // if (typeof task.date_start !== 'undefined') { task.date_start = task.date_start.toISOString(); }
     // if (typeof task.date_end !== 'undefined') { task.date_end = task.date_end.toISOString(); }
-    const req = new HttpRequest(HttpMethods.Post, 'assignments', {task: task});
+    const req = new HttpRequest(HttpMethods.Post, TaskService.base, {task: task});
     return this.makeRequest(req);
   }
 
   edit(task: Task) {
-    const req = new HttpRequest(HttpMethods.Put, 'assignments/' + task._id, {task: task});
+    const req = new HttpRequest(HttpMethods.Put, `${TaskService.base}/` + task._id, {task: task});
     return this.makeRequest(req);
   }
 
   changeStatus(task: Task) {
-    const req = new HttpRequest(HttpMethods.Patch, 'assignments/' + task._id, {task: task});
+    const req = new HttpRequest(HttpMethods.Patch, `${TaskService.base}/` + task._id, {task: task});
     return this.makeRequest(req);
   }
 
@@ -73,6 +76,7 @@ export class TaskService {
     }
   }
 
+  // Private methods
   private makeRequest(req: HttpRequest<any>): Observable<any> {
     this.progressBarService.availableProgress(true);
     return this.http.request(req)

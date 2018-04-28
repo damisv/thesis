@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
-import * as empty from 'rxjs/add/observable/empty';
+import 'rxjs/add/observable/empty';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {Error} from '../models/error';
 import {ErrorDialogComponent} from '../errors/errordialog.component';

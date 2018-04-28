@@ -18,7 +18,10 @@ export class TimelineLog {
 
 @Injectable()
 export class TimelineService {
+  // Static Properties
+  private static base = 'api/timeline';
 
+  // Rx Properties
   private timelineLogs = new BehaviorSubject<TimelineLog[]>([]);
   timelineLogs$ = this.timelineLogs.asObservable();
 
@@ -37,7 +40,7 @@ export class TimelineService {
 
   // Private methods
   private getLogs(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Get, 'timeline/' + projectID);
+    const req = new HttpRequest(HttpMethods.Get, `${TimelineService.base}/` + projectID);
     this.makeRequest(req)
       .subscribe(res => this.timelineLogs.next(res));
   }

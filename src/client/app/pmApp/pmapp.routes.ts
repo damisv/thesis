@@ -23,6 +23,7 @@ import {AgileComponent} from './content/assignments/project/agile/agile.componen
 import {AgileBoardComponent} from './content/assignments/project/agileBoard/agileBoard.component';
 import {ViewAssignmentComponent} from './content/assignments/project/viewassignment.component';
 import {CreateAssignmentComponent} from './content/assignments/project/createassignment.component';
+import {RoleGuard} from './guards/role.guard';
 
 export const PMAPP_ROUTES: Routes = [
   {path: '', component: PMAppComponent, children: [
@@ -51,7 +52,7 @@ export const PMAPP_ROUTES: Routes = [
           { path: 'team', component: TeamComponent},
           { path: 'timeline', component: TimelineComponent},
           { path: 'chat', component: ChatComponent},
-          { path: 'settings', component: ProjectSettingsComponent},
+          { path: 'settings', component: ProjectSettingsComponent, canActivate: [RoleGuard]},
           { path: '**', redirectTo: '404', pathMatch: 'full'},
           { path: '404', component: NotFoundErrorComponent}
         ]},

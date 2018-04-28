@@ -18,6 +18,10 @@ import {filter} from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
+  // Static Properties
+  private static base = 'api/user';
+
+  // Rx Properties
   private user = new BehaviorSubject<User>(new User('default'));
   user$ = this.user.asObservable();
 
@@ -31,7 +35,7 @@ export class UserService {
 User Calls to API
  */
   getUser() {
-    const req = new HttpRequest(HttpMethods.Get, 'user');
+    const req = new HttpRequest(HttpMethods.Get, UserService.base);
     this.makeRequest(req)
       .subscribe(
         res => { this.user.next(res); },
@@ -40,12 +44,12 @@ User Calls to API
   }
 
  edit(user: User) {
-      const req = new HttpRequest(HttpMethods.Put, 'user', JSON.stringify({user: user}));
+      const req = new HttpRequest(HttpMethods.Put, UserService.base, JSON.stringify({user: user}));
       return this.makeRequest(req);
   }
 
   userIsRegistered(email: string) {
-    const req = new HttpRequest(HttpMethods.Get, 'user/isRegistered' + email);
+    const req = new HttpRequest(HttpMethods.Get, `${UserService.base}/isRegistered` + email);
     return this.makeRequest(req);
   }
 
@@ -53,7 +57,7 @@ User Calls to API
  Other User Calls to API
  */
   getFor(email: string) {
-    const req = new HttpRequest(HttpMethods.Get, 'user' + email);
+    const req = new HttpRequest(HttpMethods.Get, `${UserService.base}/` + email);
     return this.makeRequest(req);
   }
 
@@ -64,7 +68,7 @@ User Calls to API
   }
   private search(value: string) {
     console.log('Search' + value);
-    const req = new HttpRequest(HttpMethods.Get, 'user/search/' + value);
+    const req = new HttpRequest(HttpMethods.Get, `${UserService.base}/search/` + value);
     return this.makeRequest(req);
   }
 

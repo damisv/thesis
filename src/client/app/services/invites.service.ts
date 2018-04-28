@@ -9,7 +9,10 @@ import {UserService} from './user.service';
 
 @Injectable()
 export class InviteService {
+  // Static Properties
+  private static base = 'api/invite';
 
+  // Rx Properties
   private invites = new BehaviorSubject<object[]>([]);
   invites$ = this.invites.asObservable();
 
@@ -21,12 +24,12 @@ export class InviteService {
 
   // Public methods
   acceptInvite(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Patch, 'invite/' + projectID, {});
+    const req = new HttpRequest(HttpMethods.Patch, `${InviteService.base}/` + projectID, {});
     return this.makeRequest(req);
   }
 
   rejectInvite(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Delete, 'invite/' + projectID);
+    const req = new HttpRequest(HttpMethods.Delete, `${InviteService.base}/` + projectID);
     return this.makeRequest(req);
   }
 
@@ -35,23 +38,23 @@ export class InviteService {
   } // removes invite from array
 
   getUserInvites() {
-    const req = new HttpRequest(HttpMethods.Get, 'invite');
+    const req = new HttpRequest(HttpMethods.Get, InviteService.base);
     this.makeRequest(req)
       .subscribe(res => this.invites.next(res));
   }
 
   getProjectInvites(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Get, 'invite/' + projectID);
+    const req = new HttpRequest(HttpMethods.Get, `${InviteService.base}/` + projectID);
     return this.makeRequest(req);
   }
 
   invite(invites: string[], projectID: string) {
-    const req = new HttpRequest(HttpMethods.Post, 'invite', JSON.stringify({invites: invites, projectID: projectID}));
+    const req = new HttpRequest(HttpMethods.Post, InviteService.base, JSON.stringify({invites: invites, projectID: projectID}));
     return this.makeRequest(req);
   }
 
   userIsInvited(email: string, projectID: string) {
-    const req = new HttpRequest(HttpMethods.Post, 'invite/isInvited', JSON.stringify({email: email, projectID: projectID}));
+    const req = new HttpRequest(HttpMethods.Post, `${InviteService.base}/isInvited`, JSON.stringify({email: email, projectID: projectID}));
     return this.makeRequest(req);
   }
 
