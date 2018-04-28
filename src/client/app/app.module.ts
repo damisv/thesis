@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,7 @@ import {ErrorDialogComponent} from './errors/errordialog.component';
 import {AuthService} from './services/auth.service';
 import {ProgressBarService} from './services/progressbar.service';
 import {MyParticlesModule} from './particles/myparticles.module';
+import {RequestInterceptor} from './services/request.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,11 @@ import {MyParticlesModule} from './particles/myparticles.module';
     ScrollToModule.forRoot(),
     MyParticlesModule
   ],
-  providers: [ThemeService, ScrollService, ProgressBarService, AuthService],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: RequestInterceptor,
+    multi: true
+  }, ThemeService, ScrollService, ProgressBarService, AuthService],
   entryComponents: [ErrorDialogComponent],
   bootstrap: [AppComponent]
 })

@@ -9,15 +9,20 @@
 tr {
     cursor: pointer;
 }
-
 .table-container {
   display: flex;
   flex-direction: column;
-  max-height: 500px;
-  min-width: 300px;
 }
-
 .mat-table {
   overflow: auto;
-  max-height: 500px;
+  max-height: 30em;
+  min-height: 30em;
+}
+.mat-column-select { overflow: visible; }
+.flex_container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  margin: 1em;
+  & .name_filter { width: 100%;}
 }

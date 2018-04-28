@@ -16,6 +16,6 @@
     </form>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button color="primary" type="submit" [disabled]="!loginGroup.valid">Submit</button>
+    <button mat-button color="primary" type="submit" [disabled]="!loginGroup.valid" (click)="submit()">Submit</button>
   </mat-card-actions>
 </mat-card>

@@ -1,6 +1,7 @@
 import {Component, OnInit, Inject, Optional} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { Error } from '../models/error';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
     selector: 'app-error-dialog',
@@ -18,7 +19,6 @@ export class ErrorDialogComponent implements OnInit {
     constructor(
       public dialogRef: MatDialogRef<ErrorDialogComponent>,
       @Optional() @Inject(MAT_DIALOG_DATA) private dialogData: any
-        // public router: Router
     ) {}
     ngOnInit() { this.error = this.dialogData; }
 }

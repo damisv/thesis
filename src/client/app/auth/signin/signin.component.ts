@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AfterContentInit, Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Account} from '../../models/account';
 import {ActivatedRoute, Router} from '@angular/router';
+import {UserService} from '../../services/user.service';
 
 @Component({
     selector: 'app-signin',
@@ -17,17 +18,18 @@ export class SigninComponent implements OnInit {
   account: Account = new Account('', '');
 
   constructor(private authService: AuthService,
+              private userService: UserService,
               private router: Router,
               private route: ActivatedRoute,
               private _formBuilder: FormBuilder) {}
 
   submit() {
     this.authService.signIn(this.account)
-        .then( res => {
+        .subscribe( res => {
           localStorage.setItem('token', res.token);
+          this.userService.giveUserProfile(res.user);
           this.router.navigate([this.returnUrl]);
-        })
-        .catch( err => console.log(err));
+        });
   }
 
   ngOnInit() {
@@ -35,7 +37,7 @@ export class SigninComponent implements OnInit {
       'email': ['', [Validators.required, Validators.email]],
       'password': ['', Validators.required]
     });
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/app';
   }
 

@@ -1,5 +1,5 @@
-import {HttpHeaders} from '@angular/common/http';
 import {Task} from '../models/task';
+import {Project} from '../models/project';
 
 export enum HttpMethods {
   Get = 'GET',
@@ -7,13 +7,6 @@ export enum HttpMethods {
   Put = 'PUT',
   Delete = 'DELETE',
   Patch = 'UPDATE'
-}
-
-export function getHeaders(): HttpHeaders {
-  if (localStorage.getItem('token') !== null) {
-    return new HttpHeaders({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
-  }
-  return new HttpHeaders({'Content-Type': 'application/json'});
 }
 
 // Date
@@ -29,33 +22,47 @@ export class FilterOption {
   constructor(public type: FilterType, public value: any) {}
 }
 export enum FilterType {
-  status, name, type, assigner, assignee, nameTypeStatus
+  status, assigner, assignee, nameTypeStatus, // task cases
+  name, type, // general cases
+  nameType // project cases
 }
-export function applyFilter(filter: FilterOption, task: Task): boolean {
+export function applyFilter(filter: FilterOption, data: any, isProject: boolean = false): boolean {
   switch (filter.type) {
-    case FilterType.status: return filterByStatus(task, filter.value);
-    case FilterType.name: return filterByString(task, filter.value);
-    case FilterType.assigner: return task.assigner_email === filter.value;
-    case FilterType.assignee: return task.assignee_email.filter(email => email.includes(filter.value)).length > 0;
-    case FilterType.type: return filterByType(task, filter.value);
+    case FilterType.status: return filterByStatus(data, filter.value);
+    case FilterType.name: return !isProject ? filterTaskByString(data, filter.value) : filterProjectByString(data, filter.value);
+    // case FilterType.assigner: return task.assigner_email === filter.value;
+    // case FilterType.assignee: return task.assignee_email.filter(email => email.includes(filter.value)).length > 0;
+    case FilterType.type: return !isProject ? filterTaskByType(data, filter.value) : filterProjectByType(data, filter.value);
     case FilterType.nameTypeStatus:
-      return filterByString(task, filter.value.name.value) &&
-        filterByStatus(task, filter.value.status.value) &&
-        filterByType(task, filter.value.type.value);
+      return filterTaskByString(data, filter.value.name.value) &&
+        filterByStatus(data, filter.value.status.value) &&
+        filterTaskByType(data, filter.value.type.value);
   }
 }
-function filterByString(task: Task, value): boolean {
+// Assignments Filters
+function filterTaskByString(task: Task, value): boolean {
   if (value === '' || value === null || value === undefined) { return true; }
   return task.name.trim().toLowerCase().includes(value) ||
     task.assigner_email.toLowerCase().includes(value) ||
     task.assignee_email.filter(email => email.toLowerCase().includes(value)).length > 0;
 }
+function filterTaskByType(task: Task, value): boolean {
+  return value === 'all' ? true : task.type === value;
+}
 function filterByStatus(task: Task, value): boolean {
   return value === 'all' ? true : value === task.completed.toString();
 }
-function filterByType(task: Task, value): boolean {
-  return value === 'all' ? true : task.type === value;
+// Project Filters
+function filterProjectByString(project: Project, value): boolean {
+  if (value === '' || value === null || value === undefined) { return true; }
+  return project.name.trim().toLowerCase().includes(value) ||
+    project.team.filter(member => member.email.toLowerCase().includes(value)).length > 0;
 }
+function filterProjectByType(project: Project, value): boolean {
+  return value === 'all' ? true :
+    project.team.filter(member => member.email === value.email && member.position === value.position).length > 0;
+}
+
 
 // Highcharts functions
 const letters = '0123456789ABCDEF';

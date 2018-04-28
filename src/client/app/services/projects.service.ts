@@ -6,13 +6,10 @@ import 'rxjs/add/operator/finally';
 import { Observable } from 'rxjs/Observable';
 import {Project} from '../models/project';
 import {ProgressBarService} from './progressbar.service';
-import {getHeaders, HttpMethods} from '../utils/utils';
-import {ErrorDialogComponent} from '../errors/errordialog.component';
-import {Error} from '../models/error';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import {HttpMethods} from '../utils/utils';
+import {MatDialog} from '@angular/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {TaskService} from './task.service';
-import {TaskType} from '../models/task';
 import {filter} from 'rxjs/operators';
 import {CalendarService} from './calendar.service';
 
@@ -58,9 +55,8 @@ export class ProjectService {
   }
 
   getProject(id) {
-      const req = new HttpRequest(HttpMethods.Get, 'project/search/' + id, {headers: getHeaders()});
-      return this.makeRequest(req)
-        .map(res => res.json());
+      const req = new HttpRequest(HttpMethods.Get, 'project/' + id);
+      return this.makeRequest(req);
   }
 
   giveProject(project: Project) {
@@ -71,28 +67,24 @@ export class ProjectService {
   addToProjects(project: Project) { this.projects.getValue().push(project); }
 
   edit(project) {
-    const req = new HttpRequest(HttpMethods.Put, 'project/' + project._id, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Put, 'project/' + project._id, JSON.stringify({project: project}));
+    return this.makeRequest(req);
   }
 
   create(project: Project, invites: string[]) {
-      const req = new HttpRequest(HttpMethods.Post, 'project/create', {project: project, invites: invites}, {headers: getHeaders()});
-      return this.makeRequest(req)
-        .map(res => res.json());
+      const req = new HttpRequest(HttpMethods.Post, 'project', JSON.stringify({project: project, invites: invites}));
+      return this.makeRequest(req);
   }
 
   delete(project: Project) {
-    const req = new HttpRequest(HttpMethods.Delete, 'project/' + project._id, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Delete, 'project/' + project._id);
+    return this.makeRequest(req);
   }
 
   // Remove Member Of Project Team
   removeMember(email: string, projectID: string) {
-    const req = new HttpRequest(HttpMethods.Patch, 'project/' + projectID, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Patch, 'project/' + projectID, JSON.stringify({email : email}));
+    return this.makeRequest(req);
   }
 
   remove(index: number) {
@@ -105,37 +97,19 @@ export class ProjectService {
   }
 
   filterName(name) {
-    const req = new HttpRequest(HttpMethods.Get, 'project/search/' + name, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Get, 'project/search/' + name);
+    return this.makeRequest(req);
   }
 
   getProjects() {
-    const req = new HttpRequest(HttpMethods.Get, 'project', {headers: getHeaders()});
+    const req = new HttpRequest(HttpMethods.Get, 'project');
     this.makeRequest(req)
-      .map(res => res.json())
-      .subscribe(
-        res => this.giveProjects(res.projects),
-        err => this.throwError(err)
-      );
+      .subscribe( res => this.giveProjects(res.projects));
   }
 
   private makeRequest(req: HttpRequest<any>): Observable<any> {
     this.progressBarService.availableProgress(true);
     return this.http.request(req)
-      .catch( err => {
-        this.throwError(err);
-        return Observable.throw(err);
-      })
       .finally( () => this.progressBarService.availableProgress(false));
-  }
-
-  private throwError(error) {
-    this.progressBarService.availableProgress(false);
-    const errorData = new Error(error.title, error.error.message);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = errorData;
-    const dialogError = this.dialog.open(ErrorDialogComponent, dialogConfig);
-    dialogError.afterClosed().subscribe(_ => {});
   }
 }

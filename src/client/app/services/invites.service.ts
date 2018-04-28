@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpRequest} from '@angular/common/http';
-import {getHeaders, HttpMethods} from '../utils/utils';
+import {HttpMethods} from '../utils/utils';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Error} from '../models/error';
-import {ErrorDialogComponent} from '../errors/errordialog.component';
 import {Observable} from 'rxjs/Observable';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import 'rxjs/add/operator/finally';
 import {ProgressBarService} from './progressbar.service';
 import {UserService} from './user.service';
 
@@ -17,67 +15,50 @@ export class InviteService {
 
   constructor(private http: HttpClient,
               private userService: UserService,
-              private progressBarService: ProgressBarService,
-              private dialog: MatDialog) {
+              private progressBarService: ProgressBarService) {
     // this.userService.user$.subscribe( _ => this.getUserInvites());
   }
 
   // Public methods
   acceptInvite(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Patch, 'invite/' + projectID, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Patch, 'invite/' + projectID, {});
+    return this.makeRequest(req);
   }
 
   rejectInvite(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Delete, 'invite/' + projectID, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Delete, 'invite/' + projectID);
+    return this.makeRequest(req);
   }
 
-  removeInvite(index: number) { this.invites.getValue().splice(index, 1); } // removes invite from array
+  removeInvite(index: number) {
+    this.invites.getValue().splice(index, 1);
+  } // removes invite from array
 
   getUserInvites() {
-    const req = new HttpRequest(HttpMethods.Get, 'invite', {headers: getHeaders()});
+    const req = new HttpRequest(HttpMethods.Get, 'invite');
     this.makeRequest(req)
-      .map(res => res.json())
-      .subscribe( res => this.invites.next(res));
+      .subscribe(res => this.invites.next(res));
   }
 
   getProjectInvites(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Get, 'invite/' + projectID, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Get, 'invite/' + projectID);
+    return this.makeRequest(req);
   }
 
   invite(invites: string[], projectID: string) {
-    const req = new HttpRequest(HttpMethods.Post, 'invite', {invites: invites, projectID: projectID}, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Post, 'invite', JSON.stringify({invites: invites, projectID: projectID}));
+    return this.makeRequest(req);
   }
 
   userIsInvited(email: string, projectID: string) {
-    const req = new HttpRequest(HttpMethods.Post, 'invite/exist', {email: email, projectID: projectID}, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Post, 'invite/isInvited', JSON.stringify({email: email, projectID: projectID}));
+    return this.makeRequest(req);
   }
+
   // Private methods
   private makeRequest(req: HttpRequest<any>): Observable<any> {
     this.progressBarService.availableProgress(true);
     return this.http.request(req)
-      .catch( err => {
-        this.throwError(err.json());
-        return Observable.throw(err);
-      })
-      .finally( () => this.progressBarService.availableProgress(false));
-  }
-
-  private throwError(error) {
-    this.progressBarService.availableProgress(false);
-    const errorData = new Error(error.title, error.error.message);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = errorData;
-    const dialogError = this.dialog.open(ErrorDialogComponent, dialogConfig);
-    dialogError.afterClosed().subscribe(_ => {});
+      .finally(() => this.progressBarService.availableProgress(false));
   }
 }

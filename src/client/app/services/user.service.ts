@@ -12,10 +12,8 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/isEmpty';
 import {HttpClient, HttpRequest} from '@angular/common/http';
-import {MatDialog, MatDialogConfig} from '@angular/material';
-import {ErrorDialogComponent} from '../errors/errordialog.component';
-import {Error} from '../models/error';
-import {getHeaders, HttpMethods} from '../utils/utils';
+import {MatDialog} from '@angular/material';
+import {HttpMethods} from '../utils/utils';
 import {filter} from 'rxjs/operators';
 
 @Injectable()
@@ -33,9 +31,8 @@ export class UserService {
 User Calls to API
  */
   getUser() {
-    const req = new HttpRequest(HttpMethods.Get, 'user', {headers: getHeaders()});
+    const req = new HttpRequest(HttpMethods.Get, 'user');
     this.makeRequest(req)
-      .map(res => res.json())
       .subscribe(
         res => { this.user.next(res); },
         err => { this.router.navigate(['auth', 'signin']); console.log(err); }
@@ -43,15 +40,13 @@ User Calls to API
   }
 
  edit(user: User) {
-      const req = new HttpRequest(HttpMethods.Put, 'user', {user: user}, {headers: getHeaders()});
-      return this.makeRequest(req)
-                  .map(res => res.json());
+      const req = new HttpRequest(HttpMethods.Put, 'user', JSON.stringify({user: user}));
+      return this.makeRequest(req);
   }
 
   userIsRegistered(email: string) {
     const req = new HttpRequest(HttpMethods.Get, 'user/isRegistered' + email);
-    return this.makeRequest(req)
-                .map(res => res.json());
+    return this.makeRequest(req);
   }
 
   /*
@@ -59,8 +54,7 @@ User Calls to API
  */
   getFor(email: string) {
     const req = new HttpRequest(HttpMethods.Get, 'user' + email);
-    return this.makeRequest(req)
-                .map(res => res.json());
+    return this.makeRequest(req);
   }
 
   searchFor(email: Observable<string>) {
@@ -70,27 +64,13 @@ User Calls to API
   }
   private search(value: string) {
     console.log('Search' + value);
-    const req = new HttpRequest(HttpMethods.Get, 'user/search/' + value, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Get, 'user/search/' + value);
+    return this.makeRequest(req);
   }
 
   private makeRequest(req: HttpRequest<any>): Observable<any> {
     this.progressBarService.availableProgress(true);
     return this.http.request(req)
-      .catch( err => {
-        this.throwError(err.json());
-        return Observable.throw(err);
-      })
       .finally( () => this.progressBarService.availableProgress(false));
   }
-
-private throwError(error) {
-  this.progressBarService.availableProgress(false);
-  const errorData = new Error(error.title, error.error.message);
-  const dialogConfig = new MatDialogConfig();
-  dialogConfig.data = errorData;
-  const dialogError = this.dialog.open(ErrorDialogComponent, dialogConfig);
-  dialogError.afterClosed().subscribe(_ => {});
-}
 }

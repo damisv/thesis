@@ -52,8 +52,7 @@ export class SignupComponent implements OnInit {
       }
   }
   submit() {
-      // TODO: send User profile too.
-    this.authService.signUp(this.account)
-      .then( _ => this.router.navigate(['/auth/signin']) );
+    this.authService.signUp(this.account, this.user)
+      .subscribe(_ => this.router.navigate(['/auth/signin']) );
   }
 }

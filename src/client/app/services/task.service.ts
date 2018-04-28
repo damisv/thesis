@@ -8,10 +8,7 @@ import {Task, TaskType} from '../models/task';
 import {ProgressBarService} from './progressbar.service';
 import {Subject} from 'rxjs/Subject';
 import {HttpClient, HttpRequest} from '@angular/common/http';
-import {getHeaders, HttpMethods} from '../utils/utils';
-import {ErrorDialogComponent} from '../errors/errordialog.component';
-import {Error} from '../models/error';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import {HttpMethods} from '../utils/utils';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
@@ -25,49 +22,42 @@ export class TaskService {
   assignments$ = this.assignments.asObservable();
 
   constructor(private http: HttpClient,
-              private progressBarService: ProgressBarService,
-              private dialog: MatDialog) {}
+              private progressBarService: ProgressBarService) {}
 
   // Get All User Task by type (task, issues, feedback)
   get(type: TaskType) {
-    const req = new HttpRequest(HttpMethods.Get, 'assignments/' + TaskType[type], {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Get, 'assignments/' + TaskType[type]);
+    return this.makeRequest(req);
   }
 
   // Get All Project Assignments
   getFor(projectID: string) {
-      const req = new HttpRequest(HttpMethods.Get, 'assignments/project/' + projectID, {headers: getHeaders()});
+      const req = new HttpRequest(HttpMethods.Get, 'assignments/project/' + projectID);
       return this.makeRequest(req)
-        .map(res => res.json())
         .subscribe( values => this.assignments.next(values));
   }
 
   // Get Task by ID
   getBy(id: string) {
-    const req = new HttpRequest(HttpMethods.Get, 'assignments/' + id, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Get, 'assignments/' + id);
+    return this.makeRequest(req);
   }
 
   create(task: Task) {
     // if (typeof task.date_start !== 'undefined') { task.date_start = task.date_start.toISOString(); }
     // if (typeof task.date_end !== 'undefined') { task.date_end = task.date_end.toISOString(); }
-    const req = new HttpRequest(HttpMethods.Post, 'assignments', {task: task}, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Post, 'assignments', {task: task});
+    return this.makeRequest(req);
   }
 
   edit(task: Task) {
-    const req = new HttpRequest(HttpMethods.Put, 'assignments', {task: task}, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Put, 'assignments/' + task._id, {task: task});
+    return this.makeRequest(req);
   }
 
   changeStatus(task: Task) {
-    const req = new HttpRequest(HttpMethods.Patch, 'assignments/complete/' + task._id, {headers: getHeaders()});
-    return this.makeRequest(req)
-      .map(res => res.json());
+    const req = new HttpRequest(HttpMethods.Patch, 'assignments/' + task._id, {task: task});
+    return this.makeRequest(req);
   }
 
   // Changes the status on this assignments array
@@ -86,19 +76,6 @@ export class TaskService {
   private makeRequest(req: HttpRequest<any>): Observable<any> {
     this.progressBarService.availableProgress(true);
     return this.http.request(req)
-      .catch( err => {
-        this.throwError(err);
-        return Observable.throw(err);
-      })
       .finally(() => this.progressBarService.availableProgress(false));
-  }
-
-  private throwError(error) {
-    this.progressBarService.availableProgress(false);
-    const errorData = new Error(error.title, error.error.message);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = errorData;
-    const dialogError = this.dialog.open(ErrorDialogComponent, dialogConfig);
-    dialogError.afterClosed().subscribe(_ => {});
   }
 }

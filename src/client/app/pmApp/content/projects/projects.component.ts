@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
-import {Member, Project} from '../../../models/project';
+import {Member, Project, ProjectPosition} from '../../../models/project';
 import {Router} from '@angular/router';
-import {MatPaginator, MatSnackBar} from '@angular/material';
+import {MatPaginator, MatSnackBar, MatTableDataSource} from '@angular/material';
 import {Title} from '@angular/platform-browser';
 
 import { DataSource} from '@angular/cdk/table';
@@ -14,112 +14,81 @@ import {User} from '../../../models/user';
 import {UserService} from '../../../services/user.service';
 import {ProjectService} from '../../../services/projects.service';
 import {Subscription} from 'rxjs/Subscription';
-import {TaskService} from '../../../services/task.service';
-import {TaskType} from '../../../models/task';
-
-class ExampleDataSource extends DataSource<any> {
-    constructor( private projectService: ProjectService,
-                 private _paginator: MatPaginator) {
-        super();
-        this.projectService.projects$.subscribe(projects => this.projects = projects);
-    }
-    projects: Project[];
-
-    /** Connect function called by the table to retrieve one stream containing the data to render. */
-    connect(): Observable<Project[]> {
-        const displayDataChanges = [
-            this.projectService.projects$,
-            this._paginator.page
-        ];
-
-        return Observable.merge(...displayDataChanges).map(() => {
-            const cdata = this.projects.slice();
-            const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-            return cdata.splice(startIndex, this._paginator.pageSize);
-        });
-    }
-    disconnect() { }
-}
+import {SnackbarService} from '../../../services/snackbar.service';
+import {applyFilter, FilterOption, FilterType} from '../../../utils/utils';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {map} from 'rxjs/operators';
+import {Task} from '../../../models/task';
 
 @Component({
     selector: 'app-pmapp-projects',
     templateUrl: './projects.component.html',
     styleUrls: ['./projects.component.scss']
 })
-export class ProjectsComponent implements OnInit, OnDestroy {
+export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     // Time Ago variables
     projectUpdated: Date;
 
-    @ViewChild('tab') tabGroup;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    selectedIndex = 0;
+
     user: User;
-    projects: Project[] = [];
-    position = 'manager';
-    positions = ['manager', 'member'];
 
     displayedColumns = ['Name', 'Budget', 'Description', 'Members', 'Progress'];
-    dataSource: ExampleDataSource | null;
+    dataSource = new MatTableDataSource<Project>();
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    filterType = FilterType;
+    positionType = ProjectPosition;
+    positions = Object.keys(ProjectPosition);
+    nameFilter = new BehaviorSubject<FilterOption>({type: FilterType.name, value: ''});
+    typeFilter = new BehaviorSubject<FilterOption>({type: FilterType.type, value: 'all'});
 
     projectsSubscription: Subscription = this.projectService.projects$.subscribe(
         projects => {
-            this.projects = projects;
+            this.dataSource.data = projects;
             this.projectUpdated = new Date();
         });
-    userSubscription: Subscription =  this.userService.user$.subscribe(
-        profile => this.user = profile);
+    userSubscription: Subscription =  this.userService.user$.subscribe(user => this.user = user);
 
     constructor(private projectService: ProjectService,
                 private userService: UserService ,
                 private router: Router,
-                public snackBar: MatSnackBar,
+                private snackBar: SnackbarService,
                 private titleService: Title) {
+      this.dataSource.filterPredicate =
+        (data: Project, filter: string) => applyFilter(JSON.parse(filter), data);
+      Observable.combineLatest(this.nameFilter.asObservable().pipe(map(value => new FilterOption(value.type, value.value))),
+        this.typeFilter.asObservable().pipe(map(value => new FilterOption(value.type, {email: this.user.email, position: value.value}))),
+        (name: FilterOption, type: FilterOption) => ({name: name, type: type}))
+          .subscribe( filters => this.filterBy(FilterType.nameType, filters));
     }
 
-    positionSearch(team) {
-        for (const member of team) {
-            if (member.email === this.user.email && member.position === this.position) { return true; }
-        }
-        return false;
-    }
+    private filterBy(type: FilterType, value) { this.dataSource.filter = JSON.stringify(new FilterOption(type, value)); }
 
-    openProjectDashboard(id) {
-        const index = this.projects.findIndex(project => project._id === id);
-        this.projectService.giveProject(this.projects[index]);
-        this.router.navigate(['app', 'project', 'dashboard']);
-    }
-
-    openProjectTeam(id) {
-        const index = this.projects.findIndex(project => project._id === id);
-        this.projectService.giveProject(this.projects[index]);
-        this.router.navigate(['app', 'project', 'team']);
+    openProject(project, path) {
+        this.projectService.giveProject(project);
+        this.router.navigate(['app', 'project', path]);
     }
 
     addProject(project: Project) {
-        this.projects.push(project);
-        this.projectService.giveProjects(this.projects);
-        this.projectUpdated = new Date();
-        this.tabGroup.selectedIndex = 0;
+      this.dataSource.data.push(project);
+      this.projectService.giveProjects(this.dataSource.data);
+      this.projectUpdated = new Date();
+      this.selectedIndex = 0;
     }
 
     editProject(index, name) {
-        this.projects[index].name = name;
+        this.dataSource.data[index].name = name;
         this.projectUpdated = new Date();
     }
 
-    openSnackBar(message, action, duration) {
-        this.snackBar.open(message, action, duration);
-    }
+    ngOnInit() { this.titleService.setTitle('My Projects'); }
 
-
-    ngOnInit() {
-        this.titleService.setTitle('My Projects');
-        this.dataSource = new ExampleDataSource(this.projectService, this.paginator);
-    }
+    ngAfterViewInit() { this.dataSource.paginator = this.paginator; }
 
     ngOnDestroy() {
-        if (this.userSubscription !== undefined) { this.userSubscription.unsubscribe(); }
-        if (this.projectsSubscription !== undefined) { this.projectsSubscription.unsubscribe(); }
-        this.titleService.setTitle('Project Management');
-    }
+          if (this.userSubscription !== undefined) { this.userSubscription.unsubscribe(); }
+          if (this.projectsSubscription !== undefined) { this.projectsSubscription.unsubscribe(); }
+          this.titleService.setTitle('Project Management');
+      }
 }
