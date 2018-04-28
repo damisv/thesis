@@ -6,7 +6,6 @@ import {HttpMethods} from '../utils/utils';
 import {User} from '../models/user';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
-import {JwtHelperService} from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthService {
@@ -15,8 +14,7 @@ export class AuthService {
   private static signUpUrl = 'api/auth/signup';
   // Initializations
   constructor(private http: HttpClient,
-              private progressBarService: ProgressBarService,
-              public jwtHelper: JwtHelperService) {
+              private progressBarService: ProgressBarService) {
   }
   // Public api methods
   signUp(account: Account, user: User) {
@@ -30,8 +28,9 @@ export class AuthService {
 
   // Public methods
   public isAuthenticated(): boolean {
-    const token = localStorage.getItem('token');
-    return !this.jwtHelper.isTokenExpired(token);
+    // const token = localStorage.getItem('token');
+    // return !this.jwtHelper.isTokenExpired(token);
+    return localStorage.getItem('token') !== null || localStorage.getItem('token') !== undefined;
   }
 
   // Private methods

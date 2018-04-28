@@ -47,6 +47,9 @@ import {CalendarModule} from 'angular-calendar';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {CalendarEventDialogComponent} from './content/calendar/calendareventdialog.component';
 import {CalendarService} from '../services/calendar.service';
+import {AuthService} from '../services/auth.service';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import {RoleGuard} from './guards/role.guard';
 
 @NgModule({
   declarations: [
@@ -91,6 +94,8 @@ import {CalendarService} from '../services/calendar.service';
     ContextMenuModule.forRoot({ autoFocus: true })
   ],
   providers: [
+    AuthService,
+    RoleGuard,
     SidebarMenuService,
     UserService,
     ProjectService,

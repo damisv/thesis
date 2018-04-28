@@ -1,4 +1,3 @@
-// src/app/auth/role-guard.service.ts
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
 import decode from 'jwt-decode';
@@ -12,10 +11,10 @@ export class RoleGuard implements CanActivate {
               private projectService: ProjectService) {}
 
   canActivate() {
-    const token = localStorage.getItem('token');
-    // decode the token to get its payload
-    const tokenPayload = decode(token);
-    if ( !this.auth.isAuthenticated() || this.projectService.isAdminOfCurrentProject(tokenPayload.email)) {
+    // const token = localStorage.getItem('token');
+    // // decode the token to get its payload
+    // const tokenPayload = decode(token);
+    if (!this.auth.isAuthenticated()) { // || this.projectService.isAdminOfCurrentProject(tokenPayload.email)) {
       this.router.navigate(['dashboard']);
       return false;
     }

@@ -112,7 +112,7 @@
                 <div style="white-space: nowrap;overflow-y: auto;text-overflow: ellipsis;max-height:10em">
                     <mat-list>
                         <ng-template ngFor let-task [ngForOf]="tasks" let-i="index">
-                            <mat-list-item (click)="openTaskView(i)" class="listItem">
+                            <mat-list-item (click)="openTaskView(task)" class="listItem">
                                 <mat-icon mat-list-icon>note</mat-icon>
                                 <h4 mat-line>{{task.name}}</h4>
                                 <p mat-line>{{task.description}}</p>
@@ -147,4 +147,34 @@
             </mat-card-footer>
         </mat-card>
     </div>
+  <div fxFlex="auto">
+    <mat-card class="card" >
+      <mat-card-header>
+        <mat-card-title>
+          Tasks
+        </mat-card-title>
+        <mat-card-subtitle>
+          Latest tasks assigned to you
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content >
+        <div style="white-space: nowrap;overflow-y: auto;text-overflow: ellipsis;max-height:10em">
+          <mat-list>
+            <ng-template ngFor let-issue [ngForOf]="issues" let-i="index">
+              <mat-list-item (click)="openTaskView(issue)" class="listItem">
+                <mat-icon mat-list-icon>note</mat-icon>
+                <h4 mat-line>{{issue.name}}</h4>
+                <p mat-line>{{issue.description}}</p>
+                <p mat-line>Early Start:&nbsp;{{ issue?.date_end | date}}</p>
+              </mat-list-item>
+            </ng-template>
+          </mat-list>
+        </div>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-divider></mat-divider>
+        <mat-icon>history</mat-icon>Updated
+      </mat-card-footer>
+    </mat-card>
+  </div>
 </div>

@@ -28,8 +28,8 @@ export class TaskService {
               private progressBarService: ProgressBarService) {}
 
   // Get All User Task by type (task, issues, feedback)
-  get(type: TaskType) {
-    const req = new HttpRequest(HttpMethods.Get, `${TaskService.base}/` + TaskType[type]);
+  get(type: string) {
+    const req = new HttpRequest(HttpMethods.Get, `${TaskService.base}/` + type);
     return this.makeRequest(req);
   }
 

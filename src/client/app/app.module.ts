@@ -19,6 +19,7 @@ import {AuthService} from './services/auth.service';
 import {ProgressBarService} from './services/progressbar.service';
 import {MyParticlesModule} from './particles/myparticles.module';
 import {RequestInterceptor} from './services/request.interceptor';
+import {AuthGuard} from './pmApp/guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import {RequestInterceptor} from './services/request.interceptor';
     provide: HTTP_INTERCEPTORS,
     useClass: RequestInterceptor,
     multi: true
-  }, ThemeService, ScrollService, ProgressBarService, AuthService],
+  }, ThemeService, ScrollService, ProgressBarService, AuthService, AuthGuard],
   entryComponents: [ErrorDialogComponent],
   bootstrap: [AppComponent]
 })

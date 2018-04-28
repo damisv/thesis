@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     user: User;
     projects: Project[];
     tasks: Task[];
+    issues: Task[];
 
     subscription: Subscription  = this.userService.user$.subscribe(
       user => {
@@ -43,12 +44,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.taskService.get(TaskType.task).subscribe(
+        this.taskService.get('task').subscribe(
             res => {
                 this.tasks = res.tasks;
                 this.tasksUpdated = new Date();
             }
         );
+      this.taskService.get('issue').subscribe(
+        res => {
+          this.issues = res.tasks;
+          // this.tasksUpdated = new Date();
+        }
+      );
     }
 
     openProjectDashboard(index) {
@@ -56,9 +63,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.router.navigate(['app', 'project', 'dashboard']);
     }
 
-    openTaskView(index) {
-        // this.taskService.giveTask(this.tasks[index]);
-        // this.router.navigate(['app', 'project', 'taskview']);
+    openTaskView(task: Task) {
+        // this.taskService.giveTask(task);
+        this.router.navigate(['app', 'project', `assignmentview/${task._id}`]);
     }
 
     isTypeOf(position: ProjectPosition, team: Member[]) {
