@@ -18,7 +18,6 @@ export class SigninComponent implements OnInit {
   account: Account = new Account('', '');
 
   constructor(private authService: AuthService,
-              private userService: UserService,
               private router: Router,
               private route: ActivatedRoute,
               private _formBuilder: FormBuilder) {}
@@ -27,7 +26,6 @@ export class SigninComponent implements OnInit {
     this.authService.signIn(this.account)
         .subscribe( res => {
           localStorage.setItem('token', res.token);
-          this.userService.giveUserProfile(res.user);
           this.router.navigate([this.returnUrl]);
         });
   }

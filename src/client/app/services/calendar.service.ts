@@ -39,8 +39,8 @@ export class CalendarService {
       return this.makeRequest(req);
     }
 
-    edit(event: MyCalendarEvent) {
-      const req = new HttpRequest(HttpMethods.Put, 'calendar/' + event._id, JSON.stringify({event: event}));
+    edit(event: CalendarEvent) {
+      const req = new HttpRequest(HttpMethods.Put, 'calendar', JSON.stringify({event: event}));
       return this.makeRequest(req);
     }
 

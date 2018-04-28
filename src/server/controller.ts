@@ -8,6 +8,7 @@ import * as assignmentsRouter from './routes/assignments';
 import * as inviteRouter from './routes/invite';
 import * as chatRouter from './routes/chat';
 import * as timelineRouter from './routes/timeline';
+import * as calendarRouter from './routes/calendar';
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.use('/assignments', assignmentsRouter);
 router.use('/invite', inviteRouter);
 router.use('/chat', chatRouter);
 router.use('/timeline', timelineRouter);
+router.use('/calendar', calendarRouter);
 // router.use('/')
 
 // Export the router

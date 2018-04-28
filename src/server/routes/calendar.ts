@@ -40,7 +40,6 @@ router.post('/', function(req, res) {
  * @method - PUT
  * Edit event by id
  * @body - Contains event to edit
- * @param - event id
  * @returns Void - success 200
  */
 router.put('/', function(req, res) {
@@ -54,7 +53,7 @@ router.put('/', function(req, res) {
  * @param - event id
  * @returns Void - success 200
  */
-router.delete('/', function(req, res) {
+router.delete('/:id', function(req, res) {
   console.log(req.body);
   res.status(200).send({message: 'signup WORKS'});
 });

@@ -5,7 +5,7 @@ const router = express.Router();
  * @method - POST
  * Sign In
  * @body - Contains 1 value => account: Account (JSON) - the email & password
- * @returns Object with 2 values : {token: token, user: the user profile }
+ * @returns  object {token: token}
  */
 router.post('/signin', function(req, res) {
   console.log(req.body);

@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {MaterialTheme, ThemeService} from '../services/theme.service';
+import {UserService} from '../services/user.service';
 
 @Component({
   selector: 'app-pmapp',
@@ -11,7 +12,10 @@ export class PMAppComponent {
   width: string;
   themes = Object.values(MaterialTheme);
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService,
+              private userService: UserService) {
+    userService.getUser();
+  }
 
   changeTheme(theme: MaterialTheme) { this.themeService.changeTheme(theme); }
 }
