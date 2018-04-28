@@ -6,15 +6,20 @@ Starter Angular 6.0.0-beta7 application with server side rendering support on to
 
 ```
 $ npm install
-$ npm run build => Complete build
-<ul>
-<li>$ npm run build:ngServer</li>
-<li>$ npm run build:ngExpress</li>
-<li>$ npm run build:ngClient</li>
-</ul>
 ```
 
+
 ## Starting Application
+
+> Building
+
+```
+$ npm run build => Complete build
+$ npm run build:ngServer
+$ npm run build:ngExpress
+$ npm run build:ngClient
+```
+> Running
 
 ```
 $ npm run start
