@@ -8,6 +8,7 @@ import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
 import { join } from 'path';
 import { config } from './config/config';
 import * as express from 'express';
+import DbClient = require('./server/database/dbClient');
 import * as apiRouter from './server/controller';
 
 const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('../dist/server/main.bundle');
@@ -40,6 +41,9 @@ app.get('*', (req, res) => {
   res.render(join(CLIENT_DIR, 'index.html'), { req, res });
 });
 
-app.listen(PORT, () => {
-  console.log(`Application is running at http://localhost:${PORT}`);
+app.listen(PORT, async () => {
+  try {
+    await DbClient.connect(); // Connecting DB
+    console.log(`Application is running at http://localhost:${PORT}`);
+  } catch (error) { console.log('Unable to connect to db'); }
 });
