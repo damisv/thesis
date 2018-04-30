@@ -40,14 +40,14 @@ export class InviteMemberComponent {
 
   separatorKeysCodes = [ENTER, COMMA];
   searchTerm$ = new Subject<string>();
-  membersAutocomplete: Observable<string[]>;
+  membersAutocomplete: Subject<string[]>;
   team = [];
 
   constructor (private inviteService: InviteService,
                private userService: UserService,
                private snackBar: SnackbarService) {
     this.userService.searchFor(this.searchTerm$)
-      .subscribe( value => this.membersAutocomplete = value);
+      .subscribe( value => this.membersAutocomplete.next(value));
   }
 
   add(input, email) {

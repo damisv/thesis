@@ -12,11 +12,11 @@ const jwt = require('jsonwebtoken');
  * @returns  - {token: token}
  */
 router.post('/signin', async function(req, res) {
-  console.log('SIGNIN');
   console.log(req.body);
   // bcrypt.hashSync(password,10);
   // if( bcrypt.compareSync(password, db.user.password) ) {}
   // error status 500 and 401
+  if (req.body.account.isEmpty()) {console.log('EMPTY'); res.status(500); }
   try {
     const result = await DbClient.findOne(req.body.account, 'accounts');
     assert.notEqual(null, result);

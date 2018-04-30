@@ -44,18 +44,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-      //   this.taskService.get('task').subscribe(
-      //       res => {
-      //           this.tasks = res.tasks;
-      //           this.tasksUpdated = new Date();
-      //       }
-      //   );
-      // this.taskService.get('issue').subscribe(
-      //   res => {
-      //     this.issues = res.tasks;
-      //     // this.tasksUpdated = new Date();
-      //   }
-      // );
+        this.taskService.get('task').subscribe(
+            res => {
+                this.tasks = res;
+                this.tasksUpdated = new Date();
+            }
+        );
+      this.taskService.get('issue').subscribe(
+        res => {
+          this.issues = res;
+          // this.tasksUpdated = new Date();
+        }
+      );
     }
 
     openProjectDashboard(index) {
@@ -64,7 +64,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     openTaskView(task: Task) {
-        // this.taskService.giveTask(task);
         this.router.navigate(['app', 'project', `assignmentview/${task._id}`]);
     }
 
