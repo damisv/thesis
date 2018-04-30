@@ -20,43 +20,29 @@ export class CalendarService {
   projectEvents$ = this.projectEvents.asObservable();
 
   // Initialization
-  constructor(private http: HttpClient,
-              private progressBarService: ProgressBarService) {}
+  constructor(private http: HttpClient) {}
 
   // Public Api Methods
   get() {
-      const req = new HttpRequest(HttpMethods.Get, CalendarService.base);
-      this.makeRequest(req)
-        .subscribe(events => this.myEvents.next(events));
+    this.http.get<MyCalendarEvent[]>(CalendarService.base)
+      .subscribe(events => this.myEvents.next(events));
   }
 
   getFor(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Get, `${CalendarService.base}/` + projectID);
-    this.makeRequest(req)
+    this.http.get<MyCalendarEvent[]>(`${CalendarService.base}/` + projectID)
       .subscribe(events => this.projectEvents.next(events));
   }
 
-  /// Creates an event and returns status
-  create(event: MyCalendarEvent, projectID: any) {
-    const body = projectID ? {projectID: projectID, event: event} : {event: event};
-    const req = new HttpRequest(HttpMethods.Post, CalendarService.base, JSON.stringify(body));
-    return this.makeRequest(req);
+  /// Creates an event and returns id
+  create(event: MyCalendarEvent, projectID: any): Observable<any> {
+    return this.http.post(CalendarService.base, projectID ? {projectID: projectID, event: event} : {event: event});
   }
 
-  edit(event: CalendarEvent) {
-    const req = new HttpRequest(HttpMethods.Put, CalendarService.base, JSON.stringify({event: event}));
-    return this.makeRequest(req);
+  edit(event: CalendarEvent): Observable<any> {
+    return this.http.put(CalendarService.base, {event: event});
   }
 
-  delete(event: MyCalendarEvent) {
-    const req = new HttpRequest(HttpMethods.Delete, `${CalendarService.base}/` + event._id);
-    return this.makeRequest(req);
-  }
-
-  // Private methods
-  private makeRequest(req: HttpRequest<any>): Observable<any> {
-    this.progressBarService.availableProgress(true);
-    return this.http.request(req)
-      .finally( () => this.progressBarService.availableProgress(false));
+  delete(event: MyCalendarEvent): Observable<any> {
+    return this.http.delete(`${CalendarService.base}/` + event._id);
   }
 }

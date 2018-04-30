@@ -26,55 +26,42 @@ export class UserService {
   user$ = this.user.asObservable();
 
   constructor(private http: HttpClient,
-              private progressBarService: ProgressBarService,
-              private router: Router,
-              private dialog: MatDialog) {}
+              private router: Router) {}
 
   giveUserProfile(user: User) { this.user.next(user); }
 /*
 User Calls to API
  */
   getUser() {
-    const req = new HttpRequest(HttpMethods.Get, UserService.base);
-    this.makeRequest(req)
+    this.http.get<User>(UserService.base)
       .subscribe(
         res => { this.user.next(res); },
         err => { this.router.navigate(['auth', 'signin']); console.log(err); }
       );
   }
 
- edit(user: User) {
-      const req = new HttpRequest(HttpMethods.Put, UserService.base, JSON.stringify({user: user}));
-      return this.makeRequest(req);
+ edit(user: User): Observable<any> {
+    return this.http.put(UserService.base, {user: user});
   }
 
-  userIsRegistered(email: string) {
-    const req = new HttpRequest(HttpMethods.Get, `${UserService.base}/isRegistered` + email);
-    return this.makeRequest(req);
+  userIsRegistered(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${UserService.base}/isRegistered` + email);
   }
 
   /*
  Other User Calls to API
  */
-  getFor(email: string) {
-    const req = new HttpRequest(HttpMethods.Get, `${UserService.base}/` + email);
-    return this.makeRequest(req);
+  getFor(email: string): Observable<User> {
+    return this.http.get<User>(`${UserService.base}/` + email);
   }
 
-  searchFor(email: Observable<string>) {
+  searchFor(email: Observable<string>): Observable<string[]> {
     return email.debounceTime(400)
       .pipe(filter(value => value !== null || value !== undefined || value.trim().length !== 0)) // blank, null or undefined don't pass
       .switchMap(val => this.search(val));
   }
-  private search(value: string) {
+  private search(value: string): Observable<string[]> {
     console.log('Search' + value);
-    const req = new HttpRequest(HttpMethods.Get, `${UserService.base}/search/` + value);
-    return this.makeRequest(req);
-  }
-
-  private makeRequest(req: HttpRequest<any>): Observable<any> {
-    this.progressBarService.availableProgress(true);
-    return this.http.request(req)
-      .finally( () => this.progressBarService.availableProgress(false));
+    return this.http.get<string[]>(`${UserService.base}/search/` + value);
   }
 }

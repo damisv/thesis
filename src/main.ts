@@ -34,6 +34,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'html');
 app.set('views', CLIENT_DIR);
 
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use('/api', apiRouter); // api routes
 
 app.get('*.*', express.static(CLIENT_DIR));

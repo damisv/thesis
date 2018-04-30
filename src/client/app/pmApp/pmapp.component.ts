@@ -14,7 +14,7 @@ export class PMAppComponent {
 
   constructor(private themeService: ThemeService,
               private userService: UserService) {
-    userService.getUser();
+    //userService.getUser();
   }
 
   changeTheme(theme: MaterialTheme) { this.themeService.changeTheme(theme); }

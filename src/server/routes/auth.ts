@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
  * @returns  - {token: token}
  */
 router.post('/signin', async function(req, res) {
+  console.log('SIGNIN');
   console.log(req.body);
   // bcrypt.hashSync(password,10);
   // if( bcrypt.compareSync(password, db.user.password) ) {}

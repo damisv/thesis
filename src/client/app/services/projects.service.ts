@@ -28,7 +28,6 @@ export class ProjectService {
   projects$ = this.projects.asObservable();
 
   constructor(private http: HttpClient,
-              private progressBarService: ProgressBarService,
               private taskService: TaskService,
               private calendarService: CalendarService,
               private dialog: MatDialog) {
@@ -62,9 +61,8 @@ export class ProjectService {
     }
   }
 
-  getProject(id) {
-      const req = new HttpRequest(HttpMethods.Get, `${ProjectService.base}/` + id);
-      return this.makeRequest(req);
+  getProject(id): Observable<Project> {
+      return this.http.get<Project>(`${ProjectService.base}/` + id);
   }
 
   giveProject(project: Project) {
@@ -74,25 +72,21 @@ export class ProjectService {
 
   addToProjects(project: Project) { this.projects.getValue().push(project); }
 
-  edit(project) {
-    const req = new HttpRequest(HttpMethods.Put, `${ProjectService.base}/` + project._id, JSON.stringify({project: project}));
-    return this.makeRequest(req);
+  edit(project): Observable<any> {
+    return this.http.put(`${ProjectService.base}/` + project._id, {project: project});
   }
 
-  create(project: Project, invites: string[]) {
-      const req = new HttpRequest(HttpMethods.Post, ProjectService.base, JSON.stringify({project: project, invites: invites}));
-      return this.makeRequest(req);
+  create(project: Project, invites: string[]): Observable<any> {
+      return this.http.post(ProjectService.base, {project: project, invites: invites});
   }
 
-  delete(project: Project) {
-    const req = new HttpRequest(HttpMethods.Delete, `${ProjectService.base}/` + project._id);
-    return this.makeRequest(req);
+  delete(project: Project): Observable<any> {
+    return this.http.delete(`${ProjectService.base}/` + project._id);
   }
 
   // Remove Member Of Project Team
-  removeMember(email: string, projectID: string) {
-    const req = new HttpRequest(HttpMethods.Patch, `${ProjectService.base}/` + projectID, JSON.stringify({email : email}));
-    return this.makeRequest(req);
+  removeMember(email: string, projectID: string): Observable<any> {
+    return this.http.patch(`${ProjectService.base}/` + projectID, {email : email});
   }
 
   remove(index: number) {
@@ -104,20 +98,12 @@ export class ProjectService {
     }
   }
 
-  filterName(name) {
-    const req = new HttpRequest(HttpMethods.Get, `${ProjectService.base}/search/` + name);
-    return this.makeRequest(req);
+  filterName(name): Observable<{name: string, id: string}[]> {
+    return this.http.get<{name: string, id: string}[]>(`${ProjectService.base}/search/` + name);
   }
 
   getProjects() {
-    const req = new HttpRequest(HttpMethods.Get, ProjectService.base);
-    this.makeRequest(req)
-      .subscribe( res => this.giveProjects(res.projects));
-  }
-
-  private makeRequest(req: HttpRequest<any>): Observable<any> {
-    this.progressBarService.availableProgress(true);
-    return this.http.request(req)
-      .finally( () => this.progressBarService.availableProgress(false));
+    this.http.get<Project[]>(ProjectService.base)
+      .subscribe( projects => this.giveProjects(projects));
   }
 }

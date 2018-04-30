@@ -26,8 +26,7 @@ export class TimelineService {
   timelineLogs$ = this.timelineLogs.asObservable();
 
   constructor(private http: HttpClient,
-              private projectService: ProjectService,
-              private progressBarService: ProgressBarService) {
+              private projectService: ProjectService) {
     projectService.project$
       .pipe(filter( value => value !== null))
       .distinctUntilChanged()
@@ -41,13 +40,7 @@ export class TimelineService {
   // Private methods
   private getLogs(projectID: string) {
     const req = new HttpRequest(HttpMethods.Get, `${TimelineService.base}/` + projectID);
-    this.makeRequest(req)
+    this.http.get<TimelineLog[]>(`${TimelineService.base}/` + projectID)
       .subscribe(res => this.timelineLogs.next(res));
-  }
-
-  private makeRequest(req: HttpRequest<any>): Observable<any> {
-    this.progressBarService.availableProgress(true);
-    return this.http.request(req)
-      .finally( () => this.progressBarService.availableProgress(false));
   }
 }

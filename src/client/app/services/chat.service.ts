@@ -23,36 +23,26 @@ export class ChatService {
   threads$ = this.threads.asObservable();
 
   constructor(private http: HttpClient,
-              private progressBarService: ProgressBarService,
               private projectService: ProjectService) {
     // Everytime a project will be added, the service will retrieve it ChatThread
-    // this.projectService.projects$.subscribe( projects =>
-    //   this.getThreads(projects.map( value => value._id )).subscribe(threads => this.threads.next(threads))
-    // );
+    this.projectService.projects$.subscribe( projects =>
+      this.getThreads(projects.map( value => value._id )).subscribe(threads => this.threads.next(threads))
+    );
   }
 
   // Public methods
-  send(message: Message) {
-    const req = new HttpRequest(HttpMethods.Post, ChatService.base, JSON.stringify({message: Message}));
-    return this.makeRequest(req);
+  send(message: Message): Observable<any> {
+    return this.http.post(ChatService.base, {message: Message});
   }
 
   receivedOnProject(message: Message) { this.threads.value[message.receiver].lastMessages.push(message); }
 
-  getMessages(id: string) {
-    const req = new HttpRequest(HttpMethods.Get, `${ChatService.base}/` + id);
-    return this.makeRequest(req);
+  getMessages(id: string): Observable<Message[]> {
+    return this.http.get<Message[]>(`${ChatService.base}/` + id);
   }
 
   // Private methods
-  private getThreads(projectIDs: string[]) {
-    const req = new HttpRequest(HttpMethods.Post, `${ChatService.base}/threads`, JSON.stringify({projectIDs: projectIDs}));
-    return this.makeRequest(req);
-  }
-
-  private makeRequest(req: HttpRequest<any>): Observable<any> {
-    this.progressBarService.availableProgress(true);
-    return this.http.request(req)
-      .finally( () => this.progressBarService.availableProgress(false));
+  private getThreads(projectIDs: string[]): Observable<Map<string, ChatThread>> {
+    return this.http.post<Map<string, ChatThread>>(`${ChatService.base}/threads`, {projectIDs: projectIDs});
   }
 }

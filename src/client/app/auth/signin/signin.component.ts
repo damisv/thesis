@@ -1,9 +1,10 @@
-import {AfterContentInit, Component, OnInit} from '@angular/core';
+import {AfterContentInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Account} from '../../models/account';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-signin',
@@ -25,10 +26,12 @@ export class SigninComponent implements OnInit {
   submit() {
     this.authService.signIn(this.account)
         .subscribe( res => {
+          console.log('RES -> ', res);
+          console.log('TOKEN', res.body);
           localStorage.setItem('token', res.token);
-          console.log(res);
           this.router.navigate([this.returnUrl]);
-        });
+          console.log('WHATTTTT?????');
+        }, err => console.log('ERROR - SIGNINCOMPONENT', err));
   }
 
   ngOnInit() {
