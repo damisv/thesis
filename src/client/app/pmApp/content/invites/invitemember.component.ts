@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/zip';
 import {SnackbarService} from '../../../services/snackbar.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {User} from '../../../models/user';
 
 @Component({
   selector: 'app-invite-member',
@@ -25,8 +26,8 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
              (matChipInputTokenEnd)="add($event.input, $event.value)"
              (keyup)="searchTerm$.next($event.target.value)">
       <mat-autocomplete #teamAuto="matAutocomplete">
-        <mat-option *ngFor="let member of membersAutocomplete | async" (click)="add(addAssignee, member)" [value]="member">
-          {{ member }}
+        <mat-option *ngFor="let member of membersAutocomplete | async" (click)="add(addAssignee, member.email)" [value]="member.email">
+          {{ member.email }}
         </mat-option>
       </mat-autocomplete>
     </mat-chip-list>
@@ -40,7 +41,7 @@ export class InviteMemberComponent {
 
   separatorKeysCodes = [ENTER, COMMA];
   searchTerm$ = new Subject<string>();
-  membersAutocomplete: Subject<string[]>;
+  membersAutocomplete: Subject<User[]>;
   team = [];
 
   constructor (private inviteService: InviteService,

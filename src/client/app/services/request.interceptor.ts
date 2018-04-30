@@ -17,12 +17,10 @@ export class RequestInterceptor implements HttpInterceptor {
     console.log('Interceptor: --- ', req.url, req.body, req.method);
     this.progressBarService.availableProgress(true);
     let headers = {};
-    // set('Content-Type', 'application/json');
     if (localStorage.getItem('token') !== null) {
       headers = {'Content-Type': 'application/json', Authorization: localStorage.getItem('token')};
     } else { headers = {'Content-Type': 'application/json'}; }
     const cloneRequest =  req.clone({ setHeaders: headers});
-    console.log('HEADERS ->', cloneRequest.headers);
     return next.handle(cloneRequest)
       .pipe(
         tap((event: HttpEvent<any>) => {
@@ -31,7 +29,7 @@ export class RequestInterceptor implements HttpInterceptor {
           }
         }),
         catchError((err: HttpErrorResponse) => {
-          if ((err.status === 400) || (err.status === 401)) {
+          if ((err.status === 401) || (err.status === 498)) {
             this.throwError(err.error);
             return empty();
           }

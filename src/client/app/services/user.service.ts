@@ -35,10 +35,8 @@ User Calls to API
   getUser() {
     this.http.get<User>(UserService.base)
       .subscribe(
-        res => { this.user.next(res); },
-        err => {
-          this.router.navigate(['auth', 'signin']);
-          console.log(err); }
+        res => this.user.next(res),
+        err => this.router.navigate(['auth', 'signin'])
       );
   }
 
@@ -57,13 +55,13 @@ User Calls to API
     return this.http.get<User>(`${UserService.base}/` + email);
   }
 
-  searchFor(email: Observable<string>): Observable<string[]> {
+  searchFor(email: Observable<string>): Observable<User[]> {
     return email.debounceTime(400)
       .pipe(filter(value => value !== null || value !== undefined || value.trim().length !== 0)) // blank, null or undefined don't pass
       .switchMap(val => this.search(val));
   }
-  private search(value: string): Observable<string[]> {
+  private search(value: string): Observable<User[]> {
     console.log('Search' + value);
-    return this.http.get<string[]>(`${UserService.base}/search/` + value);
+    return this.http.get<User[]>(`${UserService.base}/search/` + value);
   }
 }

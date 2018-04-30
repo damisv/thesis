@@ -10,12 +10,11 @@ import * as chatRouter from './routes/chat';
 import * as timelineRouter from './routes/timeline';
 import * as calendarRouter from './routes/calendar';
 // middlewares
-import {hasValidToken} from './utils';
+import {checkAccount, checkBody, hasValidToken} from './utils';
 
 const router = express.Router();
 
-router.use('/auth', authRouter);
-
+router.use('/auth', checkBody, checkAccount, authRouter);
 router.use('/user', hasValidToken, userRouter);
 router.use('/project', hasValidToken, projectRouter);
 router.use('/assignments', hasValidToken, assignmentsRouter);

@@ -15,7 +15,7 @@ import {Error} from '../../client/app/models/error';
  * @body - Contains 1 value => account: Account (JSON) - the email & password
  * @returns  - {token: token}
  */
-router.post('/signin', checkBody, checkAccount, async function(req, res) {
+router.post('/signin', async function(req, res) {
   // bcrypt.hashSync(password,10);
   // if( bcrypt.compareSync(password, db.user.password) ) {}
   // error status 500 and 401
@@ -24,7 +24,7 @@ router.post('/signin', checkBody, checkAccount, async function(req, res) {
     assert.notEqual(null, result);
     const tokenInfo = { email: result.email, _id: result._id, profile: result.profile };
     const token = await jwt.sign({ info: tokenInfo}, 'secret', {expiresIn: 7200});
-    res.status(200).send({ token: token });
+    res.status(200).send(token);
   } catch (error) {
     console.log(error);
     res.status(401).send(new Error(StatusMessages._401));
@@ -39,7 +39,7 @@ router.post('/signin', checkBody, checkAccount, async function(req, res) {
  *                            2) user: User (JSON) - the user profile that will be added after successfull signup
  * @returns Void - Success 204 - Inserted
  */
-router.post('/signup', checkBody, checkAccount, checkUser, async function(req, res) {
+router.post('/signup', checkUser, async function(req, res) {
   try {
     const accResult = await DbClient.insertOne(req.body.account, DbKeys.accounts);
     assert.notEqual(null, accResult);
