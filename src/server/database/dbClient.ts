@@ -1,4 +1,5 @@
 import {MongoClient} from 'mongodb';
+import {DbKeys} from './utils';
 
 class DbClient {
   /*
@@ -8,13 +9,15 @@ class DbClient {
  */
   private url = 'mongodb://localhost:27017/project';
 // private url = 'mongodb://admin:admin@ds135820.mlab.com:35820/pmthesis';
+
+  private dbName = 'project';
   public db;
 
   public async connect() {
     try {
       const client = await MongoClient.connect(this.url);
       console.log('Connected successfully to database');
-      this.db = client.db('project');
+      this.db = client.db(this.dbName);
       await this.createCollections();
       return this.db;
     } catch (error) { console.log('MongoDB url host unreachable!'); }
@@ -55,7 +58,7 @@ class DbClient {
   private async createCollections() {
     try {
       // Accounts
-      await this.db.createCollection('accounts',
+      await this.db.createCollection(DbKeys.accounts,
         { validator: { $and:
               [
                 { password: { $exists: true} },
@@ -63,18 +66,18 @@ class DbClient {
               ]
           }
         });
-      await this.db.collection('accounts').createIndex({email: 1}, {unique: true});
+      this.db.collection(DbKeys.accounts).createIndex({email: 1}, {unique: true});
       // User Profiles
-      await this.db.createCollection('profiles',
+      await this.db.createCollection(DbKeys.profiles,
         { validator: { $and:
               [
                 { email: { $exists: true } }
               ]
           }
         });
-      await this.db.collection('profiles').createIndex({email: 1}, {unique: true});
+      this.db.collection(DbKeys.profiles).createIndex({email: 1}, {unique: true});
       // Projects
-      await this.db.createCollection('projects',
+      await this.db.createCollection(DbKeys.projects,
         { validator: { $and:
               [
                 { team: { $exists: true }},
@@ -83,7 +86,7 @@ class DbClient {
           }
         });
       // Invites
-      await this.db.createCollection('invites',
+      await this.db.createCollection(DbKeys.invites,
         { validator: { $and:
               [
                 { project: { $exists: true }},
@@ -91,9 +94,9 @@ class DbClient {
               ]
           }
         });
-      await this.db.collection('invites').createIndex({project: 1, invites: 1}, {unique: true});
+      await this.db.collection(DbKeys.invites).createIndex({project: 1, invites: 1}, {unique: true});
       // Task
-      await this.db.createCollection('tasks',
+      await this.db.createCollection(DbKeys.tasks,
         { validator: { $and:
               [
                 { project_id: { $exists: true }},
@@ -109,7 +112,7 @@ class DbClient {
           }
         });
       // Chat
-      await this.db.createCollection('chat',
+      await this.db.createCollection(DbKeys.chat,
         { validator: { $and:
               [
                 { sender: { $exists: true }},
@@ -120,7 +123,7 @@ class DbClient {
           }
         });
       // Team
-      await this.db.createCollection('team',
+      await this.db.createCollection(DbKeys.team,
         { validator: { $and:
               [
                 { name: { $exists: true }},
@@ -129,9 +132,9 @@ class DbClient {
           }
         });
       // Timeline
-      await this.db.createCollection('timeline');
+      await this.db.createCollection(DbKeys.timeline);
       // Notifications
-      await this.db.createCollection('notification',
+      await this.db.createCollection(DbKeys.notifications,
         { validator: { $and:
               [
                 { email: { $exists: true }},
@@ -143,7 +146,7 @@ class DbClient {
           }
         });
       // Calendar Events
-      await this.db.createCollection('calendar',
+      await this.db.createCollection(DbKeys.calendar,
         { validator: { $and:
               [
                 { start: { $exists: true }},
@@ -153,14 +156,14 @@ class DbClient {
           }
         });
       // Settings
-      await this.db.createCollection('settings',
+      await this.db.createCollection(DbKeys.settings,
         { validator: { $and:
               [
                 { email: { $exists: true }}
               ]
           }
         });
-      await this.db.collection('settings').createIndex({email: 1}, {unique: true});
+      this.db.collection(DbKeys.settings).createIndex({email: 1}, {unique: true});
       console.log('SUCCESS CREATING COLLECTIONS');
     } catch { console.log('CREATING COLLECTIONS FAILED'); }
   }

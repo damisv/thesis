@@ -1,15 +1,31 @@
 import * as express from 'express';
 const router = express.Router();
+import DbClient = require('../database/dbClient');
+import * as assert from 'assert';
+import {DbKeys} from '../database/utils';
+const jwt = require('jsonwebtoken');
 
 /**
  * @method - POST
  * Sign In
  * @body - Contains 1 value => account: Account (JSON) - the email & password
- * @returns  object {token: token}
+ * @returns  - {token: token}
  */
-router.post('/signin', function(req, res) {
+router.post('/signin', async function(req, res) {
   console.log(req.body);
-  res.status(200).send({message: 'signin WORKS'});
+  // bcrypt.hashSync(password,10);
+  // if( bcrypt.compareSync(password, db.user.password) ) {}
+  // error status 500 and 401
+  try {
+    const result = await DbClient.findOne(req.body.account, 'accounts');
+    assert.notEqual(null, result);
+    const tokenInfo = { email: result.email, _id: result._id, profile: result.profile };
+    const token = await jwt.sign({ info: tokenInfo}, 'secret', {expiresIn: 7200});
+    res.status(200).send({ token: token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ title: 'Login Failed', error : {message: 'Invalid login credentials'} });
+  }
 });
 
 /**
@@ -20,9 +36,32 @@ router.post('/signin', function(req, res) {
  *                            2) user: User (JSON) - the user profile that will be added after successfull signup
  * @returns Void - Success 200 is ok
  */
-router.post('/signup', function(req, res) {
+router.post('/signup', async function(req, res) {
   console.log(req.body);
-  res.status(200).send({message: 'signup WORKS'});
+  try {
+    const accResult = await DbClient.insertOne(req.body.account, DbKeys.accounts);
+    assert.notEqual(null, accResult);
+    const profileResult = await DbClient.insertOne(req.body.user, DbKeys.profiles);
+    assert.notEqual(null, profileResult);
+    const updateAccount = await DbClient.updateOne(
+      {email: profileResult.ops[0].email},
+      {$set: {profile: profileResult.ops[0]._id}},
+      DbKeys.accounts);
+    assert.equal(1, updateAccount.result.ok);
+    const settings = {
+      'myTask': 'push',
+      'memberJoined': 'none',
+      'invite': 'toast',
+      'message': 'push',
+      'error': 'push',
+      'email': req.body.user.email};
+    const settingsResult = await DbClient.insertOne(settings, DbKeys.settings);
+    assert.notEqual(null, settingsResult);
+    res.status(200).send({ title: 'OK' });
+  } catch (error) {
+    res.status(500).send({ title: 'An error occurred', error : error });
+    console.log(error);
+  }
 });
 
 // Export the router

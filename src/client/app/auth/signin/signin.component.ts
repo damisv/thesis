@@ -26,6 +26,7 @@ export class SigninComponent implements OnInit {
     this.authService.signIn(this.account)
         .subscribe( res => {
           localStorage.setItem('token', res.token);
+          console.log(res);
           this.router.navigate([this.returnUrl]);
         });
   }

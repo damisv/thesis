@@ -22,7 +22,7 @@ export class AuthService {
     return this.makeRequest(req);
   }
   signIn(account: Account) {
-    const req = new HttpRequest(HttpMethods.Post, AuthService.signInUrl, JSON.stringify(account));
+    const req = new HttpRequest(HttpMethods.Post, AuthService.signInUrl, JSON.stringify({account: account}));
     return this.makeRequest(req);
   }
 
