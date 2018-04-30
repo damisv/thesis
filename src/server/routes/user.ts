@@ -13,7 +13,6 @@ import {checkBody, checkParams, checkUser, StatusMessages} from '../utils';
  * @returns - {user: the user profile }
  */
 router.get('/', async function(req, res) {
-  console.log(req['decoded']);
   const email = req['decoded'].info.email;
   try {
     const result = await DbClient.findOne({email: email}, DbKeys.profiles);

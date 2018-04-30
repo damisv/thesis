@@ -24,7 +24,7 @@ export class SigninComponent implements OnInit {
   submit() {
     this.authService.signIn(this.account)
         .subscribe( res => {
-          localStorage.setItem('token', res);
+          localStorage.setItem('token', res.token);
           this.router.navigate([this.returnUrl]);
         }, err => console.log('ERROR - SIGNINCOMPONENT', err));
   }

@@ -24,7 +24,7 @@ router.post('/signin', async function(req, res) {
     assert.notEqual(null, result);
     const tokenInfo = { email: result.email, _id: result._id, profile: result.profile };
     const token = await jwt.sign({ info: tokenInfo}, 'secret', {expiresIn: 7200});
-    res.status(200).send(token);
+    res.status(200).send({token: token});
   } catch (error) {
     console.log(error);
     res.status(401).send(new Error(StatusMessages._401));
