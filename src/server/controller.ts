@@ -9,42 +9,20 @@ import * as inviteRouter from './routes/invite';
 import * as chatRouter from './routes/chat';
 import * as timelineRouter from './routes/timeline';
 import * as calendarRouter from './routes/calendar';
-const jwt = require('jsonwebtoken');
+// middlewares
+import {hasValidToken} from './utils';
 
 const router = express.Router();
 
 router.use('/auth', authRouter);
 
-// route middleware to verify a token
-router.use(function(req, res, next) {
-  // check header or url parameters or post parameters for token
-  const token = req.body.token || req.query.token || req.headers.authorization;
-
-  // decode token
-  if (token) {
-    // verifies secret and checks exp
-    jwt.verify(token, 'secret', function(err, decoded) {
-      if (err) { return res.send({ title: 'Token Unauthorized', error: { message: 'Failed to authenticate token.'}});
-      } else {
-        // if everything is good, save to request for use in other routes
-        req['decoded'] = decoded;
-        next();
-      }
-    });
-  } else {
-    // if there is no token
-    // return an error
-    return res.status(403).send({ title: 'Unauthorized', error: { message: 'Failed to provide token.'}});
-  }
-});
-
-router.use('/user', userRouter);
-router.use('/project', projectRouter);
-router.use('/assignments', assignmentsRouter);
-router.use('/invite', inviteRouter);
-router.use('/chat', chatRouter);
-router.use('/timeline', timelineRouter);
-router.use('/calendar', calendarRouter);
+router.use('/user', hasValidToken, userRouter);
+router.use('/project', hasValidToken, projectRouter);
+router.use('/assignments', hasValidToken, assignmentsRouter);
+router.use('/invite', hasValidToken, inviteRouter);
+router.use('/chat', hasValidToken, chatRouter);
+router.use('/timeline', hasValidToken, timelineRouter);
+router.use('/calendar', hasValidToken, calendarRouter);
 
 // Export the router
 export = router;

@@ -50,7 +50,7 @@
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button (click)="stepper.reset()">Reset</button>
-          <button mat-button (click)="submit()">Register</button>
+          <button mat-button type="submit" [disabled]="!firstFormGroup.valid && !secondFormGroup.valid" (click)="submit()">Register</button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>

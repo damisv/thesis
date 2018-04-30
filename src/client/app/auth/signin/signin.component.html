@@ -2,7 +2,7 @@
   <mat-card-title>Sign In</mat-card-title>
   <mat-card-subtitle></mat-card-subtitle>
   <mat-card-content>
-    <form [formGroup]="loginGroup">
+    <form [formGroup]="loginGroup" (ngSubmit)="submit()">
       <div fxLayout="column">
         <mat-form-field [hideRequiredMarker]="false">
           <input matInput placeholder="Email" formControlName="email" required [(ngModel)]="account.email">

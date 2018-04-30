@@ -16,12 +16,13 @@ export class RequestInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log('Interceptor: --- ', req.url, req.body, req.method);
     this.progressBarService.availableProgress(true);
-    const httpHeaders = new HttpHeaders();
-    httpHeaders.set('Content-Type', 'application/json');
+    let headers = {};
+    // set('Content-Type', 'application/json');
     if (localStorage.getItem('token') !== null) {
-      httpHeaders.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
-    }
-    const cloneRequest = req.clone({ headers: httpHeaders });
+      headers = {'Content-Type': 'application/json', Authorization: localStorage.getItem('token')};
+    } else { headers = {'Content-Type': 'application/json'}; }
+    const cloneRequest =  req.clone({ setHeaders: headers});
+    console.log('HEADERS ->', cloneRequest.headers);
     return next.handle(cloneRequest)
       .pipe(
         tap((event: HttpEvent<any>) => {
@@ -31,6 +32,7 @@ export class RequestInterceptor implements HttpInterceptor {
         }),
         catchError((err: HttpErrorResponse) => {
           if ((err.status === 400) || (err.status === 401)) {
+            this.throwError(err.error);
             return empty();
           }
           this.throwError(err.error);
@@ -39,10 +41,9 @@ export class RequestInterceptor implements HttpInterceptor {
   }
 
   // Error
-  private throwError(error) {
-    const errorData = new Error(error.title, error.error.message);
+  private throwError(error: Error) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = errorData;
+    dialogConfig.data = error;
     const dialogError = this.dialog.open(ErrorDialogComponent, dialogConfig);
     dialogError.afterClosed().subscribe();
   }

@@ -36,7 +36,9 @@ User Calls to API
     this.http.get<User>(UserService.base)
       .subscribe(
         res => { this.user.next(res); },
-        err => { this.router.navigate(['auth', 'signin']); console.log(err); }
+        err => {
+          this.router.navigate(['auth', 'signin']);
+          console.log(err); }
       );
   }
 
