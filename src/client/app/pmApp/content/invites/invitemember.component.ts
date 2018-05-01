@@ -41,7 +41,7 @@ export class InviteMemberComponent {
 
   separatorKeysCodes = [ENTER, COMMA];
   searchTerm$ = new Subject<string>();
-  membersAutocomplete: Subject<User[]>;
+  membersAutocomplete = new Subject<User[]>();
   team = [];
 
   constructor (private inviteService: InviteService,

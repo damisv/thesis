@@ -12,7 +12,7 @@ export class Project {
     constructor(
         public name: string,
         public _id?: string,
-        public team?: Member[],
+        public team: Member[] = [],
         public company?: string,
         public budget?: number,
         public typeOf?: string,

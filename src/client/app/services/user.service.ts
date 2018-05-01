@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import {ProgressBarService} from './progressbar.service';
 import {Router} from '@angular/router';
 import {User} from '../models/user';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -11,10 +10,8 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/isEmpty';
-import {HttpClient, HttpRequest} from '@angular/common/http';
-import {MatDialog} from '@angular/material';
-import {HttpMethods} from '../utils/utils';
-import {filter} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import 'rxjs/add/operator/filter';
 
 @Injectable()
 export class UserService {
@@ -57,7 +54,7 @@ User Calls to API
 
   searchFor(email: Observable<string>): Observable<User[]> {
     return email.debounceTime(400)
-      .pipe(filter(value => value !== null || value !== undefined || value.trim().length !== 0)) // blank, null or undefined don't pass
+      .filter(term => term && term.trim().length > 0)
       .switchMap(val => this.search(val));
   }
   private search(value: string): Observable<User[]> {
