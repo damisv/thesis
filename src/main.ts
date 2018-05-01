@@ -61,4 +61,4 @@ server.listen(PORT, async () => {
 });
 
 const ioServer = new IOServer(io);
-export { ioServer };
+export {ioServer as ioServer};

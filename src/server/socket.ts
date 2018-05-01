@@ -11,6 +11,7 @@ export class IOServer {
   // Private properties
   private clients = {};
   private projects = {};
+  public num = 5;
 
   constructor(io: Server) {
     this.io = io;

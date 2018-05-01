@@ -1,12 +1,12 @@
 import * as express from 'express';
 const router = express.Router();
 import DbClient = require('../database/dbClient');
-const ioServer = require('../../main').ioServer;
 const ObjectID = require('mongodb').ObjectID;
 import * as assert from 'assert';
 import {DbKeys} from '../database/utils';
 import {Error} from '../../client/app/models/error';
 import {checkBody, isManager, StatusMessages} from '../utils';
+import { ioServer } from '../../main';
 
 /**
  * @method - GET
@@ -65,20 +65,25 @@ router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.insertOne(req.body.project, DbKeys.projects);
     assert.notEqual(null, result);
-    res.status(204).send(result.ops[0]);
     ioServer.addProject(result.ops[0]._id, result.ops[0].name);
-    ioServer.joinRoom(result.ops[0]._id, email);
+    // ioServer.joinRoom(result.ops[0]._id, email);
     const timeline = await DbClient.insertOne({name: result.ops[0].name, date: new Date(Date.now()),
                                                 description: 'Project created', project: result.ops[0]._id}, DbKeys.timeline);
     assert.notEqual(null, timeline);
-    await inviteMembersNotifications(req.body.invites, result.ops[0]._id);
+    console.log('timeline');
+    if ( req.body.invites.length > 0) {
+      await inviteMembersNotifications(req.body.invites, result.ops[0]._id);
+    }
+    console.log(result.ops[0]);
+    res.status(200).send({project: result.ops[0]});
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 async function inviteMembersNotifications(invites: string[], projectID: string) {
   try {
     const result = await DbClient.insertOne(invites, DbKeys.invites);
-    assert.equal(1, result.result.ok);
+    assert.notEqual(null, result);
+    console.log('notifications');
     const notifications = invites.map( email => ({email: email,
       type: 'invite',
       link: ['app', 'invites'],

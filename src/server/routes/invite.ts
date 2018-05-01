@@ -1,7 +1,7 @@
 import * as express from 'express';
 import {DbKeys} from '../database/utils';
 import * as assert from 'assert';
-import {checkParams, StatusMessages} from '../utils';
+import {checkBody, checkParams, StatusMessages} from '../utils';
 import {Error} from '../../client/app/models/error';
 import DbClient = require('../database/dbClient');
 const router = express.Router();
@@ -89,7 +89,7 @@ router.delete('/:id', function(req, res) {
  *                            2) projectID: string - the project id invite is destined
  * @returns Boolean
  */
-router.post('/isInvited', checkParams, async function(req, res) {
+router.post('/isInvited', checkBody, async function(req, res) {
   try {
     const result = await DbClient.findOne({project_id: req.body.projectID , invites : { email: req.body.email}}, DbKeys.invites);
     assert.notEqual(null, result);
