@@ -50,9 +50,6 @@ export class ProjectService {
   initProject(projects) {
     if (localStorage.hasOwnProperty('projectID')) {
       for (const project of projects) {
-        /*this.chatService.getProjectMessages(project._id).subscribe(res=>{
-            this.chatService.addMessages(res.messages);
-        });*/
         if (project._id === localStorage.getItem('projectID')) {
           this.giveProject(project);
           break;

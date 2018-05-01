@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Router, Route, CanLoad} from '@angular/router';
-import {AuthService, tokenExists} from '../../services/auth.service';
+import {AuthService} from '../../services/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanLoad {
@@ -10,7 +10,7 @@ export class AuthGuard implements CanLoad {
   canLoad(route: Route): boolean {
     const url: string = route.path;
     console.log('Url:' + url);
-    if (tokenExists) { return true; }
+    if (localStorage.getItem('token') !== null) { if (localStorage.getItem('token') !== undefined) { return true; } }
     this.router.navigate(['auth/signin']);
     return false;
   }

@@ -11,6 +11,10 @@ import * as express from 'express';
 import DbClient = require('./server/database/dbClient');
 import * as apiRouter from './server/controller';
 
+import { createServer, Server } from 'http';
+import * as socketIo from 'socket.io';
+import {IOServer} from './server/socket';
+
 const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('../dist/server/main.bundle');
 const PORT = process.env.PORT || config.node.port || 8080;
 const bodyParser = require('body-parser');
@@ -20,6 +24,8 @@ const CLIENT_DIR = join(process.cwd(), 'dist', 'client');
 enableProdMode();
 
 const app = express();
+const server = createServer(app);
+const io = socketIo(server, { serveClient: false});
 
 app.engine('html', ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,
@@ -47,9 +53,12 @@ app.get('*', (req, res) => {
   res.render(join(CLIENT_DIR, 'index.html'), { req, res });
 });
 
-app.listen(PORT, async () => {
+server.listen(PORT, async () => {
   try {
     await DbClient.connect(); // Connecting DB
     console.log(`Application is running at http://localhost:${PORT}`);
   } catch (error) { console.log('Unable to connect to db'); }
 });
+
+const ioServer = new IOServer(io);
+export { ioServer };

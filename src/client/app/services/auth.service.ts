@@ -20,8 +20,3 @@ export class AuthService {
     return this.http.post(AuthService.signInUrl, {account: account});
   }
 }
-
-// Public methods
-export const tokenExists = (): boolean => {
-  return localStorage.getItem('token') !== null || localStorage.getItem('token') !== undefined;
-};

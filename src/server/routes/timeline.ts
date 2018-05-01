@@ -14,4 +14,3 @@ router.get('/:id', function(req, res) {
 
 // Export the router
 export = router;
-

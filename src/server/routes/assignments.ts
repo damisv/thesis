@@ -1,8 +1,6 @@
 import * as express from 'express';
 const router = express.Router();
 
-// Authorization ...
-
 /**
  * @method - GET
  * Email will be taken from token
@@ -33,7 +31,7 @@ router.get('/issue', function(req, res) {
  * @returns Array of assignments
  */
 router.get('/project/:id', function(req, res) {
-  console.log(req.body);
+  console.log(req.params.id);
   res.status(200).send({message: 'get project assignment (task + issues)'});
 });
 

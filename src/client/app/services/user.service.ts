@@ -42,7 +42,7 @@ User Calls to API
   }
 
   userIsRegistered(email: string): Observable<boolean> {
-    return this.http.get<boolean>(`${UserService.base}/isRegistered` + email);
+    return this.http.get<boolean>(`${UserService.base}/isRegistered/` + email);
   }
 
   /*

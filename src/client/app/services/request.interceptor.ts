@@ -9,7 +9,6 @@ import {_throw} from 'rxjs/observable/throw';
 import {catchError, map, tap} from 'rxjs/operators';
 import {ProgressBarService} from './progressbar.service';
 import {Router} from '@angular/router';
-import {tokenExists} from './auth.service';
 
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
@@ -21,7 +20,7 @@ export class RequestInterceptor implements HttpInterceptor {
     console.log('Interceptor: --- ', req.url, req.body, req.method);
     this.progressBarService.availableProgress(true);
     let headers = {};
-    if (tokenExists) {
+    if (localStorage.getItem('token') !== null) {
       headers = {'Content-Type': 'application/json', Authorization: localStorage.getItem('token')};
     } else { headers = {'Content-Type': 'application/json'}; }
     const cloneRequest =  req.clone({ setHeaders: headers});

@@ -1,8 +1,6 @@
 import * as express from 'express';
 const router = express.Router();
 
-// Authorization ...
-
 /**
  * @method - GET
  * Get user invites
@@ -71,7 +69,7 @@ router.delete('/:id', function(req, res) {
  *                            2) projectID: string - the project id invite is destined
  * @returns Boolean
  */
-router.delete('/:id', function(req, res) {
+router.post('/:id', function(req, res) {
   console.log(req.body);
   res.status(200).send({message: 'invites'});
 });
