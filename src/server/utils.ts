@@ -16,7 +16,7 @@ export function hasValidToken(req, res, next) {
   // decode token
   if (token) {
     jwt.verify(token, 'secret', function(err, decoded) {
-      if (err) { return res.status(498).send(new Error(StatusMessages._403));
+      if (err) { return res.status(498).send(new Error(StatusMessages._498));
       } else {
         req['decoded'] = decoded;
         next();
