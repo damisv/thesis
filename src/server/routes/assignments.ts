@@ -1,7 +1,13 @@
 import * as express from 'express';
+import {Error} from '../../client/app/models/error';
+import {DbKeys} from '../database/utils';
+import {checkBody, checkParams, StatusMessages} from '../utils';
+import * as assert from 'assert';
 const router = express.Router();
+import DbClient = require('../database/dbClient');
 
 // Authorization ...
+// type task = 0 issue = 1
 
 /**
  * @method - GET
@@ -9,9 +15,13 @@ const router = express.Router();
  * Get Tasks for current user
  * @returns Array of Task
  */
-router.get('/task', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'get tasks'});
+router.get('/task', async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const result = await DbClient.find({assignee_email: email , type : 'task' }, DbKeys.tasks);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -20,9 +30,13 @@ router.get('/task', function(req, res) {
  * Email will be taken from token
  * @returns Array of Issues
  */
-router.get('/issue', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'get issues'});
+router.get('/issue', async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const result = await DbClient.find({assignee_email: email , type : 'issue' }, DbKeys.tasks);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -32,9 +46,12 @@ router.get('/issue', function(req, res) {
  * @param - project id
  * @returns Array of assignments
  */
-router.get('/project/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'get project assignment (task + issues)'});
+router.get('/project/:id', checkParams, async function(req, res) {
+  try {
+    const result = await DbClient.find({project_id: Object(req.params.id) }, DbKeys.tasks);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -44,9 +61,12 @@ router.get('/project/:id', function(req, res) {
  * @param - assignment id
  * @returns Array of assignments
  */
-router.get('/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'get project assignment (task + issues)'});
+router.get('/:id', checkParams, async function(req, res) {
+  try {
+    const result = await DbClient.findOne({_id: Object(req.params.id) }, DbKeys.tasks);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -56,9 +76,12 @@ router.get('/:id', function(req, res) {
  * @body - Contains 1 value => task: Task
  * @returns Void - success 200 is ok
  */
-router.post('/', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'create assignment'});
+router.post('/', checkBody, async function(req, res) {
+  try {
+    const result = await DbClient.insertOne(req.body.task, DbKeys.tasks);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -69,9 +92,12 @@ router.post('/', function(req, res) {
  * @param - task id
  * @returns Void - success 200 is ok
  */
-router.put('/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'edit assignment'});
+router.put('/:id', checkBody, checkParams, async function(req, res) {
+  try {
+    const result = await DbClient.updateOne({_id: Object(req.params.id)}, req.body.task, DbKeys.tasks);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -82,9 +108,12 @@ router.put('/:id', function(req, res) {
  * @param - task id
  * @returns Void - success 200 is ok
  */
-router.patch('/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'edit status of assignment'});
+router.patch('/:id', checkBody, checkParams, async function(req, res) {
+  try {
+    const result = await DbClient.updateOne({_id: Object(req.params.id)}, req.body.task, DbKeys.tasks);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 // Export the router
