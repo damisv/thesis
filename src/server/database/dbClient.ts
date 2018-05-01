@@ -27,8 +27,7 @@ class DbClient {
   public findOne(query, collection) {
     return this.db.collection(collection).findOne(query);
   }
-  public find(query, collection, projection) {
-    if (projection === undefined) { projection = {}; }
+  public find(query, collection, projection = {}) {
     return this.db.collection(collection).find(query, projection).toArray();
   }
   // Insert

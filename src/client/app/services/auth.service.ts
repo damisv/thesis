@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpRequest} from '@angular/common/http';
-import {ProgressBarService} from './progressbar.service';
+import {HttpClient} from '@angular/common/http';
 import {Account} from '../models/account';
-import {HttpMethods} from '../utils/utils';
 import {User} from '../models/user';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
@@ -21,11 +19,9 @@ export class AuthService {
   signIn(account: Account): Observable<any> {
     return this.http.post(AuthService.signInUrl, {account: account});
   }
-
-  // Public methods
-  public isAuthenticated(): boolean {
-    // const token = localStorage.getItem('token');
-    // return !this.jwtHelper.isTokenExpired(token);
-    return localStorage.getItem('token') !== null || localStorage.getItem('token') !== undefined;
-  }
 }
+
+// Public methods
+export const tokenExists = (): boolean => {
+  return localStorage.getItem('token') !== null || localStorage.getItem('token') !== undefined;
+};

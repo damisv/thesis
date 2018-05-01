@@ -1,39 +1,53 @@
 import * as express from 'express';
 const router = express.Router();
+import DbClient = require('../database/dbClient');
+const ObjectID = require('mongodb').ObjectID;
+import * as assert from 'assert';
+import {DbKeys} from '../database/utils';
+import {Error} from '../../client/app/models/error';
+import {checkBody, isManager, StatusMessages} from '../utils';
 
 /**
  * @method - GET
  * Get All user projects
- * Email will be taken from Authorization Header (token)
  * @returns Array of Project
  */
-router.get('/', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'get all user projects'});
+router.get('/', async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const result = await DbClient.find({'team.email': email}, DbKeys.projects);
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
  * @method - GET
  * Get Project By Id
- * Email will be taken from Authorization Header (token)
  * @param Project ID
  * @returns Project
  */
-router.get('/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'get specific project'});
+router.get('/:id', async function(req, res) {
+  try {
+    const project = await DbClient.findOne( {_id: ObjectID(req.params.id)}, DbKeys.projects);
+    assert.notEqual(null, project);
+    res.status(200).send(project);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
  * @method - GET
- * Get Projects By Name, and if it is public
- *  Email will be taken from Authorization Header (token)
+ * Get Projects By Name, and if it is public?
  *  @param - Project Name
  * @returns Array of Projects
  */
-router.get('/search/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'get projects by name'});
+router.get('/search/:id', async function(req, res) {
+  try {
+    const result = await DbClient.find({name: {$regex: new RegExp('^' + req.params.id, 'i')},
+      typeOf: 'public'}, DbKeys.projects, {name: 1, _id: 1});
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -43,36 +57,65 @@ router.get('/search/:id', function(req, res) {
  * @body Contains 2 values:
  *                          1) project: Project (JSON) - project to be added
  *                          2) invites array
- * @returns Void - Status 200 is ok
+ * @returns Void - Status 204
  */
-router.post('/', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'create project'});
+router.post('/', checkBody, async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const result = await DbClient.insertOne(req.body.project, DbKeys.projects);
+    assert.notEqual(null, result);
+    res.status(204).send(result.ops[0]);
+    // socket join and notification send
+    // addProject(result.ops[0]._id,result.ops[0].name);
+    // require('../bin/www').io.joinRoom(result.ops[0]._id,email);
+    const timeline = await DbClient.insertOne({name: result.ops[0].name, date: new Date(Date.now()),
+                                                description: 'Project created', project: result.ops[0]._id}, DbKeys.timeline);
+    assert.notEqual(null, timeline);
+    await inviteMembersNotifications(req.body.invites);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
+
+async function inviteMembersNotifications(invites: string[]) {
+  try {
+    const result = await DbClient.insertOne(invites, DbKeys.invites);
+    assert.equal(1, result.result.ok);
+    const notifications = invites.map( email => ({email: email,
+      type: 'invite',
+      link: ['app', 'invites'],
+      date: new Date(Date.now()),
+      status: 'unseen'}));
+    const notificationsResult = await DbClient.insertMany(notifications, DbKeys.notifications);
+    assert.notEqual(null, notificationsResult);
+  // socket
+  //   require('../bin/www').io.inviteMemberToProject(req.body.invites.project,result.ops[0]);
+  } catch (error) { console.log(error); }
+}
 
 /**
  * @method - PUT
  * Edit project
- *  Email will be taken from Authorization Header (token) and checked if it is manager
  *  @body - Contains 1 value => project: Project
  *  @param - Project ID
- * @returns Void - Status 200 is ok
+ * @returns Void - Status 204
  */
-router.put('/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'edit project by id'});
+router.put('/:id', isManager, async function(req, res) {
+  const tempProject = req.body.project;
+  tempProject._id = ObjectID(req.params.id);
+  try {
+    const result = await DbClient.save(tempProject, DbKeys.projects);
+    assert.equal(1, result.result.ok);
+    res.status(204).send();
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
  * @method - POST
- * Creates project
  * Removes Member Of Project Team
- * Email should be taken from token to check if has rights
  * @body - Contains 1 value => email: string - email of member to be deleted
  * @param - project id
  * @returns Void - Status 200 is ok
  */
-router.patch('/:id', function(req, res) {
+router.patch('/:id', isManager, function(req, res) {
   console.log(req.body);
   res.status(200).send({message: 'patch project by id'});
 });
