@@ -16,7 +16,7 @@ router.post('/', function(req, res) {
  * @method - POST
  * Get Threads
  * @body - Contains 1 value => projectIDs: [string] - the project id's
- * @returns Array of ChatThread(id: receiver, name: string, lastMessages: Message[] (here should be last 20 or just empty array), read: boolean)
+ * @returns Map of thread id and ChatThread(id: receiver, name: string, lastMessages: Message[] (here should be last 20 or just empty array), read: boolean)
  */
 router.post('/threads', function(req, res) {
   console.log(req.body);

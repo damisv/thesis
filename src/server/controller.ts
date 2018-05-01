@@ -9,21 +9,19 @@ import * as inviteRouter from './routes/invite';
 import * as chatRouter from './routes/chat';
 import * as timelineRouter from './routes/timeline';
 import * as calendarRouter from './routes/calendar';
+// middlewares
+import {checkAccount, checkBody, hasValidToken} from './utils';
 
 const router = express.Router();
 
-// mount express paths, any addition middleware can be added as well.
-// ex. router.use('/pathway', middleware_function, sub-router);
-
-router.use('/auth', authRouter);
-router.use('/user', userRouter);
-router.use('/project', projectRouter);
-router.use('/assignments', assignmentsRouter);
-router.use('/invite', inviteRouter);
-router.use('/chat', chatRouter);
-router.use('/timeline', timelineRouter);
-router.use('/calendar', calendarRouter);
-// router.use('/')
+router.use('/auth', checkBody, checkAccount, authRouter);
+router.use('/user', hasValidToken, userRouter);
+router.use('/project', hasValidToken, projectRouter);
+router.use('/assignments', hasValidToken, assignmentsRouter);
+router.use('/invite', hasValidToken, inviteRouter);
+router.use('/chat', hasValidToken, chatRouter);
+router.use('/timeline', hasValidToken, timelineRouter);
+router.use('/calendar', hasValidToken, calendarRouter);
 
 // Export the router
 export = router;

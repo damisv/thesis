@@ -1,9 +1,8 @@
-import {AfterContentInit, Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Account} from '../../models/account';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../services/user.service';
 
 @Component({
     selector: 'app-signin',
@@ -27,7 +26,7 @@ export class SigninComponent implements OnInit {
         .subscribe( res => {
           localStorage.setItem('token', res.token);
           this.router.navigate([this.returnUrl]);
-        });
+        }, err => console.log('ERROR - SIGNINCOMPONENT', err));
   }
 
   ngOnInit() {

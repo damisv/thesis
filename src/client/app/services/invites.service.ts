@@ -17,20 +17,17 @@ export class InviteService {
   invites$ = this.invites.asObservable();
 
   constructor(private http: HttpClient,
-              private userService: UserService,
-              private progressBarService: ProgressBarService) {
-    // this.userService.user$.subscribe( _ => this.getUserInvites());
+              private userService: UserService) {
+    this.userService.user$.subscribe( _ => this.getUserInvites());
   }
 
   // Public methods
-  acceptInvite(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Patch, `${InviteService.base}/` + projectID, {});
-    return this.makeRequest(req);
+  acceptInvite(projectID: string): Observable<any> {
+    return this.http.patch(`${InviteService.base}/` + projectID, {});
   }
 
-  rejectInvite(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Delete, `${InviteService.base}/` + projectID);
-    return this.makeRequest(req);
+  rejectInvite(projectID: string): Observable<any> {
+    return this.http.delete(`${InviteService.base}/` + projectID);
   }
 
   removeInvite(index: number) {
@@ -38,30 +35,18 @@ export class InviteService {
   } // removes invite from array
 
   getUserInvites() {
-    const req = new HttpRequest(HttpMethods.Get, InviteService.base);
-    this.makeRequest(req)
-      .subscribe(res => this.invites.next(res));
+    this.http.get<object[]>(InviteService.base).subscribe(res => this.invites.next(res));
   }
 
-  getProjectInvites(projectID: string) {
-    const req = new HttpRequest(HttpMethods.Get, `${InviteService.base}/` + projectID);
-    return this.makeRequest(req);
+  getProjectInvites(projectID: string): Observable<any> {
+    return this.http.get(`${InviteService.base}/` + projectID);
   }
 
-  invite(invites: string[], projectID: string) {
-    const req = new HttpRequest(HttpMethods.Post, InviteService.base, JSON.stringify({invites: invites, projectID: projectID}));
-    return this.makeRequest(req);
+  invite(invites: string[], projectID: string): Observable<any> {
+    return this.http.post(InviteService.base, {invites: invites, projectID: projectID});
   }
 
-  userIsInvited(email: string, projectID: string) {
-    const req = new HttpRequest(HttpMethods.Post, `${InviteService.base}/isInvited`, JSON.stringify({email: email, projectID: projectID}));
-    return this.makeRequest(req);
-  }
-
-  // Private methods
-  private makeRequest(req: HttpRequest<any>): Observable<any> {
-    this.progressBarService.availableProgress(true);
-    return this.http.request(req)
-      .finally(() => this.progressBarService.availableProgress(false));
+  userIsInvited(email: string, projectID: string): Observable<boolean> {
+    return this.http.post<boolean>(`${InviteService.base}/isInvited`, {email: email, projectID: projectID});
   }
 }

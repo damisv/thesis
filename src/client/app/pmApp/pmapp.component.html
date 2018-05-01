@@ -4,8 +4,8 @@
       <mat-card>
         <mat-card-header>
           <img mat-card-avatar mat-card-sm-image src="../../assets/images/gates.jpg" alt="Thumbnail Image">
-          <mat-card-title>Firstname Lastname</mat-card-title>
-          <mat-card-subtitle>email</mat-card-subtitle>
+          <mat-card-title>{{ user?.firstName }} {{ user?.lastName }}</mat-card-title>
+          <mat-card-subtitle>{{user?.email}}</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
 

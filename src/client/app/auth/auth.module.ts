@@ -10,7 +10,6 @@ import {AuthenticationComponent} from './authentication.component';
 import {SignupComponent} from './signup/signup.component';
 import {SigninComponent} from './signin/signin.component';
 import {AuthRoutingModule} from './auth-routing.module';
-import {AuthService} from '../services/auth.service';
 
 @NgModule({
   declarations: [

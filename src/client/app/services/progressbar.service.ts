@@ -4,7 +4,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 @Injectable()
 export class ProgressBarService {
     // Properties
-    private progressBar = new BehaviorSubject<any>(false);
+    private progressBar = new BehaviorSubject<boolean>(false);
     progressBar$ = this.progressBar.asObservable();
 
     constructor() {}

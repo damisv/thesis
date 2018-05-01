@@ -10,7 +10,8 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Observable} from 'rxjs/Observable';
 import {map, startWith} from 'rxjs/operators';
 import {areDatesCorrect} from '../../../../utils/utils';
-import {Member} from '../../../../models/project';
+import {Member, Project} from '../../../../models/project';
+import {ProjectService} from '../../../../services/projects.service';
 
 @Component({
   selector: 'app-pmapp-project-assignment-view',
@@ -34,21 +35,25 @@ export class ViewAssignmentComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private taskService: TaskService,
               private userService: UserService,
+              private projectService: ProjectService,
               private snackBar: SnackbarService) {
     this.route.params.subscribe( params => {
       this.taskService.getBy(params['id'])
         .subscribe( values => {
-          this.assignment = values.assignment;
-          this.projectTeam = values.team;
-          },
-            error => {
-              this.snackBar.show('Error occurred retrieving this assignment.');
-              this.hasRights = false;
+          this.assignment = values;
+          Observable.zip(this.userService.user$,
+            this.projectService.getProject(values.project_id),
+            (user: User, project: Project) => ({user: user, project: project}))
+            .subscribe(res => {
+              this.projectTeam = res.project.team;
+              this.user = res.user;
+              this.hasRights = this.assignment.hasRights(res.user.email);
             });
-    });
-    this.userService.user$.subscribe(user => {
-      this.user = user;
-      this.hasRights = this.assignment.hasRights(user.email);
+          },
+          _ => {
+            this.snackBar.show('Error occurred retrieving this assignment.');
+            this.hasRights = false;
+          });
     });
   }
 

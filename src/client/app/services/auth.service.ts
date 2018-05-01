@@ -13,17 +13,13 @@ export class AuthService {
   private static  signInUrl = 'api/auth/signin';
   private static signUpUrl = 'api/auth/signup';
   // Initializations
-  constructor(private http: HttpClient,
-              private progressBarService: ProgressBarService) {
-  }
+  constructor(private http: HttpClient) {}
   // Public api methods
-  signUp(account: Account, user: User) {
-    const req = new HttpRequest(HttpMethods.Post, AuthService.signUpUrl, JSON.stringify({account: account, user: user}));
-    return this.makeRequest(req);
+  signUp(account: Account, user: User): Observable<any> {
+    return this.http.post(AuthService.signUpUrl, {account: account, user: user});
   }
-  signIn(account: Account) {
-    const req = new HttpRequest(HttpMethods.Post, AuthService.signInUrl, JSON.stringify(account));
-    return this.makeRequest(req);
+  signIn(account: Account): Observable<any> {
+    return this.http.post(AuthService.signInUrl, {account: account});
   }
 
   // Public methods
@@ -31,12 +27,5 @@ export class AuthService {
     // const token = localStorage.getItem('token');
     // return !this.jwtHelper.isTokenExpired(token);
     return localStorage.getItem('token') !== null || localStorage.getItem('token') !== undefined;
-  }
-
-  // Private methods
-  private makeRequest(req: HttpRequest<any>): Observable<any> {
-    this.progressBarService.availableProgress(true);
-    return this.http.request(req)
-        .finally( () => this.progressBarService.availableProgress(false));
   }
 }

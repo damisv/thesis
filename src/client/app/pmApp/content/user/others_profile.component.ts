@@ -32,7 +32,7 @@ export class OthersProfileComponent implements OnInit, OnDestroy {
                             }
                             this.userService.getFor(params.id).subscribe(
                                 data => {
-                                    this.profile = data.profile;
+                                    this.profile = data;
                                     this.titleService.setTitle(this.profile.firstName + '\'s profile');
                                 },
                                 error => console.error(error)

@@ -1,9 +1,6 @@
 import * as express from 'express';
 const router = express.Router();
 
-// Authorization Header should be checked
-// As it is crucial for some calls, for ex: DELETE
-
 /**
  * @method - GET
  * Get All user projects
