@@ -8,6 +8,7 @@ import {ProjectService} from '../../../services/projects.service';
 import {User} from '../../../models/user';
 import {Member, Project, ProjectPosition} from '../../../models/project';
 import {Task, TaskType} from '../../../models/task';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
     selector: 'app-pmapp-dashboard',
@@ -25,9 +26,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     subscription: Subscription  = this.userService.user$.subscribe(
       user => {
-            this.user = user;
-            this.titleService.setTitle(this.user.firstName + '\'s Dashboard');
-        }
+          this.user = user;
+          this.titleService.setTitle(this.user.firstName + '\'s Dashboard');
+      }
     );
     projectSubscription: Subscription = this.projectService.projects$.subscribe(
         projects => {

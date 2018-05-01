@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import decode from 'jwt-decode';
-import {AuthService} from '../../services/auth.service';
+import {AuthService, tokenExists} from '../../services/auth.service';
 import {ProjectService} from '../../services/projects.service';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class RoleGuard implements CanActivate {
     // const token = localStorage.getItem('token');
     // // decode the token to get its payload
     // const tokenPayload = decode(token);
-    if (!this.auth.isAuthenticated()) { // || this.projectService.isAdminOfCurrentProject(tokenPayload.email)) {
+    if (!tokenExists) { // || this.projectService.isAdminOfCurrentProject(tokenPayload.email)) {
       this.router.navigate(['dashboard']);
       return false;
     }

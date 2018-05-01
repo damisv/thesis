@@ -41,3 +41,10 @@ export function checkAccount(req, res, next) {
 export function checkParams(req, res, next) {
   (!req.params.id) ? res.status(400).send(new Error(StatusMessages._400)) : next();
 }
+export function isManager(req, res, next) {
+  const email = req['decoded'].info.email;
+  if (req.body.project.team.find(member => member.email === email && member.position === 0) === undefined) {
+    res.status(403).send(new Error(StatusMessages._403));
+  }
+  next();
+}

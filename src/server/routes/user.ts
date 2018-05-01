@@ -9,7 +9,6 @@ import {checkBody, checkParams, checkUser, StatusMessages} from '../utils';
 /**
  * @method - GET
  * Get current user
- * Email/id will be taken from token
  * @returns - {user: the user profile }
  */
 router.get('/', async function(req, res) {
@@ -24,7 +23,6 @@ router.get('/', async function(req, res) {
 /**
  * @method - PUT
  * Edit current user
- * Email/id will be taken from token
  * @body - Contains 1 value => user: User profile
  * @returns Void - success 200 is ok
  */
