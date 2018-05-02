@@ -65,8 +65,8 @@ router.patch('/:id', checkParams, async function(req, res) {
   try {
     const result = await DbClient.updateOne(
       {project_id: req.params.id , invites : { email: email}}, {$set : { status: 'accepted'}}, DbKeys.invites);
-    assert.notEqual(null, result);
-    res.status(200).send(result);
+    assert.equal(1, result.result.ok);
+    res.status(200).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 

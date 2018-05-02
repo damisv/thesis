@@ -7,3 +7,13 @@ export class Notification {
                 public _id: string
     ) {}
 }
+
+export class NotificationSettings {
+  constructor(public myTask: string,
+              public memberJoined: string,
+              public invite: [string],
+              public message: Date,
+              public error: string,
+              public _id: string
+  ) {}
+}

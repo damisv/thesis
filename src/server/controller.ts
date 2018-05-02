@@ -9,6 +9,8 @@ import * as inviteRouter from './routes/invite';
 import * as chatRouter from './routes/chat';
 import * as timelineRouter from './routes/timeline';
 import * as calendarRouter from './routes/calendar';
+import * as notificationRouter from './routes/notifications';
+import * as settingsRouter from './routes/settings';
 // middlewares
 import {checkAccount, checkBody, hasValidToken} from './utils';
 
@@ -22,6 +24,8 @@ router.use('/invite', hasValidToken, inviteRouter);
 router.use('/chat', hasValidToken, chatRouter);
 router.use('/timeline', hasValidToken, timelineRouter);
 router.use('/calendar', hasValidToken, calendarRouter);
+router.use('/notification', hasValidToken, notificationRouter);
+router.use('/settings', hasValidToken, settingsRouter);
 
 // Export the router
 export = router;
