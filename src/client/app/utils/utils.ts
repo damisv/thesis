@@ -61,9 +61,6 @@ function filterProjectByString(project: Project, value): boolean {
     project.team.filter(member => member.email.toLowerCase().includes(value)).length > 0;
 }
 function filterProjectByType(project: Project, value): boolean {
-  console.log('EMAIL', value.email);
-  console.log('POSITION', value.position);
-  console.log('THIS -> ', parseInt(value.position, 10) === 0, value.position === ProjectPosition.manager);
   return value.position === 'all' ? true :
     project.team.filter(member => member.email === value.email && member.position === parseInt(value.position, 10)).length > 0;
 }

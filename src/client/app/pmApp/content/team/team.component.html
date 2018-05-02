@@ -45,13 +45,13 @@
         <mat-card-title>Invite a member</mat-card-title>
       </mat-card-header>
       <mat-card-content>
+        <p>As you type email, returns available emails. You can add by writing the email and separate by comma, or press enter.</p>
         <mat-form-field>
           <mat-chip-list #chipList>
             <mat-chip *ngFor="let member of team; let i = index;" removable="true" (remove)="remove(i)">
               {{member}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <p>As you type email, returns available emails. You can add by writing the email and separate by comma, or press enter.</p>
             <input #addAssignee placeholder="Add members to invite" matInput
                    [matAutocomplete]="teamAuto"
                    [matChipInputFor]="chipList"
