@@ -58,7 +58,7 @@
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    (matChipInputTokenEnd)="add($event.input, $event.value)"
                    (keyup)="onKeyUp($event)">
-            <mat-autocomplete #teamAuto="matAutocomplete" optionSelected)="add(addAssignee, $event.option.value)">
+            <mat-autocomplete #teamAuto="matAutocomplete" (optionSelected)="add(addAssignee, $event.option.value)">
               <mat-option *ngFor="let member of membersAutocomplete | async" (click)="add(addAssignee, member.email)" [value]="member.email">
                 {{ member.email }}
               </mat-option>
