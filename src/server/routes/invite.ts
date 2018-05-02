@@ -91,10 +91,10 @@ router.delete('/:id', function(req, res) {
  */
 router.post('/isInvited', checkBody, async function(req, res) {
   try {
-    const result = await DbClient.findOne({project_id: req.body.projectID , invites : { email: req.body.email}}, DbKeys.invites);
+    const result = await DbClient.findOne({project: req.body.projectID , invites : {$in: [req.body.email]}}, DbKeys.invites);
     assert.notEqual(null, result);
     res.status(200).send(true);
-  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
+  } catch (error) { res.status(200).send(false); }
 });
 
 // Export the router

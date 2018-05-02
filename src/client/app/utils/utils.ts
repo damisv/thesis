@@ -1,5 +1,5 @@
 import {Task} from '../models/task';
-import {Project} from '../models/project';
+import {Project, ProjectPosition} from '../models/project';
 
 export enum HttpMethods {
   Get = 'GET',
@@ -62,7 +62,7 @@ function filterProjectByString(project: Project, value): boolean {
 }
 function filterProjectByType(project: Project, value): boolean {
   return value.position === 'all' ? true :
-    project.team.filter(member => member.email === value.email && member.position === value.position).length > 0;
+    project.team.filter(member => member.email === value.email && member.position === parseInt(value.position, 10)).length > 0;
 }
 
 

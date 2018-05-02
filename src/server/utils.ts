@@ -26,11 +26,13 @@ export function hasValidToken(req, res, next) {
 }
 
 export function checkBody(req, res, next) {
-  Object.keys(req.body).length === 0 ? res.status(400).send(new Error(StatusMessages._400)) : next();
+  if (Object.keys(req.body).length === 0) { return res.status(400).send(new Error(StatusMessages._400)); }
+  next();
 }
 
 export function checkUser(req, res, next) {
-  !req.body.user ? res.status(400).send(new Error(StatusMessages._400)) : next();
+  if (!req.body.user) { return res.status(400).send(new Error(StatusMessages._400)); }
+  next();
 }
 export function checkAccount(req, res, next) {
   if (!req.body.account || (!req.body.account.email || !req.body.account.password)) {
@@ -39,7 +41,8 @@ export function checkAccount(req, res, next) {
   next();
 }
 export function checkParams(req, res, next) {
-  (!req.params.id) ? res.status(400).send(new Error(StatusMessages._400)) : next();
+  if (!req.params.id) { return res.status(400).send(new Error(StatusMessages._400)); }
+  next();
 }
 export function isManager(req, res, next) {
   const email = req['decoded'].info.email;

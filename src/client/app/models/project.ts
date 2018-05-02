@@ -15,7 +15,7 @@ export class Project {
         public team: Member[] = [],
         public company?: string,
         public budget?: number,
-        public typeOf?: string,
+        public typeOf: string = 'public',
         public description?: string
     ) {}
 }

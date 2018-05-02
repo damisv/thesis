@@ -3,8 +3,6 @@ import {Title} from '@angular/platform-browser';
 import {ProjectService} from '../../../services/projects.service';
 import {Subscription} from 'rxjs/Subscription';
 import {InviteService} from '../../../services/invites.service';
-import {User} from '../../../models/user';
-import {UserService} from '../../../services/user.service';
 
 @Component({
   selector: 'app-pmapp-invites',

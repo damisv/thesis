@@ -34,7 +34,6 @@ import {TimelineService} from '../services/timeline.service';
 import {MyParticlesModule} from '../particles/myparticles.module';
 import {TeamComponent} from './content/team/team.component';
 import {InviteService} from '../services/invites.service';
-import {InviteMemberComponent} from './content/invites/invitemember.component';
 import {MyAssignmentsComponent} from './content/assignments/myassignments.component';
 import {ProjectAssignmentsComponent} from './content/assignments/project/projectassignments.component';
 import {ProjectAssignmentComponent} from './content/assignments/project/classic/projectassignment.component';
@@ -48,7 +47,6 @@ import {ContextMenuModule} from 'ngx-contextmenu';
 import {CalendarEventDialogComponent} from './content/calendar/calendareventdialog.component';
 import {CalendarService} from '../services/calendar.service';
 import {AuthService} from '../services/auth.service';
-import {JwtHelperService} from '@auth0/angular-jwt';
 import {RoleGuard} from './guards/role.guard';
 import {SocketService} from '../services/socket.service';
 import {NotificationService} from '../services/notification.service';
@@ -60,7 +58,6 @@ import {PushNotificationModule} from 'ng-push-notification';
     DashboardComponent,
     ProjectDashboardComponent,
     ProjectsComponent,
-    InviteMemberComponent,
     UserSidebarComponent,
     ProjectSidebarComponent,
     CreateprojectComponent,
