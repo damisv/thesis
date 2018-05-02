@@ -3,6 +3,7 @@ import {MaterialTheme, ThemeService} from '../services/theme.service';
 import {UserService} from '../services/user.service';
 import {User} from '../models/user';
 import {ProjectService} from '../services/projects.service';
+import {SocketService} from '../services/socket.service';
 
 @Component({
   selector: 'app-pmapp',
@@ -17,7 +18,8 @@ export class PMAppComponent {
 
   constructor(private themeService: ThemeService,
               private userService: UserService,
-              private projectService: ProjectService) {
+              private projectService: ProjectService,
+              private socketService: SocketService) {
     userService.getUser();
     userService.user$.subscribe(user => this.user = user);
     projectService.getProjects();

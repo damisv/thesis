@@ -50,6 +50,7 @@ import {CalendarService} from '../services/calendar.service';
 import {AuthService} from '../services/auth.service';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {RoleGuard} from './guards/role.guard';
+import {SocketService} from '../services/socket.service';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import {RoleGuard} from './guards/role.guard';
     CalendarService,
     InviteService,
     TimelineService,
-    SnackbarService
+    SnackbarService,
+    SocketService
   ],
   entryComponents: [CalendarEventDialogComponent]
 })
