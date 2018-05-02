@@ -27,7 +27,7 @@ export class IOServer {
   }
 
   private async onRegister(socket, data) {
-    console.log('register' + socket.id);
+    console.log('register ' + socket.id);
     try {
       const decoded = await jwt.verify(data, 'secret');
       assert.notEqual(null, decoded);
@@ -41,7 +41,8 @@ export class IOServer {
         this.projects[project._id] = project.name;
       });
       socket.emit('connected');
-    } catch (error) { socket.emit('loginError'); }
+      console.log('emit connected');
+    } catch (error) { console.log('emit login error'); socket.emit('loginError'); }
   }
 
   // Public Methods

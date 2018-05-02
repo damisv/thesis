@@ -55,10 +55,11 @@ export class NotificationService implements OnDestroy {
   ngOnDestroy() {
   }
   showPush(title: string , body: string, data: any) {
-    this.pushNotification.show(
-      title,
-      { body: body , data: data},
-      this.closeDelay, // close delay.
-    ).catch();
+    this.pushNotification.requestPermission().then( () =>
+      this.pushNotification.show(
+        title,
+        { body: body , data: data},
+        this.closeDelay, // close delay.
+      )).catch();
   }
 }
