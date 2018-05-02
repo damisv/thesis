@@ -11,6 +11,7 @@
 .mat-table {
   overflow: auto;
   max-height: 35em;
+  min-height: 35em;
 }
 .mat-column-select { overflow: visible; }
 mat-radio-button { margin-right: 15% !important; }

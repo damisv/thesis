@@ -23,10 +23,10 @@ import {Title} from '@angular/platform-browser';
                         The page you are looking for, doesn't exist ... Yet !
                         <br>
                         <br>
-                        <mat-input-container>
-                            <mat-icon matPrefix>search</mat-icon>
-                            <input matInput placeholder="Search for something">
-                        </mat-input-container>
+                      <mat-form-field>
+                        <mat-icon matPrefix>search</mat-icon>
+                        <input matInput placeholder="Search for something">
+                      </mat-form-field>
                     </mat-card-content>
                 </mat-card>
             </div>

@@ -5,25 +5,22 @@
         fxLayoutGap.xs="0">
     <div fxFlex="auto">
         <mat-card class="card" >
-            <mat-card-header>
-                <mat-card-title></mat-card-title>
-                <mat-card-subtitle>
+            <mat-card-content>
+              <mat-tab-group #tab [selectedIndex]="selectedIndex">
+                <mat-tab label="Data Table">
                   <div class="flex_container">
-                    <mat-form-field>
-                      <mat-select placeholder="Filter" (change)="typeFilter.next({type: filterType.type, value: $event.target.value})">
-                        <mat-option *ngFor="let position of positions" [value]="position">{{position}}</mat-option>
+                    <mat-form-field class="type_filter">
+                      <mat-select placeholder="Member Type" value="all" (change)="typeFilter.next({type: filterType.type, value: $event.value})">
+                        <mat-option value="all">All</mat-option>
+                        <mat-option value="0">Manager</mat-option>
+                        <mat-option value="1">Member</mat-option>
                       </mat-select>
                     </mat-form-field>
                     <mat-form-field class="name_filter">
-                      <input matInput (keyup)="nameFilter.next({type: filterType.name, value: $event.target.value})" placeholder="Filter by name">
+                      <input matInput (keyup)="nameFilter.next({type: filterType.name, value: $event.target.value})" placeholder="Filter by name or member's email">
                     </mat-form-field>
                   </div>
-                </mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-                <mat-tab-group #tab [selectedIndex]="selectedIndex">
-                    <mat-tab label="Data Table">
-                        <div class="table-container mat-elevation-z8">
+                    <div class="table-container mat-elevation-z8">
                             <mat-table #table [dataSource]="dataSource">
                                 <ng-container matColumnDef="Name">
                                     <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
@@ -65,12 +62,11 @@
                                          [showFirstLastButtons]="true">
                           </mat-paginator>
                         </div>
-                    </mat-tab>
-                    <!-- // Data table -->
-                    <mat-tab label="Create Project">
-                        <app-pmapp-createproject (projectCreated)="addProject($event)" [user]="user"></app-pmapp-createproject>
-                    </mat-tab>
-                </mat-tab-group>
+                </mat-tab>
+                <mat-tab label="Create Project">
+                    <app-pmapp-createproject (projectCreated)="addProject($event)" [user]="user"></app-pmapp-createproject>
+                </mat-tab>
+              </mat-tab-group>
             </mat-card-content>
             <mat-card-footer>
                 <mat-divider></mat-divider>
@@ -79,6 +75,3 @@
         </mat-card>
     </div>
 </div>
-
-
-

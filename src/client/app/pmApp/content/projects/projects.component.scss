@@ -24,5 +24,6 @@ tr {
   flex-direction: column;
   align-content: center;
   margin: 1em;
+  & .type_filter {width: 50%;}
   & .name_filter { width: 100%;}
 }

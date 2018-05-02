@@ -92,7 +92,7 @@
 
           <ng-container matColumnDef="end_date">
             <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element?.date_end}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element?.date_end | date:'fullDate'}} </mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -5,6 +5,7 @@ import {checkBody, checkParams, StatusMessages} from '../utils';
 import * as assert from 'assert';
 const router = express.Router();
 import DbClient = require('../database/dbClient');
+const ObjectID = require('mongodb').ObjectID;
 
 /**
  * @method - GET
@@ -45,7 +46,7 @@ router.get('/issue', async function(req, res) {
  */
 router.get('/project/:id', checkParams, async function(req, res) {
   try {
-    const result = await DbClient.find({project_id: Object(req.params.id) }, DbKeys.tasks);
+    const result = await DbClient.find({project_id: req.params.id}, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -60,7 +61,7 @@ router.get('/project/:id', checkParams, async function(req, res) {
  */
 router.get('/:id', checkParams, async function(req, res) {
   try {
-    const result = await DbClient.findOne({_id: Object(req.params.id) }, DbKeys.tasks);
+    const result = await DbClient.findOne({_id: ObjectID(req.params.id) }, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -91,7 +92,7 @@ router.post('/', checkBody, async function(req, res) {
  */
 router.put('/:id', checkBody, checkParams, async function(req, res) {
   try {
-    const result = await DbClient.updateOne({_id: Object(req.params.id)}, req.body.task, DbKeys.tasks);
+    const result = await DbClient.updateOne({_id: ObjectID(req.params.id)}, req.body.task, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -107,7 +108,7 @@ router.put('/:id', checkBody, checkParams, async function(req, res) {
  */
 router.patch('/:id', checkBody, checkParams, async function(req, res) {
   try {
-    const result = await DbClient.updateOne({_id: Object(req.params.id)}, req.body.task, DbKeys.tasks);
+    const result = await DbClient.updateOne({_id: ObjectID(req.params.id)}, req.body.task, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -115,4 +116,3 @@ router.patch('/:id', checkBody, checkParams, async function(req, res) {
 
 // Export the router
 export = router;
-
