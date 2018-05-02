@@ -44,7 +44,7 @@ export class ProjectService {
 
   // This method is used for RoleGuard
   isAdminOfCurrentProject(email: string) {
-    return this.project.getValue().team.find(member => member.email === email && member.position === ProjectPosition.manager) === undefined;
+    return this.project.value.team.find(member => member.email === email && member.position === ProjectPosition.manager) === undefined;
   }
 
   initProject(projects) {
@@ -67,7 +67,7 @@ export class ProjectService {
       this.project.next(project);
   }
 
-  addToProjects(project: Project) { this.projects.getValue().push(project); }
+  addToProjects(project: Project) { this.projects.value.push(project); }
 
   edit(project): Observable<any> {
     return this.http.put(`${ProjectService.base}/` + project._id, {project: project});
@@ -87,11 +87,11 @@ export class ProjectService {
   }
 
   remove(index: number) {
-    if (this.project.getValue() !== null) {
-      this.project.getValue().team.splice(index, 1);
-      const tempProject = this.project.getValue();
-      const tempIndex = this.projects.getValue().findIndex(value => value._id === tempProject._id);
-      this.projects.getValue()[tempIndex] = tempProject;
+    if (this.project.value !== null) {
+      this.project.value.team.splice(index, 1);
+      const tempProject = this.project.value;
+      const tempIndex = this.projects.value.findIndex(value => value._id === tempProject._id);
+      this.projects.value[tempIndex] = tempProject;
     }
   }
 

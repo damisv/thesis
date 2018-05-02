@@ -33,6 +33,8 @@ export function applyFilter(filter: FilterOption, data: any, isProject: boolean 
     // case FilterType.assigner: return task.assigner_email === filter.value;
     // case FilterType.assignee: return task.assignee_email.filter(email => email.includes(filter.value)).length > 0;
     case FilterType.type: return !isProject ? filterTaskByType(data, filter.value) : filterProjectByType(data, filter.value);
+    case FilterType.nameType:
+      return filterProjectByString(data, filter.value.name.value) && filterProjectByType(data, filter.value.type.value);
     case FilterType.nameTypeStatus:
       return filterTaskByString(data, filter.value.name.value) &&
         filterByStatus(data, filter.value.status.value) &&
@@ -59,7 +61,7 @@ function filterProjectByString(project: Project, value): boolean {
     project.team.filter(member => member.email.toLowerCase().includes(value)).length > 0;
 }
 function filterProjectByType(project: Project, value): boolean {
-  return value === 'all' ? true :
+  return value.position === 'all' ? true :
     project.team.filter(member => member.email === value.email && member.position === value.position).length > 0;
 }
 

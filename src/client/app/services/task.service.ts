@@ -4,17 +4,15 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/finally';
 import { Observable } from 'rxjs/Observable';
-import {Task, TaskType} from '../models/task';
-import {ProgressBarService} from './progressbar.service';
+import {Task} from '../models/task';
 import {Subject} from 'rxjs/Subject';
-import {HttpClient, HttpRequest} from '@angular/common/http';
-import {HttpMethods} from '../utils/utils';
+import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class TaskService {
   // Static Properties
-  private static base = 'api/assignment';
+  private static base = 'api/assignments';
   // Rx Properties
   // Current task for editing or viewing
   private task = new Subject<Task>();
@@ -34,7 +32,10 @@ export class TaskService {
   // Get All Project Assignments
   getFor(projectID: string) {
     this.http.get<Task[]>(`${TaskService.base}/project/` + projectID)
-      .subscribe( values => this.assignments.next(values));
+      .subscribe( values => {
+        console.log(values);
+        this.assignments.next(values);
+      });
   }
 
   // Get Task by ID
