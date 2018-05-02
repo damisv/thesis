@@ -32,10 +32,7 @@ export class TaskService {
   // Get All Project Assignments
   getFor(projectID: string) {
     this.http.get<Task[]>(`${TaskService.base}/project/` + projectID)
-      .subscribe( values => {
-        console.log(values);
-        this.assignments.next(values);
-      });
+      .subscribe( values => this.assignments.next(values));
   }
 
   // Get Task by ID

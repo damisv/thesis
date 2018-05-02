@@ -46,7 +46,7 @@ router.get('/issue', async function(req, res) {
  */
 router.get('/project/:id', checkParams, async function(req, res) {
   try {
-    const result = await DbClient.find({project_id: ObjectID(req.params.id) }, DbKeys.tasks);
+    const result = await DbClient.find({project_id: req.params.id}, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -116,4 +116,3 @@ router.patch('/:id', checkBody, checkParams, async function(req, res) {
 
 // Export the router
 export = router;
-
