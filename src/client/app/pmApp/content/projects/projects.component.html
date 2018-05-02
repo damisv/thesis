@@ -6,7 +6,7 @@
     <div fxFlex="auto">
         <mat-card class="card" >
             <mat-card-content>
-              <mat-tab-group #tab [selectedIndex]="selectedIndex">
+              <mat-tab-group #tab [(selectedIndex)]="selectedIndex">
                 <mat-tab label="Data Table">
                   <div class="flex_container">
                     <mat-form-field class="type_filter">
@@ -17,7 +17,10 @@
                       </mat-select>
                     </mat-form-field>
                     <mat-form-field class="name_filter">
-                      <input matInput (keyup)="nameFilter.next({type: filterType.name, value: $event.target.value})" placeholder="Filter by name or member's email">
+                      <input matInput #filterInput (keyup)="nameFilter.next({type: filterType.name, value: $event.target.value})" placeholder="Filter by name or member's email">
+                      <button mat-button *ngIf="filterInput.value" matPrefix mat-icon-button aria-label="Clear" (click)="filterInput.value = null ">
+                        <mat-icon>close</mat-icon>
+                      </button>
                     </mat-form-field>
                   </div>
                     <div class="table-container mat-elevation-z8">
@@ -34,7 +37,7 @@
 
                                 <ng-container matColumnDef="Description">
                                     <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.description | truncate: 15}} </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="Members">

@@ -76,7 +76,27 @@
             <mat-panel-description>Invite users to work on your project</mat-panel-description>
           </mat-expansion-panel-header>
           <ng-template matExpansionPanelContent>
-            <app-invite-member (addInvite)="onInvite($event)" [userEmail]="user.email" [project]="project" ></app-invite-member>
+            <p>As you type email, returns available emails. You can add by writing the email and separate by comma, or press enter.</p>
+            <mat-form-field>
+              <mat-chip-list #chipList>
+                <mat-chip *ngFor="let member of membersToInvite; let i = index;" removable="true" (remove)="remove(i)">
+                  {{member}}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+
+                <input #addAssignee placeholder="Add members to invite" matInput
+                       [matAutocomplete]="teamAuto"
+                       [matChipInputFor]="chipList"
+                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                       (matChipInputTokenEnd)="add($event.input, $event.value)"
+                       (keyup)="onKeyUp($event)">
+                <mat-autocomplete autoActiveFirstOption #teamAuto="matAutocomplete" (optionSelected)="add(addAssignee, $event.option.value)">
+                  <mat-option *ngFor="let member of membersAutocomplete | async" (click)="add(addAssignee, member.email)" [value]="member.email">
+                    {{ member.email }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-chip-list>
+            </mat-form-field>
           </ng-template>
         </mat-expansion-panel>
       <div>
