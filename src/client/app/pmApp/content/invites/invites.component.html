@@ -15,26 +15,21 @@
           <mat-table #table [dataSource]="invites">
             <ng-container matColumnDef="no.">
               <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.index}} </mat-cell>
+              <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">
               <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
               <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="position">
-              <mat-header-cell *matHeaderCellDef> Position </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
-            </ng-container>
-
             <ng-container matColumnDef="accept">
               <mat-header-cell *matHeaderCellDef> Accept </mat-header-cell>
-              <mat-cell *matCellDef="let element"><button mat-fab color="primary" (click)="acceptInvite(element._id, element.index)">Primary</button></mat-cell>
+              <mat-cell *matCellDef="let element; let i = index;" (click)="acceptInvite(element._id, i)"><mat-icon color="primary">done</mat-icon></mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="reject">
               <mat-header-cell *matHeaderCellDef> Reject </mat-header-cell>
-              <mat-cell *matCellDef="let element"><button mat-fab color="warn" (click)="rejectInvite(element._id, element.index)">Primary</button></mat-cell>
+              <mat-cell *matCellDef="let element; let i = index;" (click)="rejectInvite(element._id, i)"><mat-icon color="warn">close</mat-icon></mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -50,5 +45,3 @@
     </mat-card>
   </div>
 </div>
-
-

@@ -10,10 +10,13 @@ import {InviteService} from '../../../services/invites.service';
   styleUrls: ['./invites.component.scss']
 })
 export class InvitesComponent implements OnInit, OnDestroy {
-  displayedColumns = ['no.', 'name', 'position', 'accept', 'reject'];
+  displayedColumns = ['no.', 'name', 'accept', 'reject'];
 
   invites: object[] = [];
-  invitesSubscription: Subscription = this.inviteService.invites$.subscribe(res => this.invites = res);
+  invitesSubscription: Subscription = this.inviteService.invites$.subscribe(res => {
+    console.log(res);
+    this.invites = res;
+  });
   constructor( private titleService: Title,
                private inviteService: InviteService,
                private projectService: ProjectService

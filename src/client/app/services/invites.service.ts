@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpRequest} from '@angular/common/http';
-import {HttpMethods} from '../utils/utils';
+import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
-import {ProgressBarService} from './progressbar.service';
 import {UserService} from './user.service';
 
 @Injectable()
@@ -31,7 +29,9 @@ export class InviteService {
   }
 
   removeInvite(index: number) {
-    this.invites.getValue().splice(index, 1);
+    const temp = this.invites.value;
+    temp.splice(index, 1);
+    this.invites.next(temp);
   } // removes invite from array
 
   getUserInvites() {

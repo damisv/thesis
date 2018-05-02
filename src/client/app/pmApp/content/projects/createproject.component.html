@@ -91,7 +91,7 @@
                        (matChipInputTokenEnd)="add($event.input, $event.value)"
                        (keyup)="onKeyUp($event)">
                 <mat-autocomplete autoActiveFirstOption #teamAuto="matAutocomplete" (optionSelected)="add(addAssignee, $event.option.value)">
-                  <mat-option *ngFor="let member of membersAutocomplete | async" (click)="add(addAssignee, member.email)" [value]="member.email">
+                  <mat-option *ngFor="let member of membersAutocomplete | async" [value]="member.email">
                     {{ member.email }}
                   </mat-option>
                 </mat-autocomplete>

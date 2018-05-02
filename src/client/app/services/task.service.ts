@@ -41,29 +41,33 @@ export class TaskService {
   }
 
   create(task: Task): Observable<any> {
-    // if (typeof task.date_start !== 'undefined') { task.date_start = task.date_start.toISOString(); }
-    // if (typeof task.date_end !== 'undefined') { task.date_end = task.date_end.toISOString(); }
     return this.http.post(TaskService.base, {task: task});
   }
 
   edit(task: Task): Observable<any> {
-    return this.http.put(`${TaskService.base}/` + task._id, {task: task});
+    return this.http.put(TaskService.base, {task: task});
   }
 
   changeStatus(task: Task): Observable<any> {
-    return this.http.patch(`${TaskService.base}/` + task._id, {task: task});
+    return this.http.patch(TaskService.base, {task: task});
   }
 
   // Changes the status on this assignments array
   changeStatusOf(id: string, status: boolean) {
-    const index = this.assignments.getValue().findIndex(value => value._id === id);
-    this.assignments.getValue()[index].completed = status;
+    const temp = this.assignments.value;
+    const index = temp.findIndex(value => value._id === id);
+    temp[index].completed = status;
+    this.assignments.next(temp);
   }
 
   // When a task arrives through socket, this method should be called.
   add(task: Task) {
     if (localStorage.hasOwnProperty('projectID')) {
-       if (task.project_id === localStorage.getItem('projectID')) { this.assignments.getValue().push(task); }
+       if (task.project_id === localStorage.getItem('projectID')) {
+         const temp = this.assignments.value;
+         temp.push(task);
+         this.assignments.next(temp);
+       }
     }
   }
 }

@@ -21,13 +21,11 @@ export class ProjectAssignmentsComponent {
 
   create(task) {
     this.taskService.create(task)
-      .subscribe( _ => {
-        this.taskService.add(task);
-        this.snackBar.show(task.name + ' successfully created!');
-        this.changeTab();
+      .subscribe( res => {
+        this.taskService.add(res.task);
+        this.snackBar.show(res.task.name + ' successfully created!');
+        this.selectedTab = 0;
       },
         err => this.snackBar.show('Error occurred on creating task. Try again.'));
   }
-
-  private changeTab() { this.selectedTab = 0; }
 }

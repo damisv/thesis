@@ -56,7 +56,7 @@
         <mat-toolbar-row>
           <mat-form-field class="name_filter">
             <input matInput #filterInput (keyup)="nameFilter.next({type: filterType.name, value: $event.target.value})" placeholder="Filter">
-            <button mat-button *ngIf="filterInput.value" matPrefix mat-icon-button aria-label="Clear" (click)="filterInput.value = null ">
+            <button mat-button *ngIf="filterInput.value" matPrefix mat-icon-button aria-label="Clear" (click)="filterInput.value=''">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>

@@ -52,7 +52,10 @@ export class ProjectAssignmentComponent implements OnInit {
       .subscribe( filters => this.dataSource.filter = new FilterOption(FilterType.nameTypeStatus, filters));
   }
 
-  openTask(id: string) { this.router.navigate(['assignmentview/' + id]); }
+  openTask(id: string) {
+    console.log(id);
+    this.router.navigate(['app', 'assignmentview', id]);
+  }
 
   changeStatusOf(task: Task) {
     this.taskService.changeStatus(task)

@@ -10,13 +10,14 @@ const router = express.Router();
  * @method - GET
  * Get user invites
  * The id or email will be taken from the authorization header, as long as the token is ok.
- * @returns Array of invites in the form of: {projectId: string, name: string, position: number/enum}
+ * @returns Array of invites in the form of: {project: string, name: string}
  */
 router.get('/', async function(req, res) {
   const email = req['decoded'].info.email;
   try {
-    const result = await DbClient.find({email: email }, DbKeys.invites);
+    const result = await DbClient.find({invites : {$in: [email]}}, DbKeys.invites, { project: 1, _id: 0});
     assert.notEqual(null, result);
+    console.log(result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
@@ -46,7 +47,7 @@ router.get('/:id', checkParams, async function(req, res) {
  */
 router.post('/', checkParams, async function(req, res) {
   try {
-    const result = await DbClient.insertMany({project_id: req.body.projectID, invites: req.body.invites}, DbKeys.invites);
+    const result = await DbClient.insertMany({project: req.body.projectID, invites: req.body.invites}, DbKeys.invites);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }

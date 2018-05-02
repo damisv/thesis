@@ -72,16 +72,16 @@ router.post('/', checkBody, async function(req, res) {
     assert.notEqual(null, timeline);
     console.log('timeline');
     if ( req.body.invites.length > 0) {
-      await inviteMembersNotifications(req.body.invites, result.ops[0]._id);
+      await inviteMembersNotifications(req.body.invites, result.ops[0]._id.valueOf(), req.body.project.name);
     }
     console.log(result.ops[0]);
     res.status(200).send({project: result.ops[0]});
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
-async function inviteMembersNotifications(invites: string[], projectID: string) {
+async function inviteMembersNotifications(invites: string[], projectID: string, projectName: string) {
   try {
-    const result = await DbClient.insertOne(invites, DbKeys.invites);
+    const result = await DbClient.insertOne({project: projectID, name: projectName, invites: invites}, DbKeys.invites);
     assert.notEqual(null, result);
     console.log('notifications');
     const notifications = invites.map( email => ({email: email,

@@ -28,7 +28,7 @@ export class ViewAssignmentComponent implements OnInit {
   hasRights = false;
 
   // Assignees
-  separatorKeysCodes = [ENTER, COMMA];
+  separatorKeysCodes = [COMMA];
   filteredTeam: Observable<string[]>;
   searchTerm$ = new Subject<string>();
 
@@ -69,13 +69,26 @@ export class ViewAssignmentComponent implements OnInit {
       member.toLowerCase().indexOf(val.toLowerCase()) === 0);
   }
 
-  // Add assignees and chips
-  add(input, value): void {
-    if ((value || '').trim()) {
-      if (this.assignment.assignee_email.findIndex(value) === -1) {
-        this.assignment.assignee_email.push(value.trim());
-      }
+  onKeyUp(event) {
+    if (!this.hasRights) {
+      this.snackBar.show('You don\'t have the necessary rights to do that.');
+      return;
     }
+    if (event.which <= 90 && event.which >= 48) { this.searchTerm$.next(event.target.value); }
+  }
+
+  // Add assignees and chips
+  add(input, email): void {
+    if (!(email || '').trim()) { return; }
+    if (this.assignment.assignee_email.indexOf(email) !== -1) {
+      this.snackBar.show(`${email} has been already assigned`);
+      return;
+    }
+    if (this.projectTeam.filter(member => member.email === email).length === 0) {
+      this.snackBar.show(`${email} is not a member of this project`);
+      return;
+    }
+    this.assignment.assignee_email.push(email.trim());
     if (input) { input.value = ''; }
   }
 
@@ -88,7 +101,7 @@ export class ViewAssignmentComponent implements OnInit {
   }
 
   onSave() {
-    if (this.assignment.hasRights(this.user.email)) {
+    if (!this.hasRights) {
       this.snackBar.show('You don\'t have the necessary rights to do that.');
       return;
     }
@@ -101,8 +114,11 @@ export class ViewAssignmentComponent implements OnInit {
       return;
     }
     this.taskService.edit(this.assignment)
-      .subscribe( res => this.snackBar.show('Assignment Updated'),
-                error => this.snackBar.show('Updating assignment failed.Try again.'));
+      .subscribe( res => {
+        this.taskService.getFor(this.assignment.project_id);
+        this.snackBar.show('Assignment Updated');
+        },
+          error => this.snackBar.show('Updating assignment failed.Try again.'));
   }
 
   // Expansion Panels methods

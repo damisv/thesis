@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/finally';
 import { Observable } from 'rxjs/Observable';
-import {HttpClient, HttpRequest} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Message} from '../models/message';
-import {HttpMethods} from '../utils/utils';
 import {ProjectService} from './projects.service';
-import {ProgressBarService} from './progressbar.service';
 
 export class ChatThread {
   constructor(public id: string, public name: string,
@@ -35,7 +33,11 @@ export class ChatService {
     return this.http.post(ChatService.base, {message: Message});
   }
 
-  receivedOnProject(message: Message) { this.threads.value[message.receiver].lastMessages.push(message); }
+  receivedOnProject(message: Message) {
+    const temp = this.threads.value;
+    temp[message.receiver].lastMessages.push(message);
+    this.threads.next(temp);
+  }
 
   getMessages(id: string): Observable<Message[]> {
     return this.http.get<Message[]>(`${ChatService.base}/` + id);

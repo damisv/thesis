@@ -7,7 +7,6 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="flex_container">
-
         <mat-radio-group [(ngModel)]="assignment.type">
           <mat-radio-button [value]="taskType.task">Task</mat-radio-button>
           <mat-radio-button [value]="taskType.issue">Issue</mat-radio-button>
@@ -60,15 +59,14 @@
   <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>Assigning</mat-panel-title>
-      <mat-panel-description>{{ 0 }} assigness<mat-icon>group_add</mat-icon>
+      <mat-panel-description>{{ assignment?.assignee_email.length }} assigness<mat-icon>group_add</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <div class="flex_container">
         <mat-form-field>
           <mat-chip-list #chipList>
-            <mat-chip *ngFor="let member of assignment?.assignee_email; let i = index;" selectable="true"
-                      removable="true" (remove)="remove(i)">
+            <mat-chip *ngFor="let member of assignment?.assignee_email; let i = index;" removable="true" (remove)="remove(i)">
               {{member}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
@@ -78,9 +76,10 @@
                    [matChipInputFor]="chipList"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    (matChipInputTokenEnd)="add($event.input, $event.value)"
-                    (keyup)="searchTerm$.next($event.target.value)">
-            <mat-autocomplete #teamAuto="matAutocomplete">
-              <mat-option *ngFor="let member of filteredTeam | async" (click)="add(addAssignee, member)" [value]="member">
+                    (keyup)="onKeyUp($event)">
+            <mat-hint align="start"><strong>You can enter multiple values by comma.</strong> </mat-hint>
+            <mat-autocomplete #teamAuto="matAutocomplete" (optionSelected)="add(addAssignee, $event.option.value)">
+              <mat-option *ngFor="let member of filteredTeam | async" [value]="member">
                 {{ member }}
               </mat-option>
             </mat-autocomplete>

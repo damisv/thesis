@@ -1,7 +1,7 @@
 import * as express from 'express';
 import {Error} from '../../client/app/models/error';
 import {DbKeys} from '../database/utils';
-import {checkBody, checkParams, StatusMessages} from '../utils';
+import {checkBody, checkParams, hasRightsOnAssignment, StatusMessages} from '../utils';
 import * as assert from 'assert';
 const router = express.Router();
 import DbClient = require('../database/dbClient');
@@ -75,10 +75,13 @@ router.get('/:id', checkParams, async function(req, res) {
  * @returns Void - success 200 is ok
  */
 router.post('/', checkBody, async function(req, res) {
+  const task = req.body.task;
+  task.assigner_email = req['decoded'].info.email;
+  task.date_created = new Date();
   try {
     const result = await DbClient.insertOne(req.body.task, DbKeys.tasks);
     assert.notEqual(null, result);
-    res.status(200).send(result);
+    res.status(200).send({task: result.ops[0]});
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
@@ -90,10 +93,12 @@ router.post('/', checkBody, async function(req, res) {
  * @param - task id
  * @returns Void - success 200 is ok
  */
-router.put('/:id', checkBody, checkParams, async function(req, res) {
+router.put('/', checkBody, hasRightsOnAssignment, async function(req, res) {
+  const temp = req.body.task;
+  temp._id = ObjectID(req.body.task._id);
   try {
-    const result = await DbClient.updateOne({_id: ObjectID(req.params.id)}, req.body.task, DbKeys.tasks);
-    assert.notEqual(null, result);
+    const result = await DbClient.save(temp, DbKeys.tasks);
+    assert.equal(1, result.result.ok);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
@@ -101,14 +106,14 @@ router.put('/:id', checkBody, checkParams, async function(req, res) {
 /**
  * @method - PATCH
  * Edit assignment status
- * Email will be taken from token
  * @body - Contains 1 value => task: Task
  * @param - task id
  * @returns Void - success 200 is ok
  */
-router.patch('/:id', checkBody, checkParams, async function(req, res) {
+router.patch('/', checkBody, hasRightsOnAssignment, async function(req, res) {
   try {
-    const result = await DbClient.updateOne({_id: ObjectID(req.params.id)}, req.body.task, DbKeys.tasks);
+    const result = await DbClient.updateOne({_id: ObjectID(req.body.task._id)},
+      {$set: { completed: req.body.task.completed}}, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }

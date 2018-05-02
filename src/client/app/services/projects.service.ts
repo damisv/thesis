@@ -67,7 +67,11 @@ export class ProjectService {
       this.project.next(project);
   }
 
-  addToProjects(project: Project) { this.projects.value.push(project); }
+  addToProjects(project: Project) {
+    const temp = this.projects.value;
+    temp.push(project);
+    this.projects.next(temp);
+  }
 
   edit(project): Observable<any> {
     return this.http.put(`${ProjectService.base}/` + project._id, {project: project});

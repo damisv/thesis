@@ -47,7 +47,14 @@ export function checkParams(req, res, next) {
 export function isManager(req, res, next) {
   const email = req['decoded'].info.email;
   if (req.body.project.team.find(member => member.email === email && member.position === 0) === undefined) {
-    res.status(403).send(new Error(StatusMessages._403));
+    return res.status(403).send(new Error(StatusMessages._403));
+  }
+  next();
+}
+export function hasRightsOnAssignment(req, res, next) {
+  const email = req['decoded'].info.email;
+  if (req.body.task.assigner_email !== email || req.body.task.assignee_email.find(value => value === email) === undefined) {
+    return res.status(403).send(new Error(StatusMessages._403));
   }
   next();
 }

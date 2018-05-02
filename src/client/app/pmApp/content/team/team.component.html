@@ -27,7 +27,7 @@
 
           <ng-container matColumnDef="remove">
             <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
-            <mat-cell *matCellDef="let element"><button mat-fab color="warn" (click)="removeMember(element.email, element.index)">Primary</button></mat-cell>
+            <mat-cell *matCellDef="let element" (click)="removeMember(element.email, element.index)"><mat-icon color="warn">close</mat-icon></mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -59,7 +59,7 @@
                    (matChipInputTokenEnd)="add($event.input, $event.value)"
                    (keyup)="onKeyUp($event)">
             <mat-autocomplete #teamAuto="matAutocomplete" (optionSelected)="add(addAssignee, $event.option.value)">
-              <mat-option *ngFor="let member of membersAutocomplete | async" (click)="add(addAssignee, member.email)" [value]="member.email">
+              <mat-option *ngFor="let member of membersAutocomplete | async" [value]="member.email">
                 {{ member.email }}
               </mat-option>
             </mat-autocomplete>

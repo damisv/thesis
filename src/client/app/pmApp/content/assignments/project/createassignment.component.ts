@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA} from '@angular/cdk/keycodes';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {map, startWith} from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class CreateAssignmentComponent implements OnInit {
   taskType = TaskType;
 
   // Assignees
-  separatorKeysCodes = [ENTER, COMMA];
+  separatorKeysCodes = [COMMA];
   filteredTeam: Observable<string[]>;
   searchTerm$ = new Subject<string>();
 
@@ -36,17 +36,24 @@ export class CreateAssignmentComponent implements OnInit {
   }
 
   filter(val: string): string[] {
-    return this.project.team.map(value => value.email).filter(member =>
-      member.toLowerCase().indexOf(val.toLowerCase()) === 0);
+    return this.project.team.map(value => value.email)
+      .filter(member => member.toLowerCase().indexOf(val.toLowerCase()) === 0);
   }
 
+  onKeyUp(event) { if (event.which <= 90 && event.which >= 48) { this.searchTerm$.next(event.target.value); }}
+
   // Add assignees and chips
-  add(input, value): void {
-    if ((value || '').trim()) {
-      if (this.assignment.assignee_email.findIndex(value) === -1) {
-        this.assignment.assignee_email.push(value.trim());
-      }
+  add(input, email): void {
+    if (!(email || '').trim()) { return; }
+    if (this.assignment.assignee_email.indexOf(email) !== -1) {
+        this.snackBar.show(`${email} has been already assigned`);
+        return;
     }
+    if (this.project.team.filter(member => member.email === email).length === 0) {
+      this.snackBar.show(`${email} is not a member of this project`);
+      return;
+    }
+    this.assignment.assignee_email.push(email.trim());
     if (input) { input.value = ''; }
   }
 
