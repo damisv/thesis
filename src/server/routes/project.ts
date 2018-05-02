@@ -66,7 +66,7 @@ router.post('/', checkBody, async function(req, res) {
     const result = await DbClient.insertOne(req.body.project, DbKeys.projects);
     assert.notEqual(null, result);
     ioServer.addProject(result.ops[0]._id, result.ops[0].name);
-    // ioServer.joinRoom(result.ops[0]._id, email);
+    ioServer.joinRoom(result.ops[0]._id, email);
     const timeline = await DbClient.insertOne({name: result.ops[0].name, date: new Date(Date.now()),
                                                 description: 'Project created', project: result.ops[0]._id}, DbKeys.timeline);
     assert.notEqual(null, timeline);

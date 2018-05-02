@@ -51,6 +51,8 @@ import {AuthService} from '../services/auth.service';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {RoleGuard} from './guards/role.guard';
 import {SocketService} from '../services/socket.service';
+import {NotificationService} from '../services/notification.service';
+import {PushNotificationModule} from 'ng-push-notification';
 
 @NgModule({
   declarations: [
@@ -92,7 +94,8 @@ import {SocketService} from '../services/socket.service';
     TruncateModule,
     MglTimelineModule,
     CalendarModule.forRoot(),
-    ContextMenuModule.forRoot({ autoFocus: true })
+    ContextMenuModule.forRoot({ autoFocus: true }),
+    PushNotificationModule.forRoot()
   ],
   providers: [
     AuthService,
@@ -106,7 +109,8 @@ import {SocketService} from '../services/socket.service';
     InviteService,
     TimelineService,
     SnackbarService,
-    SocketService
+    SocketService,
+    NotificationService
   ],
   entryComponents: [CalendarEventDialogComponent]
 })
