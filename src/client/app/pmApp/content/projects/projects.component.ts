@@ -3,11 +3,12 @@ import {Project, ProjectPosition} from '../../../models/project';
 import {Router} from '@angular/router';
 import {MatPaginator} from '@angular/material';
 import {Title} from '@angular/platform-browser';
-
+import { TruncateModule } from '@yellowspot/ng-truncate';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
+import {map} from 'rxjs/operators';
 import {User} from '../../../models/user';
 import {UserService} from '../../../services/user.service';
 import {ProjectService} from '../../../services/projects.service';
@@ -15,7 +16,6 @@ import {Subscription} from 'rxjs/Subscription';
 import {SnackbarService} from '../../../services/snackbar.service';
 import {FilterOption, FilterType} from '../../../utils/utils';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {map} from 'rxjs/operators';
 import {MyDataSource} from '../../../utils/customGenerics';
 
 @Component({
