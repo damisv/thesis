@@ -34,6 +34,7 @@ export class MyDataSource<T> extends DataSource<T> {
       const cdata = this.data.slice();
       const filtered = cdata.filter(project => applyFilter(this.filter, project, this.projectType));
       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+      this._paginator.length = filtered.length;
       return filtered.splice(startIndex, this._paginator.pageSize);
     });
   }

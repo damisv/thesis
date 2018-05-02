@@ -44,7 +44,9 @@ export class ProjectService {
 
   // This method is used for RoleGuard
   isAdminOfCurrentProject(email: string) {
-    return this.project.value.team.find(member => member.email === email && member.position === 0) === undefined;
+    console.log('EMAIL', email);
+    console.log(this.project.value.team);
+    return this.project.value.team.filter(member => member.email === email && member.position === 0).length > 0;
   }
 
   initProject(projects) {
