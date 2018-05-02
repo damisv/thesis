@@ -55,7 +55,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     addProject(project: Project) {
-      this.projectService.giveProjects(this.dataSource.data);
+      const temp = this.dataSource.data;
+      temp.push(project);
+      this.projectService.giveProjects(temp);
       this.projectUpdated = new Date();
       this.selectedIndex = 0;
     }
