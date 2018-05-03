@@ -5,6 +5,7 @@ import * as assert from 'assert';
 const router = express.Router();
 import DbClient = require('../database/dbClient');
 import {checkBody, checkParams, StatusMessages} from '../utils';
+import {ioServer} from '../../main';
 const ObjectID = require('mongodb').ObjectID;
 
 /**
@@ -17,6 +18,7 @@ router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.insertOne(req.body.message, DbKeys.chat);
     assert.notEqual(null, result);
+    ioServer.sentMessageProject(req.body.message.receiver, result.ops[0]._id);
     res.status(204).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });

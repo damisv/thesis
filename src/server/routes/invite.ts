@@ -4,6 +4,7 @@ import * as assert from 'assert';
 import {checkBody, checkParams, StatusMessages} from '../utils';
 import {Error} from '../../client/app/models/error';
 import DbClient = require('../database/dbClient');
+import {ioServer} from '../../main';
 const router = express.Router();
 
 /**
@@ -45,13 +46,33 @@ router.get('/:id', checkParams, async function(req, res) {
  *                2) projectID - The id of project to invite
  * @returns Void - success 200 is needed only
  */
-router.post('/', checkParams, async function(req, res) {
+router.post('/', checkBody, async function(req, res) {
   try {
-    const result = await DbClient.insertMany({project: req.body.projectID, invites: req.body.invites}, DbKeys.invites);
-    assert.notEqual(null, result);
-    res.status(200).send(result);
+    console.log('invite 1');
+    const result = await DbClient.updateOne({project: req.body.projectID}, {$push: { invites: req.body.invites}}, DbKeys.invites);
+    assert.equal(1, result.result.ok);
+    if ( req.body.invites.length > 0) {
+      await inviteMembersNotifications(req.body.invites, result.ops[0]._id.valueOf(), req.body.project.name);
+    }
+    console.log('invite 2');
+    res.status(200).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
+
+async function inviteMembersNotifications(invites: string[], projectID: string, projectName: string) {
+  try {
+    const notifications = invites.map( email => ({email: email,
+      type: 'invite',
+      link: ['app', 'invites'],
+      date: new Date(Date.now()),
+      status: 'unseen'}));
+    const notificationsResult = await DbClient.insertMany(notifications, DbKeys.notifications);
+    assert.notEqual(null, notificationsResult);
+    console.log('invite 3');
+    ioServer.inviteMemberToProject(projectID, notifications);
+    console.log('invite 4');
+  } catch (error) { console.log(error); }
+}
 
 /**
  * @method - PATCH
@@ -66,6 +87,7 @@ router.patch('/:id', checkParams, async function(req, res) {
     const result = await DbClient.updateOne(
       {project_id: req.params.id , invites : { email: email}}, {$set : { status: 'accepted'}}, DbKeys.invites);
     assert.equal(1, result.result.ok);
+    ioServer.memberJoinedProject(req.params.id, email);
     res.status(200).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });

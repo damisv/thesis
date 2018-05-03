@@ -65,25 +65,22 @@ router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.insertOne(req.body.project, DbKeys.projects);
     assert.notEqual(null, result);
+    const resultInvites = await DbClient.insertOne({project: result.ops[0]._id, name: result.ops[0].name, invites: []}, DbKeys.invites);
+    assert.notEqual(null, resultInvites);
     ioServer.addProject(result.ops[0]._id, result.ops[0].name);
     ioServer.joinRoom(result.ops[0]._id, email);
     const timeline = await DbClient.insertOne({name: result.ops[0].name, date: new Date(Date.now()),
                                                 description: 'Project created', project: result.ops[0]._id}, DbKeys.timeline);
     assert.notEqual(null, timeline);
-    console.log('timeline');
     if ( req.body.invites.length > 0) {
       await inviteMembersNotifications(req.body.invites, result.ops[0]._id.valueOf(), req.body.project.name);
     }
-    console.log(result.ops[0]);
     res.status(200).send({project: result.ops[0]});
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 async function inviteMembersNotifications(invites: string[], projectID: string, projectName: string) {
   try {
-    const result = await DbClient.insertOne({project: projectID, name: projectName, invites: invites}, DbKeys.invites);
-    assert.notEqual(null, result);
-    console.log('notifications');
     const notifications = invites.map( email => ({email: email,
       type: 'invite',
       link: ['app', 'invites'],
@@ -91,7 +88,9 @@ async function inviteMembersNotifications(invites: string[], projectID: string, 
       status: 'unseen'}));
     const notificationsResult = await DbClient.insertMany(notifications, DbKeys.notifications);
     assert.notEqual(null, notificationsResult);
+    console.log('invite 3');
     ioServer.inviteMemberToProject(projectID, notifications);
+    console.log('invite 4');
   } catch (error) { console.log(error); }
 }
 
