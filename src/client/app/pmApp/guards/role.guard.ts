@@ -11,11 +11,8 @@ export class RoleGuard implements CanActivate {
               private projectService: ProjectService) {}
 
   canActivate() {
-    if (localStorage.getItem('token') === null) {
-      this.router.navigate(['app/project/dashboard']);
-      return false;
-    }
-    if (localStorage.getItem('token') === undefined) {
+    // checks if null or undefined
+    if (localStorage.getItem('token') !== null) {
       this.router.navigate(['app/project/dashboard']);
       return false;
     }

@@ -95,7 +95,6 @@ import {PushNotificationModule} from 'ng-push-notification';
     PushNotificationModule.forRoot()
   ],
   providers: [
-    AuthService,
     RoleGuard,
     SidebarMenuService,
     UserService,

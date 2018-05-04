@@ -12,17 +12,18 @@ export class SocketService implements OnDestroy {
   constructor( private notificationService: NotificationService) {
     this.socket = io(SocketService.socketServer , {
       reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax : 60000,
-      reconnectionAttempts: 5
+      reconnectionDelay: 500,
+      reconnectionDelayMax : 1000,
+      reconnectionAttempts: 15
     });
     this.socket.on('connected', this.register() );
     this.socket.on('loginSuccessful', function() {console.log('success login');
       notificationService.showPush('success', 'login YUPIE' , {}); } );
     /*this.socket.on('projectCreated',  function(date) {console.log('project created'); });*/
     this.socket.on('loginError', function(date) {console.log('login error'); });
-    this.socket.on('Invitation', function(projectName , notification) { console.log('invitation for ' + projectName);
-      notificationService.showPush('Invitation', projectName + ' sent you an invitation' , {}); });
+    this.socket.on('joinProject', (id) => this.joinProject(id) );
+    this.socket.on('Invitation', function(res) { console.log('invitation for ' + res.notification.project_name);
+      notificationService.showPush('Invitation', res.notification.project_name + ' sent you an invitation' , {}); });
     this.socket.on('memberJoined', function(projectName , email) { console.log('member joined ' + projectName + email);
       notificationService.showPush('New Member Joined', email + ' joined ' + projectName , {}); });
     this.socket.on('reconnecting', function(date) {console.log('reconnecting'); });
@@ -38,6 +39,10 @@ export class SocketService implements OnDestroy {
     }
   }
 
+  joinProject(id) {
+    console.log('emit join id ' + id);
+    this.socket.emit('joinProject', id);
+  }
   register() {
     this.socket.emit('register', localStorage.getItem('token'));
   }

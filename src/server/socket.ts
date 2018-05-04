@@ -21,8 +21,9 @@ export class IOServer {
   // Private methods
   private listen() {
     this.io.on('connection', (socket: any) => {
-      console.log('Connected client on port TRALALALALALA.');
+      console.log('Connected client');
       socket.on('register', data => this.onRegister(socket, data));
+      socket.on('joinProject', data => socket.join(data));
     });
   }
 
@@ -32,7 +33,7 @@ export class IOServer {
       const decoded = await jwt.verify(data, 'secret');
       assert.notEqual(null, decoded);
       const email = decoded.info.email;
-      this.clients[email] = socket;
+      this.clients[email] = socket.id;
       socket.emit('loginSuccessful');
       const result = await DbClient.find({'team.email': email}, DbKeys.projects, {_id: 1, name: 1});
       assert.notEqual(null, result);
@@ -49,35 +50,42 @@ export class IOServer {
   public addProject(id, name) { this.projects[id] = name; }
 
   public inviteMemberToProject(projectID, notifications: any[]) {
-    const projectName = this.projects[projectID];
     notifications.forEach(notification => {
-      console.log('invite' + notification.email);
-      this.io.to(this.clients[notification.email].id).emit('Invitation', projectName, notification);
+      if (this.clients[notification.email]) {
+        console.log(this.clients[notification.email]);
+        this.io.to(this.clients[notification.email]).emit('Invitation', {notification: notification});
+      }
     });
   }
 
   public taskAssignedToMembers(projectID, task , assignees) {
     assignees.forEach(assignee => {
-      this.io.to(this.clients[assignee].id).emit('taskAssigned', this.projects[projectID], task);
+      if (this.clients[assignee]) {
+        this.io.to(this.clients[assignee]).emit('taskAssigned', this.projects[projectID], task);
+      }
     });
   }
   public memberJoinedProject(projectID, email) {
     this.io.to(projectID).emit('memberJoined', this.projects[projectID], email);
     /// add user in room/project
-    this.clients[email].join(projectID);
+    if (this.clients[email]) {
+      this.io.to(this.clients[email]).emit('joinProject', projectID);
+    }
+    console.log('try join project');
   }
 
   /// add user in room/project
   public joinRoom(roomID, email) {
-    console.log('join room1');
-    console.log('email ' + email);
-    console.log('room id ' + roomID);
-    this.clients[email].join(roomID);
-    console.log('join room2');
+    if (this.clients[email]) {
+      this.io.to(this.clients[email]).emit('joinProject', roomID);
+    }
+    console.log('try join room');
   }
 
   public sentMessage(receiver, message_id) {
-    this.io.to(this.clients[receiver]).emit('message', message_id);
+    if (this.clients[receiver]) {
+      this.io.to(this.clients[receiver]).emit('message', message_id);
+    }
   }
   public sentMessageProject(receiver, message_id) {
     this.io.to(receiver).emit('projectMessage', message_id);

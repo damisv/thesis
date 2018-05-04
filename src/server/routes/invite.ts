@@ -5,6 +5,7 @@ import {checkBody, checkParams, StatusMessages} from '../utils';
 import {Error} from '../../client/app/models/error';
 import DbClient = require('../database/dbClient');
 import {ioServer} from '../../main';
+const ObjectID = require('mongodb').ObjectID;
 const router = express.Router();
 
 /**
@@ -18,7 +19,6 @@ router.get('/', async function(req, res) {
   try {
     const result = await DbClient.find({invites : {$in: [email]}}, DbKeys.invites, { project: 1, _id: 0});
     assert.notEqual(null, result);
-    console.log(result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
@@ -44,17 +44,17 @@ router.get('/:id', checkParams, async function(req, res) {
  * @body Contains 2 values:
  *                1) invites - Array of emails to invite
  *                2) projectID - The id of project to invite
+ *                3) projectName - the name of the project
  * @returns Void - success 200 is needed only
  */
 router.post('/', checkBody, async function(req, res) {
   try {
-    console.log('invite 1');
-    const result = await DbClient.updateOne({project: req.body.projectID}, {$push: { invites: req.body.invites}}, DbKeys.invites);
-    assert.equal(1, result.result.ok);
+    const result = await DbClient.updateOne({project: ObjectID(req.body.projectID)},
+      {$push: { invites: { $each: req.body.invites}}}, DbKeys.invites);
+    assert.notEqual(null, result);
     if ( req.body.invites.length > 0) {
-      await inviteMembersNotifications(req.body.invites, result.ops[0]._id.valueOf(), req.body.project.name);
+      await inviteMembersNotifications(req.body.invites, req.body.projectID, req.body.projectName);
     }
-    console.log('invite 2');
     res.status(200).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
@@ -62,15 +62,15 @@ router.post('/', checkBody, async function(req, res) {
 async function inviteMembersNotifications(invites: string[], projectID: string, projectName: string) {
   try {
     const notifications = invites.map( email => ({email: email,
+      project: projectID,
+      project_name: projectName,
       type: 'invite',
       link: ['app', 'invites'],
       date: new Date(Date.now()),
       status: 'unseen'}));
     const notificationsResult = await DbClient.insertMany(notifications, DbKeys.notifications);
     assert.notEqual(null, notificationsResult);
-    console.log('invite 3');
     ioServer.inviteMemberToProject(projectID, notifications);
-    console.log('invite 4');
   } catch (error) { console.log(error); }
 }
 
@@ -100,7 +100,7 @@ router.patch('/:id', checkParams, async function(req, res) {
  * @returns Void - success 200 is needed only
  */
 router.delete('/:id', function(req, res) {
-  console.log(req.body);
+  console.log('delete' + req.body);
   res.status(200).send({message: 'invites'});
 });
 
