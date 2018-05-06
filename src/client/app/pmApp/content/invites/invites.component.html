@@ -24,7 +24,7 @@
 
             <ng-container matColumnDef="accept">
               <mat-header-cell *matHeaderCellDef> Accept </mat-header-cell>
-              <mat-cell *matCellDef="let element; let i = index;" (click)="acceptInvite(element._id, i)"><mat-icon color="primary">done</mat-icon></mat-cell>
+              <mat-cell *matCellDef="let element; let i = index;" (click)="acceptInvite(element.project, i)"><mat-icon color="primary">done</mat-icon></mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="reject">

@@ -52,8 +52,7 @@ export class IOServer {
   public inviteMemberToProject(projectID, notifications: any[]) {
     notifications.forEach(notification => {
       if (this.clients[notification.email]) {
-        console.log(this.clients[notification.email]);
-        this.io.to(this.clients[notification.email]).emit('Invitation', {notification: notification});
+        this.io.to(this.clients[notification.email]).emit('Invitation', notification);
       }
     });
   }

@@ -17,7 +17,7 @@ const router = express.Router();
 router.get('/', async function(req, res) {
   const email = req['decoded'].info.email;
   try {
-    const result = await DbClient.find({invites : {$in: [email]}}, DbKeys.invites, { project: 1, _id: 0});
+    const result = await DbClient.find({invites : {$in: [  email ]}}, DbKeys.invites, { project: 1, _id: 0});
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -50,7 +50,7 @@ router.get('/:id', checkParams, async function(req, res) {
 router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.updateOne({project: ObjectID(req.body.projectID)},
-      {$push: { invites: { $each: req.body.invites}}}, DbKeys.invites);
+      {$addToSet: { invites: { $each: req.body.invites}}}, DbKeys.invites);
     assert.notEqual(null, result);
     if ( req.body.invites.length > 0) {
       await inviteMembersNotifications(req.body.invites, req.body.projectID, req.body.projectName);
@@ -84,24 +84,52 @@ async function inviteMembersNotifications(invites: string[], projectID: string, 
 router.patch('/:id', checkParams, async function(req, res) {
   const email = req['decoded'].info.email;
   try {
+    console.log('project id ' + req.params.id);
+    const resultProject = await  DbClient.updateOne({_id: ObjectID(req.params.id)},
+      {$addToSet: {team: {email: email, position: 1}}}, DbKeys.projects);
+    assert.notEqual(null, resultProject);
     const result = await DbClient.updateOne(
-      {project_id: req.params.id , invites : { email: email}}, {$set : { status: 'accepted'}}, DbKeys.invites);
-    assert.equal(1, result.result.ok);
+      {project: ObjectID(req.params.id) }, { $pull: { invites: { $in: [ req.body.email ] }}}, DbKeys.invites);
+    assert.notEqual(null, result);
     ioServer.memberJoinedProject(req.params.id, email);
     res.status(200).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
+ * @method - PATCH
+ * Manager deletes the invite to member
+ * @body - Project ID, email
+ * @returns Void - success 200 is needed only
+ */
+router.patch('/deleteInvite', checkParams, async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const resultManager = await DbClient.findOne({_id: ObjectID(req.body.projectID) ,
+      team: {email: email, position: 0}}, DbKeys.projects);
+    console.log('manager?');
+    assert.notEqual(null, resultManager);
+    console.log('yes manager');
+    const result = await DbClient.updateOne({project: req.body.projectID},
+      {$pull : { invites: {$in: [req.body.email]}}}, DbKeys.invites);
+    assert.notEqual(null, result);
+    res.status(200).send();
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
+});
+
+/**
  * @method - DELETE
- * Accepts the invite to project id
- * Email will be taken from token
+ * Deletes the invite to project id
  * @param - Project ID
  * @returns Void - success 200 is needed only
  */
-router.delete('/:id', function(req, res) {
-  console.log('delete' + req.body);
-  res.status(200).send({message: 'invites'});
+router.delete('/:id', checkBody, async function(req, res) {
+  const email = req['decoded'].info.email;
+  const result = await DbClient.updateOne({project: req.params.id},
+    {$pull : { invites: {$in: [email]}}}, DbKeys.invites);
+  assert.notEqual(null, result);
+  console.log('delete ' + email);
+  res.status(200).send();
 });
 
 /**

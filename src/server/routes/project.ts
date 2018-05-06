@@ -65,11 +65,11 @@ router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.insertOne(req.body.project, DbKeys.projects);
     assert.notEqual(null, result);
-    const resultInvites = await DbClient.insertOne({project: result.ops[0]._id, name: result.ops[0].name, invites: req.body.invites},
-      DbKeys.invites);
+    const resultInvites = await DbClient.insertOne({project: result.ops[0]._id,
+        name: result.ops[0].name, invites: req.body.invites}, DbKeys.invites);
     assert.notEqual(null, resultInvites);
-    ioServer.addProject(result.ops[0]._id.valueOf(), result.ops[0].name);
-    ioServer.joinRoom(result.ops[0]._id.valueOf(), email);
+    ioServer.addProject(result.ops[0]._id, result.ops[0].name);
+    ioServer.joinRoom(result.ops[0]._id, email);
     const timeline = await DbClient.insertOne({name: result.ops[0].name, date: new Date(Date.now()),
                                                 description: 'Project created', project: result.ops[0]._id}, DbKeys.timeline);
     assert.notEqual(null, timeline);
@@ -121,7 +121,7 @@ router.put('/:id', isManager, async function(req, res) {
  */
 router.patch('/:id', isManager, async function(req, res) {
   try {
-    const result = await DbClient.updateOne({ _id: req.params.id}, {$pull: {'team': {'email': req.body.email}}}, DbKeys.projects);
+    const result = await DbClient.updateOne({ _id: req.params.id}, {team: {$pull: {email: req.body.email}}}, DbKeys.projects);
     assert.notEqual(null, result);
     res.status(204).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -141,6 +141,8 @@ router.delete('/:id', async function(req, res) {
     if (result.team.find(member => member.email === email && member.position === 0) !== undefined) {
       const deleteResult = await DbClient.deleteOne({_id: ObjectID(req.params.id)}, DbKeys.projects);
       assert.notEqual(null, deleteResult);
+      const deleteInvites = await DbClient.deleteOne({project: req.params.id}, DbKeys.invites);
+      assert.notEqual(null, deleteInvites);
     }
     res.status(204).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }

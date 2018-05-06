@@ -21,9 +21,9 @@ export class SocketService implements OnDestroy {
       notificationService.showPush('success', 'login YUPIE' , {}); } );
     /*this.socket.on('projectCreated',  function(date) {console.log('project created'); });*/
     this.socket.on('loginError', function(date) {console.log('login error'); });
-    this.socket.on('joinProject', (id) => this.joinProject(id) );
-    this.socket.on('Invitation', function(res) { console.log('invitation for ' + res.notification.project_name);
-      notificationService.showPush('Invitation', res.notification.project_name + ' sent you an invitation' , {}); });
+    this.socket.on('joinProject', function(id)  {this.joinProject(id); }.bind(this));
+    this.socket.on('Invitation', function(notification) { console.log('invitation for ' + notification.project_name);
+      notificationService.showPush('Invitation', notification.project_name + ' sent you an invitation' , {}); });
     this.socket.on('memberJoined', function(projectName , email) { console.log('member joined ' + projectName + email);
       notificationService.showPush('New Member Joined', email + ' joined ' + projectName , {}); });
     this.socket.on('reconnecting', function(date) {console.log('reconnecting'); });
