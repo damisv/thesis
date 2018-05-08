@@ -13,11 +13,11 @@
       </mat-card-header>
       <mat-card-content>
         <div class="flex_container">
-          <div id="taskChartContainer" *ngIf="assignments.length > 0;else no_tasks_available"></div>
-          <ng-template #no_tasks_available>
+          <div id="taskChartContainer"></div>
+          <div *ngIf="!taskAvailable">
             <h4>There are no tasks on this project</h4>
-            <a mat-raised-button [routerLink]="['tasks']" >Create a new Task</a>
-          </ng-template>
+            <a mat-raised-button [routerLink]="['assignments']" >Create a new Task</a>
+          </div>
         </div>
       </mat-card-content>
       <mat-card-footer>
@@ -35,11 +35,11 @@
       </mat-card-header>
       <mat-card-content>
         <div class="flex_container">
-          <div id="issuesChartContainer" *ngIf="assignments.length > 0;else no_issues_available"></div>
-          <ng-template #no_issues_available>
+          <div id="issuesChartContainer"></div>
+          <div *ngIf="!issueAvailable">
             <h4>There are no tasks on this project</h4>
-            <a mat-raised-button [routerLink]="['tasks']" >Create a new Task</a>
-          </ng-template>
+            <a mat-raised-button [routerLink]="['assignments']" >Create a new Task</a>
+          </div>
         </div>
       </mat-card-content>
       <mat-card-footer>
