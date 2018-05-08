@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpRequest} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/finally';
 import { Observable } from 'rxjs/Observable';
-import {Project, ProjectPosition} from '../models/project';
-import {ProgressBarService} from './progressbar.service';
-import {HttpMethods} from '../utils/utils';
+import {Project} from '../models/project';
 import {MatDialog} from '@angular/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {TaskService} from './task.service';
