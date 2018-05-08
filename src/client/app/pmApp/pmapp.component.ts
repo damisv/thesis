@@ -4,6 +4,7 @@ import {UserService} from '../services/user.service';
 import {User} from '../models/user';
 import {ProjectService} from '../services/projects.service';
 import {SocketService} from '../services/socket.service';
+import {NotificationService} from '../services/notification.service';
 
 @Component({
   selector: 'app-pmapp',
@@ -19,10 +20,14 @@ export class PMAppComponent {
   constructor(private themeService: ThemeService,
               private userService: UserService,
               private projectService: ProjectService,
+              private notificationService: NotificationService,
               private socketService: SocketService) {
     userService.getUser();
     userService.user$.subscribe(user => this.user = user);
     projectService.getProjects();
+    notificationService.notifications$.subscribe(notifications => {
+      this.notifications = notifications.filter(value => value.status === 'true').length;
+    });
   }
 
   changeTheme(theme: MaterialTheme) { this.themeService.changeTheme(theme); }

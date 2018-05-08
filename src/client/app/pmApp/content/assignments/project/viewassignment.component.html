@@ -9,7 +9,7 @@
         <mat-card-title>{{ assignment?.name }}</mat-card-title>
         <mat-card-subtitle>
           <div style="flex: 1 1 auto;"></div>
-          <mat-checkbox [(ngModel)]="assignment.completed" [disabled]="hasRights">Status of assignment</mat-checkbox>
+          <mat-checkbox [(ngModel)]="assignment.completed" [disabled]="!admin">Status of assignment</mat-checkbox>
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
@@ -24,20 +24,20 @@
             <ng-template matExpansionPanelContent>
               <div class="flex_container">
 
-                <mat-radio-group [(ngModel)]="assignment.type" [disabled]="hasRights">
+                <mat-radio-group [(ngModel)]="assignment.type" [disabled]="!admin">
                   <mat-radio-button [value]="taskType.task">Task</mat-radio-button>
                   <mat-radio-button [value]="taskType.issue">Issue</mat-radio-button>
                 </mat-radio-group>
 
                 <mat-form-field>
-                  <input matInput placeholder="Name" [(ngModel)]="assignment.name" required [disabled]="hasRights">
+                  <input matInput placeholder="Name" [(ngModel)]="assignment.name" required [disabled]="!admin">
                 </mat-form-field>
 
                 <mat-form-field>
                   <mat-icon matSuffix>description</mat-icon>
                   <textarea #description matInput placeholder="Description"
                             maxlength="2048" matTextareaAutosize
-                            matAutosizeMinRows="2" matAutosizeMaxRows="5" [(ngModel)]="assignment.description" [disabled]="hasRights"></textarea>
+                            matAutosizeMinRows="2" matAutosizeMaxRows="5" [(ngModel)]="assignment.description" [disabled]="!admin"></textarea>
                   <mat-hint align="end">{{description.value.length}} / 2048</mat-hint>
                 </mat-form-field>
               </div>
@@ -56,12 +56,12 @@
             <ng-template matExpansionPanelContent>
               <div class="flex_container">
                 <mat-form-field>
-                  <input matInput [matDatepicker]="start" placeholder="Choose a date" [(ngModel)]="assignment.date_start" readonly [disabled]="hasRights">
+                  <input matInput [matDatepicker]="start" placeholder="Choose a date" [(ngModel)]="assignment.date_start" readonly [disabled]="!admin">
                   <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
                   <mat-datepicker #start></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field>
-                  <input matInput [matDatepicker]="end" placeholder="Choose a date" [(ngModel)]="assignment.date_end" readonly [disabled]="hasRights">
+                  <input matInput [matDatepicker]="end" placeholder="Choose a date" [(ngModel)]="assignment.date_end" readonly [disabled]="!admin">
                   <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
                   <mat-datepicker #end></mat-datepicker>
                 </mat-form-field>
@@ -76,15 +76,15 @@
           <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Assigning</mat-panel-title>
-              <mat-panel-description>{{ 0 }} assigness<mat-icon>group_add</mat-icon>
+              <mat-panel-description>{{ assignment?.assignee_email.length }} assigness<mat-icon>group_add</mat-icon>
               </mat-panel-description>
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
               <div class="flex_container">
                 <mat-form-field>
                   <mat-chip-list #chipList>
-                    <mat-chip *ngFor="let member of assignment?.assignee_email; let i = index;" [selectable]="hasRights"
-                              [removable]="hasRights" (remove)="remove(i)">
+                    <mat-chip *ngFor="let member of assignment?.assignee_email; let i = index;" [selectable]="!admin"
+                              [removable]="!admin" (remove)="remove(i)">
                       {{member}}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
@@ -95,9 +95,9 @@
                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                            (matChipInputTokenEnd)="add($event.input, $event.value)"
                            (keyup)="searchTerm$.next($event.target.value)"
-                            [disabled]="hasRights">
-                    <mat-autocomplete #teamAuto="matAutocomplete">
-                      <mat-option *ngFor="let member of filteredTeam | async" (click)="add(addAssignee, member)" [value]="member">
+                           [disabled]="!admin">
+                    <mat-autocomplete #teamAuto="matAutocomplete" (optionSelected)="add(addAssignee, $event.option.value)">
+                      <mat-option *ngFor="let member of filteredTeam | async" [value]="member">
                         {{ member }}
                       </mat-option>
                     </mat-autocomplete>
@@ -130,7 +130,7 @@
 
         </mat-accordion>
 
-        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="hasRights">Create</button>
+        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!admin">Update</button>
 
       </mat-card-content>
     </mat-card>

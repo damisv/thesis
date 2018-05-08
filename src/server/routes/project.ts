@@ -65,26 +65,26 @@ router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.insertOne(req.body.project, DbKeys.projects);
     assert.notEqual(null, result);
+    const resultInvites = await DbClient.insertOne({project: result.ops[0]._id,
+        name: result.ops[0].name, invites: req.body.invites}, DbKeys.invites);
+    assert.notEqual(null, resultInvites);
     ioServer.addProject(result.ops[0]._id, result.ops[0].name);
     ioServer.joinRoom(result.ops[0]._id, email);
     const timeline = await DbClient.insertOne({name: result.ops[0].name, date: new Date(Date.now()),
                                                 description: 'Project created', project: result.ops[0]._id}, DbKeys.timeline);
     assert.notEqual(null, timeline);
-    console.log('timeline');
     if ( req.body.invites.length > 0) {
-      await inviteMembersNotifications(req.body.invites, result.ops[0]._id.valueOf(), req.body.project.name);
+      await inviteMembersNotifications(req.body.invites, result.ops[0]._id, result.ops[0].name);
     }
-    console.log(result.ops[0]);
     res.status(200).send({project: result.ops[0]});
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 async function inviteMembersNotifications(invites: string[], projectID: string, projectName: string) {
   try {
-    const result = await DbClient.insertOne({project: projectID, name: projectName, invites: invites}, DbKeys.invites);
-    assert.notEqual(null, result);
-    console.log('notifications');
     const notifications = invites.map( email => ({email: email,
+      project: projectID,
+      project_name: projectName,
       type: 'invite',
       link: ['app', 'invites'],
       date: new Date(Date.now()),
@@ -121,7 +121,7 @@ router.put('/:id', isManager, async function(req, res) {
  */
 router.patch('/:id', isManager, async function(req, res) {
   try {
-    const result = await DbClient.updateOne({ _id: req.params.id}, {$pull: {'team': {'email': req.body.email}}}, DbKeys.projects);
+    const result = await DbClient.updateOne({ _id: req.params.id}, {team: {$pull: {email: req.body.email}}}, DbKeys.projects);
     assert.notEqual(null, result);
     res.status(204).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -141,6 +141,8 @@ router.delete('/:id', async function(req, res) {
     if (result.team.find(member => member.email === email && member.position === 0) !== undefined) {
       const deleteResult = await DbClient.deleteOne({_id: ObjectID(req.params.id)}, DbKeys.projects);
       assert.notEqual(null, deleteResult);
+      const deleteInvites = await DbClient.deleteOne({project: req.params.id}, DbKeys.invites);
+      assert.notEqual(null, deleteInvites);
     }
     res.status(204).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }

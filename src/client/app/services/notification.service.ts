@@ -20,7 +20,7 @@ export class NotificationService implements OnDestroy {
     'message': 'push',
     'error': 'push'
   };
-  private closeDelay = 3000;
+  private closeDelay = 5000;
 
   private notifications = new BehaviorSubject<Notification[]>([]);
   notifications$ = this.notifications.asObservable();

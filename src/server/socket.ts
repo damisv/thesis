@@ -21,8 +21,9 @@ export class IOServer {
   // Private methods
   private listen() {
     this.io.on('connection', (socket: any) => {
-      console.log('Connected client on port TRALALALALALA.');
+      console.log('Connected client');
       socket.on('register', data => this.onRegister(socket, data));
+      socket.on('joinProject', data => socket.join(data));
     });
   }
 
@@ -41,37 +42,49 @@ export class IOServer {
         this.projects[project._id] = project.name;
       });
       socket.emit('connected');
-      console.log('emit connected');
+      console.log('connected ' + email);
     } catch (error) { console.log('emit login error'); socket.emit('loginError'); }
   }
 
   // Public Methods
   public addProject(id, name) { this.projects[id] = name; }
 
-  public inviteMemberToProject(projectID, notification: any[]) {
-    const projectName = this.projects[projectID];
-    notification.forEach(value => {
-      this.io.to(this.clients[value.email]).emit('Invitation', projectName, value);
+  public inviteMemberToProject(projectID, notifications: any[]) {
+    notifications.forEach(notification => {
+      if (this.clients[notification.email]) {
+        this.io.to(this.clients[notification.email]).emit('Invitation', notification);
+      }
     });
   }
 
-  public taskAssignedToMembers(projectID, task) {
-    this.io.to(projectID).emit('taskAssigned', this.projects[projectID], task);
+  public taskAssignedToMembers(projectID, task , assignees) {
+    assignees.forEach(assignee => {
+      if (this.clients[assignee]) {
+        this.io.to(this.clients[assignee]).emit('taskAssigned', this.projects[projectID], task);
+      }
+    });
   }
   public memberJoinedProject(projectID, email) {
-    const client = this.clients[email];
-    this.io.to(projectID).emit('memberJoined', this.projects[projectID], client);
+    this.io.to(projectID).emit('memberJoined', this.projects[projectID], email);
     /// add user in room/project
-    this.io.clients[client].join(projectID);
+    if (this.clients[email]) {
+      this.io.to(this.clients[email]).emit('joinProject', projectID);
+    }
+    console.log('try join project');
   }
 
   /// add user in room/project
   public joinRoom(roomID, email) {
-    this.io.clients[this.clients[email]].join(roomID);
+    if (this.clients[email]) {
+      this.io.to(this.clients[email]).emit('joinProject', roomID);
+    }
+    console.log('try join room');
   }
 
   public sentMessage(receiver, message_id) {
-    this.io.to(this.clients[receiver]).emit('message', message_id);
+    if (this.clients[receiver]) {
+      this.io.to(this.clients[receiver]).emit('message', message_id);
+    }
   }
   public sentMessageProject(receiver, message_id) {
     this.io.to(receiver).emit('projectMessage', message_id);

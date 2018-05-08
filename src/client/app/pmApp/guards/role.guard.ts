@@ -11,17 +11,16 @@ export class RoleGuard implements CanActivate {
               private projectService: ProjectService) {}
 
   canActivate() {
-    if (localStorage.getItem('token') === null) {
-      this.router.navigate(['app/project/dashboard']);
-      return false;
-    }
-    if (localStorage.getItem('token') === undefined) {
-      this.router.navigate(['app/project/dashboard']);
-      return false;
-    }
     try {
-      const decoded = jwt_decode(localStorage.getItem('token'));
-      return this.projectService.isAdminOfCurrentProject(decoded.info.email);
+      if (localStorage) {
+        if (localStorage.getItem('token') !== null) {
+          if (localStorage.getItem('token') !== undefined) {
+            const decoded = jwt_decode(localStorage.getItem('token'));
+            console.log(decoded.info.email);
+            return this.projectService.isAdminOfCurrentProject(decoded.info.email);
+          }
+        }
+      }
     } catch (error) {
       this.router.navigate(['dashboard']);
       return false;

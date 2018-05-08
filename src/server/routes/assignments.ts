@@ -5,6 +5,7 @@ import {checkBody, checkParams, hasRightsOnAssignment, StatusMessages} from '../
 import * as assert from 'assert';
 const router = express.Router();
 import DbClient = require('../database/dbClient');
+import {ioServer} from '../../main';
 const ObjectID = require('mongodb').ObjectID;
 
 /**
@@ -81,6 +82,7 @@ router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.insertOne(req.body.task, DbKeys.tasks);
     assert.notEqual(null, result);
+    // ioServer.taskAssignedToMembers(req.body.project_id, req.body.task, req.body.assignee_email);
     res.status(200).send({task: result.ops[0]});
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });

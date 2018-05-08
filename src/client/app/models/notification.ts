@@ -4,6 +4,8 @@ export class Notification {
                 public link: [string],
                 public date: Date,
                 public status: string,
+                public project: string,
+                public project_name: string,
                 public _id: string
     ) {}
 }

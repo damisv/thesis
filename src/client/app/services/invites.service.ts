@@ -42,8 +42,8 @@ export class InviteService {
     return this.http.get(`${InviteService.base}/` + projectID);
   }
 
-  invite(invites: string[], projectID: string): Observable<any> {
-    return this.http.post(InviteService.base, {invites: invites, projectID: projectID});
+  invite(invites: string[], projectID: string, projectName: string): Observable<any> {
+    return this.http.post(`${InviteService.base}`, {invites: invites, projectID: projectID , projectName: projectName});
   }
 
   userIsInvited(email: string, projectID: string): Observable<boolean> {

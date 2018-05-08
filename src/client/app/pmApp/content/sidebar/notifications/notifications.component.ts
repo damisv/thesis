@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {Notification} from '../../../../models/notification';
+import {NotificationService} from '../../../../services/notification.service';
 
 @Component({
   selector: 'app-pmapp-notifications',
@@ -7,16 +8,9 @@ import {Notification} from '../../../../models/notification';
   styles: ['']
 })
 export class NotificationsComponent {
-  notifications: Notification[] = [
-    new Notification('email@email.com', 'task', [''], new Date(), 'true', ''),
-    new Notification('email@email.com', 'issue', [''], new Date(), 'false', ''),
-    new Notification('email@email.com', 'task', [''], new Date(), 'true', ''),
-    new Notification('email@email.com', 'issue', [''], new Date(), 'true', ''),
-    new Notification('email@email.com', 'task', [''], new Date(), 'false', ''),
-    new Notification('email@email.com', 'task', [''], new Date(), 'true', ''),
-    new Notification('email@email.com', 'project', [''], new Date(), 'false', ''),
-    new Notification('email@email.com', 'project', [''], new Date(), 'false', ''),
-  ];
+  notifications: Notification[] = [];
 
-  constructor() {}
+  constructor(private notificationService: NotificationService) {
+    notificationService.notifications$.subscribe(notifications => this.notifications = notifications);
+  }
 }

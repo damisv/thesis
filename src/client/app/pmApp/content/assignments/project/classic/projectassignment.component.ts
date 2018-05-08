@@ -54,7 +54,7 @@ export class ProjectAssignmentComponent implements OnInit {
 
   openTask(id: string) {
     console.log(id);
-    this.router.navigate(['app', 'assignmentview', id]);
+    this.router.navigate(['app', 'project', 'assignmentview', id]);
   }
 
   changeStatusOf(task: Task) {

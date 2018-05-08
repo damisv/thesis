@@ -25,7 +25,7 @@ export class ViewAssignmentComponent implements OnInit {
   user = new User('');
   projectTeam: Member[] = [];
   assignment = new Task(TaskType.task);
-  hasRights = false;
+  admin = false;
 
   // Assignees
   separatorKeysCodes = [COMMA];
@@ -47,14 +47,21 @@ export class ViewAssignmentComponent implements OnInit {
             .subscribe(res => {
               this.projectTeam = res.project.team;
               this.user = res.user;
-              this.hasRights = this.assignment.hasRights(res.user.email);
+              this.admin = this.hasRights(res.user.email);
             });
           },
           _ => {
             this.snackBar.show('Error occurred retrieving this assignment.');
-            this.hasRights = false;
+            this.admin = false;
           });
     });
+  }
+
+  hasRights(email: string): boolean {
+    if (this.assignment.assigner_email && this.assignment.assignee_email) {
+      return this.assignment.assigner_email === email || this.assignment.assignee_email.filter(value => value === email).length > 0;
+    }
+    return false;
   }
 
   ngOnInit() {

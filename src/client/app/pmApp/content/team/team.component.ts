@@ -44,9 +44,9 @@ export class TeamComponent {
       this.snackBar.show('No members to invite');
       return;
     }
-    this.inviteService.invite(this.team, this.project._id)
+    this.inviteService.invite(this.team, this.project._id, this.project.name)
       .subscribe(
-        _ => {}, // members invited
+        () => {console.log('success members invited'); }, // members invited
         err => {}// this.notificationService.create("error"," Error Invite failed","Error! Unable to send invite to "+email,"error");
       );
   }

@@ -78,7 +78,7 @@ export class ProjectService {
   }
 
   create(project: Project, invites: string[]): Observable<any> {
-      return this.http.post(ProjectService.base, {project: project, invites: invites});
+    return this.http.post(ProjectService.base, {project: project, invites: invites});
   }
 
   delete(project: Project): Observable<any> {
