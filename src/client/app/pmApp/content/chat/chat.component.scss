@@ -26,6 +26,7 @@ mat-sidenav-content {
   }
 }
 .message {
+  word-break: break-all;
   height: auto !important;
   & img {
     height: 4em;

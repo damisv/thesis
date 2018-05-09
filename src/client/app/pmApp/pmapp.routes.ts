@@ -24,6 +24,7 @@ import {AgileBoardComponent} from './content/assignments/project/agileBoard/agil
 import {ViewAssignmentComponent} from './content/assignments/project/viewassignment.component';
 import {CreateAssignmentComponent} from './content/assignments/project/createassignment.component';
 import {RoleGuard} from './guards/role.guard';
+import {GanttComponent} from './content/gantt/gantt.component';
 
 export const PMAPP_ROUTES: Routes = [
   {path: '', component: PMAppComponent, children: [
@@ -49,6 +50,7 @@ export const PMAPP_ROUTES: Routes = [
               { path: 'agile-board', component: AgileBoardComponent, outlet: 'assignments'}
             ]},
           { path: 'assignmentview/:id', component: ViewAssignmentComponent},
+          { path: 'gantt', component: GanttComponent},
           { path: 'team', component: TeamComponent},
           { path: 'timeline', component: TimelineComponent},
           { path: 'chat', component: ChatComponent},

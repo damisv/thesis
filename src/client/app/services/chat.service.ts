@@ -24,16 +24,24 @@ export class ChatService {
               private projectService: ProjectService) {
     // Everytime a project will be added, the service will retrieve it ChatThread
     this.projectService.projects$.subscribe( projects =>
-      this.getThreads(projects.map( value => value._id )).subscribe(threads => this.threads.next(threads))
+      this.getThreads(projects.map( value => ({id: value._id, name: value.name})))
+        .map(threads => {
+          const temp = Object.keys(threads);
+          const data = new Map<string, ChatThread>();
+          temp.forEach(value => data.set(value, threads[value]));
+          return data;
+        })
+        .subscribe(res => this.threads.next(res))
     );
   }
 
   // Public methods
   send(message: Message): Observable<any> {
-    return this.http.post(ChatService.base, {message: Message});
+    return this.http.post(ChatService.base, {message: message});
   }
 
   receivedOnProject(message: Message) {
+    console.log(message);
     const temp = this.threads.value;
     temp[message.receiver].lastMessages.push(message);
     this.threads.next(temp);
@@ -44,7 +52,7 @@ export class ChatService {
   }
 
   // Private methods
-  private getThreads(projectIDs: string[]): Observable<Map<string, ChatThread>> {
-    return this.http.post<Map<string, ChatThread>>(`${ChatService.base}/threads`, {projectIDs: projectIDs});
+  private getThreads(projects: any[]): Observable<Map<string, ChatThread>> {
+    return this.http.post<Map<string, ChatThread>>(`${ChatService.base}/threads`, {projects: projects});
   }
 }

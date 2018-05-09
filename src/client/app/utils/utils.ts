@@ -67,18 +67,11 @@ function filterProjectByType(project: Project, value): boolean {
 
 
 // Highcharts functions
-const letters = '0123456789ABCDEF';
 export const day = 1000 * 60 * 60 * 24;
 export function daysToMilliseconds(days) { return days * 24 * 60 * 60 * 1000; }
-export function getRandomColor() {
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+export function getRandomColor() { return `#${Math.random().toString(16).slice(-6)}`; }
 
-export function getCorrectDays(date) {
+export function getCorrectDays(date = new Date) {
   const dateTemp = new Date(date);
   dateTemp.setUTCHours(0);
   dateTemp.setUTCMinutes(0);

@@ -1,10 +1,8 @@
 import {Component} from '@angular/core';
-import {MaterialTheme, ThemeService} from '../services/theme.service';
-import {UserService} from '../services/user.service';
-import {User} from '../models/user';
-import {ProjectService} from '../services/projects.service';
-import {SocketService} from '../services/socket.service';
-import {NotificationService} from '../services/notification.service';
+import {MaterialTheme, ThemeService, UserService,
+  ProjectService, SocketService, NotificationService} from '../services';
+import {User} from '../models';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-pmapp',
@@ -21,6 +19,7 @@ export class PMAppComponent {
               private userService: UserService,
               private projectService: ProjectService,
               private notificationService: NotificationService,
+              private router: Router,
               private socketService: SocketService) {
     userService.getUser();
     userService.user$.subscribe(user => this.user = user);
@@ -31,4 +30,6 @@ export class PMAppComponent {
   }
 
   changeTheme(theme: MaterialTheme) { this.themeService.changeTheme(theme); }
+
+  logout() { this.router.navigate(['auth', 'signin']); }
 }

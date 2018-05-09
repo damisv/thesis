@@ -10,9 +10,9 @@
         <mat-card-subtitle>Pending Ones Only</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <p *ngIf="invites.length < 1">No invites received.</p>
-        <div class="table-container" *ngIf="invites.length > 0">
-          <mat-table #table [dataSource]="invites">
+        <p *ngIf="invitesAvailable">No invites received.</p>
+        <div class="table-container" *ngIf="invitesAvailable">
+          <mat-table #table [dataSource]="dataSource">
             <ng-container matColumnDef="no.">
               <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
               <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>

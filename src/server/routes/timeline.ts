@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {Error} from '../../client/app/models/error';
+import {Error} from '../../client/app/models';
 import {DbKeys} from '../database/utils';
 import DbClient = require('../database/dbClient');
 const ObjectID = require('mongodb').ObjectID;
@@ -15,7 +15,7 @@ const router = express.Router();
  */
 router.get('/:id', checkParams, async function(req, res) {
   try {
-    const result = await DbClient.findOne({_id: ObjectID(req.params.id)}, DbKeys.timeline);
+    const result = await DbClient.find({project: ObjectID(req.params.id)}, DbKeys.timeline);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }

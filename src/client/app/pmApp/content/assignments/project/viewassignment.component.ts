@@ -22,10 +22,9 @@ export class ViewAssignmentComponent implements OnInit {
   step = 0;
   taskType = TaskType;
 
-  user = new User('');
+  user: User;
   projectTeam: Member[] = [];
   assignment = new Task(TaskType.task);
-  admin = false;
 
   // Assignees
   separatorKeysCodes = [COMMA];
@@ -47,21 +46,16 @@ export class ViewAssignmentComponent implements OnInit {
             .subscribe(res => {
               this.projectTeam = res.project.team;
               this.user = res.user;
-              this.admin = this.hasRights(res.user.email);
             });
           },
-          _ => {
-            this.snackBar.show('Error occurred retrieving this assignment.');
-            this.admin = false;
-          });
+          _ => this.snackBar.show('Error occurred retrieving this assignment.'));
     });
   }
 
-  hasRights(email: string): boolean {
-    if (this.assignment.assigner_email && this.assignment.assignee_email) {
-      return this.assignment.assigner_email === email || this.assignment.assignee_email.filter(value => value === email).length > 0;
-    }
-    return false;
+  hasRights() {
+    if (!this.user) { return; }
+    return this.assignment.assigner_email !== this.user.email ||
+      this.assignment.assignee_email.filter(value => value === this.user.email).length === 0;
   }
 
   ngOnInit() {

@@ -4,6 +4,20 @@ import {MatPaginator} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
+// Simple Datasource
+export class MySimpleDataSource<T> extends DataSource<T> {
+  data: T[];
+
+  constructor(private dataObservable: Observable<T[]>) {
+    super();
+    this.dataObservable.subscribe(data => this.data = data);
+  }
+
+  connect(): Observable<T[]> { return this.dataObservable; }
+  disconnect() {}
+}
+
+// Elaborate Data source
 export class MyDataSource<T> extends DataSource<T> {
   data: T[];
 

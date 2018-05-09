@@ -20,7 +20,7 @@
                   </div>
                 </mgl-timeline-entry-content>
                 <mgl-timeline-entry-dot color="primary" [size]="20"></mgl-timeline-entry-dot>
-                <mgl-timeline-entry-side>{{log.date}}</mgl-timeline-entry-side>
+                <mgl-timeline-entry-side>{{log.date | date:'fullDate'}}</mgl-timeline-entry-side>
               </mgl-timeline-entry>
             </mgl-timeline>
           </div>

@@ -1,11 +1,9 @@
 import {AfterViewInit, Component, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-import {ProjectService} from '../../../services/projects.service';
 import {Title} from '@angular/platform-browser';
-import {TaskService} from '../../../services/task.service';
 import {Router} from '@angular/router';
-import {Task, TaskType} from '../../../models/task';
-import {Project} from '../../../models/project';
+import {ProjectService, TaskService} from '../../../services';
+import {Task, TaskType, Project} from '../../../models';
 
 @Component({
   selector: 'app-pmapp-project-dashboard',
@@ -43,9 +41,13 @@ export class ProjectDashboardComponent implements AfterViewInit, OnDestroy {
     for (const assignment of assignments) {
       assignment.type === TaskType.task ? tasks.push(assignment) : issues.push(assignment);
     }
-    this.initChart(tasks, 'taskChartContainer', 'Task Statistics', 'Task Statistics ');
+    if (tasks.length !== 0) {
+      this.initChart(tasks, 'taskChartContainer', 'Task Statistics', 'Task Statistics ');
+    }
     this.taskAvailable = tasks.length !== 0;
-    this.initChart(issues, 'issuesChartContainer', 'Issue Statistics', 'Issue Statistics ');
+    if (issues.length !== 0) {
+      this.initChart(issues, 'issuesChartContainer', 'Issue Statistics', 'Issue Statistics ');
+    }
     this.issueAvailable = issues.length !== 0;
   }
 

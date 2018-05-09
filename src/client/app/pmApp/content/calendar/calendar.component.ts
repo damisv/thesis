@@ -4,12 +4,10 @@ import {startOfDay, endOfDay, subDays, addDays, endOfMonth,
 import { CalendarEventAction, CalendarEventTimesChangedEvent,  CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs/Subject';
 import {colors} from '../../../utils/utils';
-import {EventActionType, MyCalendarEvent} from '../../../models/calendarEvent';
-import {CalendarService} from '../../../services/calendar.service';
-import {ProjectService} from '../../../services/projects.service';
+import {EventActionType, MyCalendarEvent, Project} from '../../../models';
+import {CalendarService, ProjectService} from '../../../services';
 import {Observable} from 'rxjs/Observable';
-import {MatDialog, MatMenu} from '@angular/material';
-import {Project} from '../../../models/project';
+import {MatDialog} from '@angular/material';
 import {CalendarEventDialogComponent} from './calendareventdialog.component';
 
 @Component({

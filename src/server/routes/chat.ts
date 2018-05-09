@@ -25,24 +25,22 @@ router.post('/', checkBody, async function(req, res) {
 /**
  * @method - POST
  * Get Threads
- * @body - Contains 1 value => projectIDs: [string] - the project id's
+ * @body - Contains 1 value => projects: {id: string, name: string] - the project's id and name
  * @returns Map of thread id and ChatThread(id: receiver, name: string, lastMessages: Message[]
  * (here should be last 20 or just empty array), read: boolean)
  */
 router.post('/threads', checkBody, async function(req, res) {
-  const ids = req.body.projectIDs.map(id => ObjectID(id));
+  const ids = req.body.projects.map(value => value.id);
   const temp = {};
-  req.body.projectIDs.forEach(id => {
-    temp[id] = {id: id, name: 'pro name', lastMessages: [], read : false};
+  req.body.projects.forEach(value => {
+    temp[value.id] = {id: value.id, name: value.name, lastMessages: [], read : false};
   });
   try {
     const result = await DbClient.find( {receiver : {$in: ids } }, DbKeys.chat);
     assert.notEqual(null, result);
-    result.ops.forEach(message => temp[message.receiver].lastMessages.push(message) );
-    res.status(204).send(temp);
+    result.forEach(message => temp[message.receiver].lastMessages.push(message));
+    res.status(200).send(temp);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
-  console.log(req.body);
-  res.status(200).send({message: 'got threads'});
 });
 
 /**

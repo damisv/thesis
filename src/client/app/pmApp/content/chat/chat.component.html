@@ -40,8 +40,8 @@
                   <a mat-list-item><mat-icon mat-list-icon>#</mat-icon>SecondProject</a>
                 </mat-list-item>
                 <mat-divider></mat-divider>
-                <h3 mat-subheader>CHANNELS ({{threads.length}})</h3>
-                <ng-template ngFor let-thread [ngForOf]="threads">
+                <h3 mat-subheader>CHANNELS ({{ threads.size }})</h3>
+                <ng-template ngFor let-thread [ngForOf]="threads.values()">
                   <mat-list-item *ngIf="thread.read || !sorted"
                                  [ngStyle]="{'font-weight': thread.read ? 'normal' : 'bold' }"
                                  (click)="currentThread$.next(thread)" >
@@ -60,26 +60,19 @@
               <div style="overflow: auto;height: 83%" #messagesContainer [scrollTop]="messagesContainer.scrollHeight">
                 <mat-card class="card messages-container">
                   <mat-list>
-                    <ng-template ngFor let-item let-i="index" let-last="last" [ngForOf]="array">
+                    <ng-template ngFor let-item let-i="index" let-last="last" [ngForOf]="messages">
                       <mat-list-item class="message">
-                        <ng-template [ngIf]="i > 0 ? array[i-1].sender !== item.sender : true ">
+                        <ng-template [ngIf]="i > 0 ? messages[i-1].sender !== item.sender : true ">
                           <div>
                             <img matListAvatar src="../../../../assets/images/gates.jpg"/>
-                            <h3 matLine>Firstname Lastname {{item.sender}}</h3>
-                            <h4 matLine>2:35 pm</h4>
+                            <h3 matLine>{{item.sender}}</h3>
+                            <h4 matLine>{{ item.date_sent | date:'fullDate'}}</h4>
                           </div>
                         </ng-template>
-                        <p>
-                        <span>
-                          {{ 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' +
-                          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' +
-                          'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.' +
-                          ' Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' }}
-                        </span>
-                        </p>
+                        <p style="font-style: italic"><span>{{ item.message }}</span></p>
                       </mat-list-item>
                       <!--<ng-template [ngIf]="last ? "></ng-template>-->
-                      <mat-divider *ngIf="!last ? array[i+1].sender !== item.sender : false"></mat-divider>
+                      <mat-divider *ngIf="!last ? messages[i+1].sender !== item.sender : false"></mat-divider>
                     </ng-template>
                   </mat-list>
                 </mat-card>

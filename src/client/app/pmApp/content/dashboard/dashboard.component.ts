@@ -2,13 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {Subscription} from 'rxjs/Subscription';
-import {UserService} from '../../../services/user.service';
-import {TaskService} from '../../../services/task.service';
-import {ProjectService} from '../../../services/projects.service';
-import {User} from '../../../models/user';
-import {Member, Project, ProjectPosition} from '../../../models/project';
-import {Task, TaskType} from '../../../models/task';
-import {Subject} from 'rxjs/Subject';
+import {UserService, TaskService, ProjectService} from '../../../services';
+import {Member, Project, ProjectPosition, User, Task} from '../../../models';
 
 @Component({
     selector: 'app-pmapp-dashboard',

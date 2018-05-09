@@ -1,0 +1,20 @@
+<div fxLayout="column"
+      fxLayoutAlign="center"
+      fxLayoutGap="10px">
+  <div fxFlex>
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Gantt</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div id="ganttChartContainer"></div>
+        <div *ngIf="!available"><p>No tasks available</p></div>
+      </mat-card-content>
+      <mat-card-footer>
+        <mat-divider></mat-divider>
+        <mat-icon>history</mat-icon>Updated <span ></span>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+
+</div>

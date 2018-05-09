@@ -9,6 +9,7 @@ import {_throw} from 'rxjs/observable/throw';
 import {catchError, map, tap} from 'rxjs/operators';
 import {ProgressBarService} from './progressbar.service';
 import {Router} from '@angular/router';
+import * as jwt_decode from 'jwt-decode';
 
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
@@ -21,7 +22,14 @@ export class RequestInterceptor implements HttpInterceptor {
     this.progressBarService.availableProgress(true);
     let headers = {};
     if (localStorage.getItem('token') !== null) {
-      headers = {'Content-Type': 'application/json', Authorization: localStorage.getItem('token')};
+      if (localStorage.getItem('token') !== undefined) {
+        headers = {'Content-Type': 'application/json', Authorization: localStorage.getItem('token')};
+        const decoded = jwt_decode(localStorage.getItem('token'));
+        if (decoded.exp < (new Date).getMilliseconds()) {
+          this.router.navigate(['auth', 'signin']);
+          return;
+        }
+      }
     } else { headers = {'Content-Type': 'application/json'}; }
     const cloneRequest =  req.clone({ setHeaders: headers});
     return next.handle(cloneRequest)

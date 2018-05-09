@@ -89,7 +89,7 @@ router.patch('/:id', checkParams, async function(req, res) {
       {$addToSet: {team: {email: email, position: 1}}}, DbKeys.projects);
     assert.notEqual(null, resultProject);
     const result = await DbClient.updateOne(
-      {project: ObjectID(req.params.id) }, { $pull: { invites: { $in: [ req.body.email ] }}}, DbKeys.invites);
+      {project: ObjectID(req.params.id) }, { $pull: { invites: { $in: [ email ] }}}, DbKeys.invites);
     assert.notEqual(null, result);
     ioServer.memberJoinedProject(req.params.id, email);
     res.status(200).send();

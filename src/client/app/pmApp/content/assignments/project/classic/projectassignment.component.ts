@@ -1,15 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Task, TaskType} from '../../../../../models/task';
 import {MatPaginator} from '@angular/material';
-import {Project} from '../../../../../models/project';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 import {map} from 'rxjs/operators';
-import {ProjectService} from '../../../../../services/projects.service';
-import {TaskService} from '../../../../../services/task.service';
-import {Subscription} from 'rxjs/Subscription';
+import {ProjectService, SnackbarService, TaskService, UserService} from '../../../../../services';
+import {Task, TaskType, Project, User} from '../../../../../models';
 import { FilterOption, FilterType} from '../../../../../utils/utils';
 import {MyDataSource} from '../../../../../utils/customGenerics';
 
@@ -21,6 +19,8 @@ import {MyDataSource} from '../../../../../utils/customGenerics';
 export class ProjectAssignmentComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  user: User;
 
   taskType = TaskType;
   types = Object.keys(TaskType);
@@ -41,7 +41,9 @@ export class ProjectAssignmentComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private projectService: ProjectService,
-              private taskService: TaskService) {}
+              private userService: UserService,
+              private snackBar: SnackbarService,
+              private taskService: TaskService) { userService.user$.subscribe(user => this.user = user); }
 
   ngOnInit() {
     this.dataSource = new MyDataSource(this.taskService.assignments$, this.paginator);
@@ -52,12 +54,17 @@ export class ProjectAssignmentComponent implements OnInit {
       .subscribe( filters => this.dataSource.filter = new FilterOption(FilterType.nameTypeStatus, filters));
   }
 
-  openTask(id: string) {
-    console.log(id);
-    this.router.navigate(['app', 'project', 'assignmentview', id]);
+  openTask(id: string) { this.router.navigate(['app', 'project', 'assignmentview', id]); }
+
+  hasRights(task: Task) {
+    return task.assigner_email !== this.user.email || task.assignee_email.filter(email => email === this.user.email).length === 0;
   }
 
   changeStatusOf(task: Task) {
+    if (task.assigner_email !== this.user.email || task.assignee_email.filter(email => email === this.user.email).length === 0) {
+      this.snackBar.show('You have no rights upon this task');
+      return;
+    }
     this.taskService.changeStatus(task)
       .subscribe( res => this.taskService.changeStatusOf(task._id, task.completed));
   }

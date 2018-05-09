@@ -17,7 +17,7 @@ const ObjectID = require('mongodb').ObjectID;
 router.get('/task', async function(req, res) {
   const email = req['decoded'].info.email;
   try {
-    const result = await DbClient.find({assignee_email: email , type : 'task' }, DbKeys.tasks);
+    const result = await DbClient.find({assignee_email: email , type : 0 }, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -32,7 +32,7 @@ router.get('/task', async function(req, res) {
 router.get('/issue', async function(req, res) {
   const email = req['decoded'].info.email;
   try {
-    const result = await DbClient.find({assignee_email: email , type : 'issue' }, DbKeys.tasks);
+    const result = await DbClient.find({assignee_email: email , type : 1 }, DbKeys.tasks);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
