@@ -59,9 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.router.navigate(['app', 'project', 'dashboard']);
     }
 
-    openTaskView(task: Task) {
-        this.router.navigate(['app', 'project', `assignmentview/${task._id}`]);
-    }
+    openTaskView(task: Task) { this.router.navigate(['app', 'assignmentview', task._id]); }
 
     isTypeOf(position: ProjectPosition, team: Member[]) {
         for (const member of team) {

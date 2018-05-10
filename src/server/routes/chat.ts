@@ -18,7 +18,7 @@ router.post('/', checkBody, async function(req, res) {
   try {
     const result = await DbClient.insertOne(req.body.message, DbKeys.chat);
     assert.notEqual(null, result);
-    ioServer.sentMessageProject(req.body.message.receiver, result.ops[0]._id);
+    ioServer.sentMessageProject(req.body.message.receiver, result.ops[0]);
     res.status(204).send();
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });

@@ -3,8 +3,9 @@ import 'rxjs/add/operator/finally';
 import { Observable } from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Message} from '../models/message';
+import {Message} from '../models';
 import {ProjectService} from './projects.service';
+import {SocketService} from './socket.service';
 
 export class ChatThread {
   constructor(public id: string, public name: string,
@@ -21,7 +22,8 @@ export class ChatService {
   threads$ = this.threads.asObservable();
 
   constructor(private http: HttpClient,
-              private projectService: ProjectService) {
+              private projectService: ProjectService,
+              private socketService: SocketService) {
     // Everytime a project will be added, the service will retrieve it ChatThread
     this.projectService.projects$.subscribe( projects =>
       this.getThreads(projects.map( value => ({id: value._id, name: value.name})))
@@ -33,6 +35,7 @@ export class ChatService {
         })
         .subscribe(res => this.threads.next(res))
     );
+    socketService.onProjectMessage().subscribe(message => this.receivedOnProject(message)); // receives new messages
   }
 
   // Public methods
@@ -40,10 +43,11 @@ export class ChatService {
     return this.http.post(ChatService.base, {message: message});
   }
 
-  receivedOnProject(message: Message) {
-    console.log(message);
+  private receivedOnProject(message: Message) {
     const temp = this.threads.value;
-    temp[message.receiver].lastMessages.push(message);
+    const tempThread = temp.get(message.receiver);
+    tempThread.lastMessages.push(message);
+    temp.set(message.receiver, tempThread);
     this.threads.next(temp);
   }
 

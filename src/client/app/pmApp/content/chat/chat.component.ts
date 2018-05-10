@@ -12,14 +12,16 @@ import {Message, User} from '../../../models';
 export class ChatComponent implements OnDestroy {
   threadsSubscription: Subscription = this.chatService.threads$
     .subscribe( threads => {
-      console.log(threads);
       this.threads = threads;
+      if (this.currentThread) {
+        this.currentThread$.next(this.threads.get(this.currentThread.id));
+      }
     });
   threads: Map<string, ChatThread>;
 
   currentThread$ = new Subject<ChatThread>();
-  messages = [];
-  private currentThreadID;
+  currentThread: ChatThread;
+  threadSelected = false;
   sorted = false;
 
   // Message Sending Properties
@@ -28,18 +30,26 @@ export class ChatComponent implements OnDestroy {
   constructor(public chatService: ChatService,
               private userService: UserService) {
    this.currentThread$.subscribe( thread => {
-     console.log(thread);
-     this.currentThreadID = thread.id;
-     this.messages = thread.lastMessages;
+     this.currentThread = thread;
+     this.threadSelected = true;
    });
    userService.user$.subscribe( user => this.user = user);
   }
 
   // Public methods
+  sayHi() {
+    const messageTemp = new Message(this.user.email, this.currentThread.id, `Hi #${this.currentThread.name}`, new Date());
+    this.send(messageTemp);
+  }
+
   sendMessage() {
-    if (!this.messageInput || this.currentThreadID === undefined ) { return; }
-    const messageTemp = new Message('', this.user.email, this.currentThreadID, this.messageInput, new Date());
-    this.chatService.send(messageTemp)
+    if (!this.messageInput || this.currentThread === undefined ) { return; }
+    const messageTemp = new Message(this.user.email, this.currentThread.id, this.messageInput, new Date());
+    this.send(messageTemp);
+  }
+
+  private send(message: Message) {
+    this.chatService.send(message)
       .subscribe(
         res => { this.messageInput = null; },
         error => { }

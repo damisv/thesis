@@ -1,8 +1,8 @@
 export class Message {
-    constructor(public _id: string,
-                public sender: string,
+    constructor(public sender: string,
                 public receiver: string,
                 public message: string,
-                public date_sent: Date
+                public date_sent: Date,
+                public _id?: string
     ) {}
 }

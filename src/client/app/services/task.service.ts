@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
@@ -8,6 +8,7 @@ import {Task} from '../models/task';
 import {Subject} from 'rxjs/Subject';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {SocketService} from './socket.service';
 
 @Injectable()
 export class TaskService {
@@ -22,7 +23,14 @@ export class TaskService {
   private assignments = new BehaviorSubject<Task[]>([]);
   assignments$ = this.assignments.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+              private socketService: SocketService) {
+    socketService.onNewTask().subscribe(value => {
+      if (value.email === value.task.assigner_email) { return; }
+      this.add(value.task);
+    });
+    socketService.onTaskEdited().subscribe(task => this.addEdited(task));
+  }
 
   // Get All User Task by type (task, issues, feedback)
   get(type: string): Observable<Task[]> {
@@ -52,15 +60,14 @@ export class TaskService {
     return this.http.patch(TaskService.base, {task: task});
   }
 
-  // Changes the status on this assignments array
-  changeStatusOf(id: string, status: boolean) {
+  // Socket method
+  private addEdited(task: Task) {
     const temp = this.assignments.value;
-    const index = temp.findIndex(value => value._id === id);
-    temp[index].completed = status;
+    const index = temp.findIndex(value => value._id === task._id);
+    temp[index] = task;
     this.assignments.next(temp);
   }
 
-  // When a task arrives through socket, this method should be called.
   add(task: Task) {
     if (localStorage.hasOwnProperty('projectID')) {
        if (task.project_id === localStorage.getItem('projectID')) {

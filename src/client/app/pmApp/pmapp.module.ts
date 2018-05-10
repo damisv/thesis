@@ -40,8 +40,9 @@ import {ContextMenuModule} from 'ngx-contextmenu';
 import {CalendarEventDialogComponent} from './content/calendar/calendareventdialog.component';
 import {
   CalendarService, NotificationService, SnackbarService, InviteService,
-  TimelineService, ChatService, UserService, ProjectService, TaskService, SocketService
+  TimelineService, ChatService, UserService, ProjectService, TaskService
 } from '../services';
+import {SocketService} from '../services/socket.service';
 import {RoleGuard} from './guards/role.guard';
 import {PushNotificationModule} from 'ng-push-notification';
 import {GanttComponent} from './content/gantt/gantt.component';

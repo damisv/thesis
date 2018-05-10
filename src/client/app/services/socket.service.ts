@@ -1,49 +1,73 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import * as io from 'socket.io-client';
 import {NotificationService} from './notification.service';
+import {Observable} from 'rxjs/Observable';
+import {Message, Task} from '../models';
 
 @Injectable()
 export class SocketService implements OnDestroy {
-  // Static Properties
-  private static socketServer = 'localhost:8080';
-  private static base = '8080';
+
   private socket;
-  // Initialization
-  constructor( private notificationService: NotificationService) {
-    this.socket = io(SocketService.socketServer , {
-      reconnection: true,
-      reconnectionDelay: 500,
-      reconnectionDelayMax : 1000,
-      reconnectionAttempts: 15
+  private email;
+
+  constructor(private notificationService: NotificationService) {
+    this.socket = io();
+    // Login listeners
+    this.socket.on('connected', () => this.register());
+    this.socket.on('loginSuccessful', (email) => {
+      this.email = email;
+      notificationService.showPush('success', `${email} logged in`, {});
     });
-    this.socket.on('connected', this.register() );
-    this.socket.on('loginSuccessful', function() {console.log('success login');
-      notificationService.showPush('success', 'login YUPIE' , {}); } );
-    /*this.socket.on('projectCreated',  function(date) {console.log('project created'); });*/
-    this.socket.on('loginError', function(date) {console.log('login error'); });
-    this.socket.on('joinProject', function(id)  {this.joinProject(id); }.bind(this));
-    this.socket.on('Invitation', function(notification) { console.log('invitation for ' + notification.project_name);
-      notificationService.showPush('Invitation', notification.project_name + ' sent you an invitation' , {}); });
-    this.socket.on('memberJoined', function(projectName , email) { console.log('member joined ' + projectName + email);
-      notificationService.showPush('New Member Joined', email + ' joined ' + projectName , {}); });
-    this.socket.on('reconnecting', function(date) {console.log('reconnecting'); });
-    this.socket.on('taskAssigned', function(projectName , task ) { console.log('task assigned for ' + projectName);
-      notificationService.showPush('New Task', projectName + ' sent you a task' , {}); });
-    this.socket.on('projectMessage', function(id) { console.log('project message');
-      notificationService.showPush('New Message', 'New Message' , {}); });
+    //
+    this.initListeners();
   }
 
-  ngOnDestroy() {
-    if ( this.socket !== null ) {
-      this.socket.close();
-    }
-  }
-
-  joinProject(id) {
-    console.log('emit join id ' + id);
-    this.socket.emit('joinProject', id);
-  }
-  register() {
+  // EMITTERS
+  private register() {
     this.socket.emit('register', localStorage.getItem('token'));
   }
+
+  // SIMPLE LISTENERS
+  private initListeners() {
+    this.socket.on('memberJoined', (projectName, email) => {
+      this.notificationService.showPush('Team gets bigger!!!', `${email} joined ${projectName}`, {});
+    });
+    this.socket.on('taskAssigned', (projectName, task ) => {
+      this.notificationService.showPush('You have a new task', `${task.name} from ${projectName} has been assigned to you` , {});
+    });
+    this.socket.on('testt', () => this.notificationService.showPush('Test', 'Test', {}));
+  }
+
+  // RX LISTENERS
+  onProjectMessage(): Observable<Message> {
+    return new Observable<Message>(observer => {
+      this.socket.on('projectMessage', (message) => {
+        observer.next(message);
+        if (this.email !== message.sender) {
+          this.notificationService.showPush('New Message Received', `From ${message.sender}`, {});
+        }
+      });
+    });
+  }
+  onInvitation(): Observable<any> {
+    return new Observable<any>(observer => {
+      this.socket.on('invitation', (notification) => {
+        this.notificationService.showPush('Invite', `You've been invited to ${notification.project_name}`, {});
+        this.notificationService.addNotification(notification);
+        observer.next(notification);
+      });
+    });
+  }
+  onNewTask(): Observable<{task: Task, email: string}> {
+    return new Observable<{task: Task, email: string}>(observer => {
+      this.socket.on('taskArrived', (task) => observer.next({task: task, email: this.email}));
+    });
+  }
+  onTaskEdited(): Observable<Task> {
+    return new Observable<Task>(observer => {
+      this.socket.on('taskEdited', (task) => observer.next(task));
+    });
+  }
+
+  ngOnDestroy() { if (this.socket) { this.socket.close(); } }
 }

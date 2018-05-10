@@ -1,18 +1,20 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy} from '@angular/core';
 import {day, getCorrectDays} from '../../../utils/utils';
 import {ProjectService, TaskService} from '../../../services';
 import {Router} from '@angular/router';
 import {Project, Task} from '../../../models';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-pmapp-project-gantt',
   templateUrl: './gantt.component.html',
   styleUrls: ['./gantt.component.scss']
 })
-export class GanttComponent implements AfterViewInit {
+export class GanttComponent implements AfterViewInit, OnDestroy {
   project: Project;
   available = true;
   assignments: Task[] = [];
+  taskSubscription: Subscription;
   private tasks: Task[];
   private chart;
 
@@ -23,7 +25,7 @@ export class GanttComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.taskService.assignments$.subscribe( assignments => {
+    this.taskSubscription = this.taskService.assignments$.subscribe( assignments => {
       this.assignments = assignments;
       this.tasks = assignments.filter(value => value.type === 0);
       this.initChartData(this.tasks);
@@ -70,5 +72,9 @@ export class GanttComponent implements AfterViewInit {
         }]
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.taskSubscription) { this.taskSubscription.unsubscribe(); }
   }
 }

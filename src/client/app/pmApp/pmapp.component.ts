@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {MaterialTheme, ThemeService, UserService,
-  ProjectService, SocketService, NotificationService} from '../services';
+  ProjectService, NotificationService} from '../services';
 import {User} from '../models';
 import {Router} from '@angular/router';
+import {SocketService} from '../services/socket.service';
 
 @Component({
   selector: 'app-pmapp',

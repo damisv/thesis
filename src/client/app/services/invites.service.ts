@@ -4,6 +4,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {UserService} from './user.service';
 import 'rxjs/add/operator/finally';
+import {SocketService} from './socket.service';
 
 @Injectable()
 export class InviteService {
@@ -15,8 +16,10 @@ export class InviteService {
   invites$ = this.invites.asObservable();
 
   constructor(private http: HttpClient,
-              private userService: UserService) {
-    this.userService.user$.subscribe( _ => this.getUserInvites());
+              private userService: UserService,
+              private socketService: SocketService) {
+    Observable.merge(userService.user$, socketService.onInvitation())
+      .subscribe(_ => this.getUserInvites());
   }
 
   // Public methods
@@ -48,5 +51,11 @@ export class InviteService {
 
   userIsInvited(email: string, projectID: string): Observable<boolean> {
     return this.http.post<boolean>(`${InviteService.base}/isInvited`, {email: email, projectID: projectID});
+  }
+
+  private inviteArrived(invite: object) {
+    const temp = this.invites.value;
+    temp.push(invite);
+    this.invites.next(temp);
   }
 }

@@ -11,12 +11,8 @@ import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
 import {HomepageComponent} from './homepage/homepage.component';
 
-import {ThemeService} from './services/theme.service';
-import {ScrollService} from './services/scroll.service';
-
 import {ErrorDialogComponent} from './errors/errordialog.component';
-import {AuthService} from './services/auth.service';
-import {ProgressBarService} from './services/progressbar.service';
+import {AuthService, ProgressBarService, ScrollService, ThemeService} from './services';
 import {MyParticlesModule} from './particles/myparticles.module';
 import {RequestInterceptor} from './services/request.interceptor';
 import {AuthGuard} from './pmApp/guards/auth.guard';

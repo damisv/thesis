@@ -80,10 +80,12 @@ router.post('/', checkBody, async function(req, res) {
   task.assigner_email = req['decoded'].info.email;
   task.date_created = new Date();
   try {
-    const result = await DbClient.insertOne(req.body.task, DbKeys.tasks);
+    const result = await DbClient.insertOne(task, DbKeys.tasks);
     assert.notEqual(null, result);
-    // ioServer.taskAssignedToMembers(req.body.project_id, req.body.task, req.body.assignee_email);
-    res.status(200).send({task: result.ops[0]});
+    const tempTask = result.ops[0];
+    ioServer.newTaskArrived(tempTask);
+    ioServer.taskAssignedToMembers(tempTask);
+    res.status(200).send({task: tempTask});
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
@@ -101,6 +103,7 @@ router.put('/', checkBody, hasRightsOnAssignment, async function(req, res) {
   try {
     const result = await DbClient.save(temp, DbKeys.tasks);
     assert.equal(1, result.result.ok);
+    ioServer.taskEdited(req.body.task);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
@@ -117,6 +120,7 @@ router.patch('/', checkBody, hasRightsOnAssignment, async function(req, res) {
     const result = await DbClient.updateOne({_id: ObjectID(req.body.task._id)},
       {$set: { completed: req.body.task.completed}}, DbKeys.tasks);
     assert.notEqual(null, result);
+    ioServer.taskEdited(req.body.task);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });

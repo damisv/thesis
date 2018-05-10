@@ -46,6 +46,11 @@ export class NotificationService implements OnDestroy {
   delete(notification: Notification): Observable<any> {
     return this.http.delete(`${NotificationService.base}/`  + notification._id );
   }
+  addNotification(notification: Notification) {
+    const temp = this.notifications.value;
+    temp.push(notification);
+    this.notifications.next(temp);
+  }
   private getSettings() {
     this.http.get<any>(`${NotificationService.baseSettings}/`).subscribe(res => this.notificationSettings.next(res));
   }

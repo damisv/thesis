@@ -5,7 +5,6 @@ export * from './chat.service';
 export * from './invites.service';
 export * from './notification.service';
 export * from './projects.service';
-export * from './socket.service';
 export * from './task.service';
 export * from './timeline.service';
 export * from './user.service';

@@ -22,6 +22,7 @@ export class IOServer {
   private listen() {
     this.io.on('connection', (socket: any) => {
       console.log('Connected client');
+      socket.emit('connected');
       socket.on('register', data => this.onRegister(socket, data));
       socket.on('joinProject', data => socket.join(data));
     });
@@ -34,14 +35,13 @@ export class IOServer {
       assert.notEqual(null, decoded);
       const email = decoded.info.email;
       this.clients[email] = socket.id;
-      socket.emit('loginSuccessful');
+      socket.emit('loginSuccessful', email);
       const result = await DbClient.find({'team.email': email}, DbKeys.projects, {_id: 1, name: 1});
       assert.notEqual(null, result);
       result.forEach(project => {
         socket.join(project._id);
         this.projects[project._id] = project.name;
       });
-      socket.emit('connected');
       console.log('connected ' + email);
     } catch (error) { console.log('emit login error'); socket.emit('loginError'); }
   }
@@ -52,15 +52,23 @@ export class IOServer {
   public inviteMemberToProject(projectID, notifications: any[]) {
     notifications.forEach(notification => {
       if (this.clients[notification.email]) {
-        this.io.to(this.clients[notification.email]).emit('Invitation', notification);
+        this.io.to(this.clients[notification.email]).emit('invitation', notification);
       }
     });
   }
 
-  public taskAssignedToMembers(projectID, task , assignees) {
-    assignees.forEach(assignee => {
+  public newTaskArrived(task) {
+    this.io.to(task.project_id).emit('taskArrived', task);
+  }
+
+  public taskEdited(task) {
+    this.io.to(task.project_id).emit('taskEdited', task);
+  }
+
+  public taskAssignedToMembers(task) {
+    task.assignee_email.forEach(assignee => {
       if (this.clients[assignee]) {
-        this.io.to(this.clients[assignee]).emit('taskAssigned', this.projects[projectID], task);
+        this.io.to(this.clients[assignee]).emit('taskAssigned', this.projects[task.project_id], task);
       }
     });
   }
@@ -86,7 +94,7 @@ export class IOServer {
       this.io.to(this.clients[receiver]).emit('message', message_id);
     }
   }
-  public sentMessageProject(receiver, message_id) {
-    this.io.to(receiver).emit('projectMessage', message_id);
+  public sentMessageProject(receiver, message) {
+    this.io.to(receiver).emit('projectMessage', message);
   }
 }

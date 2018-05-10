@@ -56,28 +56,31 @@
                 <button matTooltip="Toggle Sidenav!" mat-icon-button (click)="chatSidenav.toggle()" aria-label="Toggle Sidenav">
                 <mat-icon aria-hidden="true">menu</mat-icon>
               </button>
+                <div style="flex: 1 1 auto;"></div>
+                <p *ngIf="threadSelected">#{{ currentThread?.name }}</p>
               </mat-toolbar>
               <div style="overflow: auto;height: 83%" #messagesContainer [scrollTop]="messagesContainer.scrollHeight">
-                <mat-card class="card messages-container">
+                <mat-card class="card messages-container" *ngIf="threadSelected">
                   <mat-list>
-                    <ng-template ngFor let-item let-i="index" let-last="last" [ngForOf]="messages">
+                    <p *ngIf="currentThread?.lastMessages.length === 0">No messages on this conversation.<a (click)="!!sayHi()">Say hi!</a></p>
+                    <ng-template ngFor let-item let-i="index" let-last="last" [ngForOf]="currentThread?.lastMessages">
                       <mat-list-item class="message">
-                        <ng-template [ngIf]="i > 0 ? messages[i-1].sender !== item.sender : true ">
+                        <ng-template [ngIf]="i > 0 ? currentThread?.lastMessages[i-1].sender !== item.sender : true ">
                           <div>
                             <img matListAvatar src="../../../../assets/images/gates.jpg"/>
                             <h3 matLine>{{item.sender}}</h3>
                             <h4 matLine>{{ item.date_sent | date:'fullDate'}}</h4>
                           </div>
                         </ng-template>
-                        <p style="font-style: italic"><span>{{ item.message }}</span></p>
+                        <p style="font-style: italic" matTooltip="{{item.date_sent | date: 'EEEE, MMMM d, y, h:mm:ss a'}}" matTooltipPosition="above"><span>{{ item.message }}</span></p>
                       </mat-list-item>
                       <!--<ng-template [ngIf]="last ? "></ng-template>-->
-                      <mat-divider *ngIf="!last ? messages[i+1].sender !== item.sender : false"></mat-divider>
+                      <mat-divider *ngIf="!last ? currentThread?.lastMessages[i+1].sender !== item.sender : false"></mat-divider>
                     </ng-template>
                   </mat-list>
                 </mat-card>
               </div>
-              <mat-toolbar class="messages-toolbar bottom">
+              <mat-toolbar class="messages-toolbar bottom" *ngIf="threadSelected">
                 <button mat-icon-button matTooltip="Add content" matTooltipPosition="after" [matMenuTriggerFor]="addContent"><mat-icon>add</mat-icon></button>
                 <mat-menu #addContent="matMenu">
                   <button mat-menu-item>Code or text snippet</button>

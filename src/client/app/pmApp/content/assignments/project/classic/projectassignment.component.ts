@@ -66,6 +66,6 @@ export class ProjectAssignmentComponent implements OnInit {
       return;
     }
     this.taskService.changeStatus(task)
-      .subscribe( res => this.taskService.changeStatusOf(task._id, task.completed));
+      .subscribe(_ => {}, err => console.log(err));
   }
 }
