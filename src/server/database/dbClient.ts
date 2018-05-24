@@ -7,10 +7,11 @@ class DbClient {
 * 1) Local host
 * 2) mLab
  */
-  private url = 'mongodb://localhost:27017/project';
-// private url = 'mongodb://admin:admin@ds135820.mlab.com:35820/pmthesis';
+  //private url = 'mongodb://localhost:27017/project';
+ private url = 'mongodb://admin:admin@ds135820.mlab.com:35820/pmthesis';
 
-  private dbName = 'project';
+  //private dbName = 'project';
+  private dbName = 'pmthesis';
   public db;
 
   public async connect() {
