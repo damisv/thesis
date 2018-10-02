@@ -91,7 +91,7 @@
     "engine-strict": true
   },
   "engines": {
-    "node": ">= 8.9.0",
+    "node": ">= 5.4.1 <= 8",
     "npm": ">= 5"
   }
 }
