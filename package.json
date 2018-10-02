@@ -36,6 +36,7 @@
     "@angular/material": "6.0.0-beta.4",
     "@angular/platform-browser": "6.0.0-beta.7",
     "@angular/platform-browser-dynamic": "6.0.0-beta.7",
+    "@angular/platform-server": "^6.1.9",
     "@angular/router": "6.0.0-beta.7",
     "@auth0/angular-jwt": "^1.1.0",
     "@nguniversal/express-engine": "^5.0.0-beta.5",
