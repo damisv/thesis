@@ -16,7 +16,9 @@
     "build:ngClient:watch": "ng build --prod --app ngClient --output-hashing=false --watch",
     "build:ngServer:watch": "ng build --prod --app ngServer --output-hashing=false --watch",
     "build:express:watch": "webpack --config webpack.config.js --progress --colors --watch",
-    "start:watch": "nodemon dist/main --ignore src/ --ignore *.json"
+    "start:watch": "nodemon dist/main --ignore src/ --ignore *.json",
+    "heroku-prebuild": "npm install -g @angular/cli@latest && npm install",
+    "heroku-postbuild": "npm run build && npm run start"
   },
   "private": true,
   "dependencies": {
