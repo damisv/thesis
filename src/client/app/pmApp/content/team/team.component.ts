@@ -46,7 +46,7 @@ export class TeamComponent {
     }
     this.inviteService.invite(this.team, this.project._id, this.project.name)
       .subscribe(
-        () => {console.log('success members invited'); }, // members invited
+        () =>  this.team = [], // members invited
         err => {}// this.notificationService.create("error"," Error Invite failed","Error! Unable to send invite to "+email,"error");
       );
   }

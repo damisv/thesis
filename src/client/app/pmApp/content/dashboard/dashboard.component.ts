@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     user: User;
     projects: Project[];
     tasks: Task[];
+    tasksOverdue: Task[];
     issues: Task[];
 
     subscription: Subscription  = this.userService.user$.subscribe(
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             res => {
                 this.tasks = res;
                 this.tasksUpdated = new Date();
+                this.tasksOverdue = res.filter(task => task.date_end.getTime() > this.tasksUpdated.getTime());
             }
         );
       this.taskService.get('issue').subscribe(

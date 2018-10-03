@@ -1,4 +1,10 @@
 import * as express from 'express';
+import {ioServer} from '../../main';
+import {DbKeys} from '../database/utils';
+import {checkBody, checkParams, StatusMessages} from '../utils';
+import {Error} from '../../client/app/models/error';
+import DbClient = require('../database/dbClient');
+import * as assert from 'assert';
 const router = express.Router();
 
 /**
@@ -7,9 +13,13 @@ const router = express.Router();
  * Email should be taken from token
  * @returns Array of MyCalendarEvents (see calendarEvent.ts)
  */
-router.get('/', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'user events'});
+router.get('/', async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const result = await DbClient.find({email: email }, DbKeys.calendar).toArray();
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -19,9 +29,13 @@ router.get('/', function(req, res) {
  * @param - project id
  * @returns Array of MyCalendarEvents (see calendarEvent.ts)
  */
-router.get('/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'signup WORKS'});
+router.get('/:id', checkParams, async function(req, res) {
+  const project_id = req.params.id;
+  try {
+    const result = await DbClient.find({project_id: project_id}, DbKeys.calendar).toArray();
+    assert.notEqual(null, result);
+    res.status(200).send(result);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -31,9 +45,20 @@ router.get('/:id', function(req, res) {
  * @body - Contains either 1 or 2 values: if it has projectID, then will be added to project, if not to user.
  * @returns Id of event created
  */
-router.post('/', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'signup WORKS'});
+router.post('/', checkBody, async function(req, res) {
+  const email = req['decoded'].info.email;
+  let result;
+  try {
+    if (req.body.projectID) {
+      req.body.event.project_id = req.body.projectID;
+      result = await DbClient.insertOne(req.body.event, DbKeys.calendar);
+    } else {
+      req.body.event.email = email;
+      result = await DbClient.insertOne(req.body.event, DbKeys.calendar);
+    }
+    assert.notEqual(null, result);
+    res.status(200).send(result.ops._id);
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -42,9 +67,13 @@ router.post('/', function(req, res) {
  * @body - Contains event to edit
  * @returns Void - success 200
  */
-router.put('/', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'signup WORKS'});
+router.put('/', checkBody, async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const result = await DbClient.save(req.body.event, DbKeys.calendar);
+    assert.notEqual(null, result);
+    res.status(200).send({});
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 /**
@@ -53,11 +82,14 @@ router.put('/', function(req, res) {
  * @param - event id
  * @returns Void - success 200
  */
-router.delete('/:id', function(req, res) {
-  console.log(req.body);
-  res.status(200).send({message: 'signup WORKS'});
+router.delete('/:id', checkParams, async function(req, res) {
+  const email = req['decoded'].info.email;
+  try {
+    const result = await DbClient.deleteOne({_id: req.params.id }, DbKeys.calendar);
+    assert.notEqual(null, result);
+    res.status(200).send({});
+  } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 
 // Export the router
 export = router;
-

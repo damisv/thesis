@@ -79,7 +79,7 @@ async function inviteMembersNotifications(invites: string[], projectID: string, 
  * Accepts the invite to project id
  * Email will be taken from token
  * @param - Project ID
- * @returns Void - success 200 is needed only
+ * @returns Project
  */
 router.patch('/:id', checkParams, async function(req, res) {
   const email = req['decoded'].info.email;
@@ -92,7 +92,8 @@ router.patch('/:id', checkParams, async function(req, res) {
       {project: ObjectID(req.params.id) }, { $pull: { invites: { $in: [ email ] }}}, DbKeys.invites);
     assert.notEqual(null, result);
     ioServer.memberJoinedProject(req.params.id, email);
-    res.status(200).send();
+    const projectTemp = await DbClient.findOne({_id: ObjectID(req.params.id)}, DbKeys.projects);
+    res.status(200).send(projectTemp);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 

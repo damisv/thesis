@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '@angular/common/http';
 import {Notification, NotificationSettings} from '../models/notification';
 import {PushNotificationService, PushNotificationSettings} from 'ng-push-notification';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class NotificationService implements OnDestroy {
@@ -29,6 +30,7 @@ export class NotificationService implements OnDestroy {
 
   // Initialization
   constructor(private http: HttpClient,
+              private router: Router,
               private pushNotification: PushNotificationService) {
     this.get();
     this.getSettings();
@@ -59,12 +61,18 @@ export class NotificationService implements OnDestroy {
   }
   ngOnDestroy() {
   }
-  showPush(title: string , body: string, data: any) {
-    this.pushNotification.requestPermission().then( () =>
-      this.pushNotification.show(
-        title,
-        { body: body , data: data},
-        this.closeDelay, // close delay.
-      )).catch();
+  showPush(title: string , body: string, data: any, route: any = null) {
+    if (route) {
+      this.pushNotification.click$.asObservable()
+        .subscribe(value => this.router.navigate(route));
+    }
+    this.pushNotification.requestPermission()
+      .then( () =>
+        this.pushNotification.show(
+          title,
+          { body: body , data: data},
+          this.closeDelay // close delay.
+        )
+      ).catch();
   }
 }

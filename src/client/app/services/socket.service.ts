@@ -30,12 +30,14 @@ export class SocketService implements OnDestroy {
   // SIMPLE LISTENERS
   private initListeners() {
     this.socket.on('memberJoined', (projectName, email) => {
-      this.notificationService.showPush('Team gets bigger!!!', `${email} joined ${projectName}`, {});
+      this.notificationService.showPush('Team gets bigger!!!', `${email} joined ${projectName}`, {}, ['app', 'invites']);
     });
     this.socket.on('taskAssigned', (projectName, task ) => {
-      this.notificationService.showPush('You have a new task', `${task.name} from ${projectName} has been assigned to you` , {});
+      this.notificationService.showPush('You have a new task',
+        `${task.name} from ${projectName} has been assigned to you` ,
+        {}, ['app', 'assignmentview', task._id]);
     });
-    this.socket.on('testt', () => this.notificationService.showPush('Test', 'Test', {}));
+    // this.socket.on('testt', () => this.notificationService.showPush('Test', 'Test', {}));
   }
 
   // RX LISTENERS
@@ -44,7 +46,7 @@ export class SocketService implements OnDestroy {
       this.socket.on('projectMessage', (message) => {
         observer.next(message);
         if (this.email !== message.sender) {
-          this.notificationService.showPush('New Message Received', `From ${message.sender}`, {});
+          this.notificationService.showPush('New Message Received', `From ${message.sender}`, {}, ['app', 'chat']);
         }
       });
     });
@@ -52,7 +54,7 @@ export class SocketService implements OnDestroy {
   onInvitation(): Observable<any> {
     return new Observable<any>(observer => {
       this.socket.on('invitation', (notification) => {
-        this.notificationService.showPush('Invite', `You've been invited to ${notification.project_name}`, {});
+        this.notificationService.showPush('Invite', `You've been invited to ${notification.project_name}`, {}, ['app', 'invites']);
         this.notificationService.addNotification(notification);
         observer.next(notification);
       });
