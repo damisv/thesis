@@ -3,7 +3,7 @@ import { CalendarEvent } from 'angular-calendar';
 
 export class MyCalendarEvent implements CalendarEvent {
   constructor(public start: Date = new Date(),
-              public end: Date = new Date(),
+              public end: Date = null,
               public title: string = 'default',
               public color: any = colors.red,
               public actions: any[] = [],

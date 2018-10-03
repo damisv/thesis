@@ -55,8 +55,8 @@ export class CalendarComponent {
     Observable.combineLatest(this.calendarService.myEvents$, this.calendarService.projectEvents$,
       (myEvents: MyCalendarEvent[], projectEvents: MyCalendarEvent[]) => ({my: myEvents, project: projectEvents}))
       .subscribe( events => {
-        //this.events = events.my.concat(events.project);
-        //this.refresh.next();
+        this.events = events.my.concat(events.project);
+        this.refresh.next();
       });
   }
 
@@ -117,6 +117,7 @@ export class CalendarComponent {
         if (result.create) {
           this.calendarService.create(result.event, result.projectID)
             .subscribe(value => {
+              console.log(value);
               const tempEvent = result.event;
               tempEvent._id = value._id;
               this.events.push(tempEvent);

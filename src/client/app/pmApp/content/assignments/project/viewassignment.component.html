@@ -9,7 +9,7 @@
         <mat-card-title>{{ assignment?.name }}</mat-card-title>
         <mat-card-subtitle>
           <div style="flex: 1 1 auto;"></div>
-          <mat-checkbox [(ngModel)]="assignment.completed" [disabled]="hasRights()">Status of assignment</mat-checkbox>
+          <mat-checkbox [(ngModel)]="assignment.completed" [disabled]="!hasRights()" (change)="changeStatus()">Status of assignment</mat-checkbox>
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>

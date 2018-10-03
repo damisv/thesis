@@ -68,7 +68,7 @@
           <ng-container matColumnDef="status">
             <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
             <mat-cell *matCellDef="let element" class="mat-column-select">
-              <mat-checkbox [disabled]="hasRights(element)" (click)="$event.stopPropagation()"
+              <mat-checkbox [disabled]="!hasRights(element)" (click)="$event.stopPropagation()"
                             [(ngModel)]="element.completed" (change)="changeStatusOf(element)"></mat-checkbox>
             </mat-cell>
           </ng-container>

@@ -32,6 +32,7 @@ export class CalendarEventDialogComponent {
     if (data.event) {
       this.event = data.event;
       this.createDialog = !data.event.end;
+      this.event.end = data.event.start;
     }
     this.projects = data.projects;
   }

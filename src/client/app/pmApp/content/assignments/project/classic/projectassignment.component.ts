@@ -57,11 +57,11 @@ export class ProjectAssignmentComponent implements OnInit {
   openTask(id: string) { this.router.navigate(['app', 'project', 'assignmentview', id]); }
 
   hasRights(task: Task) {
-    return !(task.assigner_email === this.user.email || task.assignee_email.filter(email => email === this.user.email).length > 0);
+    return (task.assigner_email === this.user.email || task.assignee_email.filter(email => email === this.user.email).length > 0);
   }
 
   changeStatusOf(task: Task) {
-    if (task.assigner_email !== this.user.email || task.assignee_email.filter(email => email === this.user.email).length === 0) {
+    if (!(task.assigner_email === this.user.email || task.assignee_email.filter(email => email === this.user.email).length > 0)) {
       this.snackBar.show('You have no rights upon this assignment');
       return;
     }

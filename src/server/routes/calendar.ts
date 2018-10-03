@@ -6,6 +6,7 @@ import {Error} from '../../client/app/models/error';
 import DbClient = require('../database/dbClient');
 import * as assert from 'assert';
 const router = express.Router();
+const ObjectID = require('mongodb').ObjectID;
 
 /**
  * @method - GET
@@ -32,7 +33,7 @@ router.get('/', async function(req, res) {
 router.get('/:id', checkParams, async function(req, res) {
   const project_id = req.params.id;
   try {
-    const result = await DbClient.find({project_id: project_id}, DbKeys.calendar).toArray();
+    const result = await DbClient.find({project_id: ObjectID(project_id)}, DbKeys.calendar);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }

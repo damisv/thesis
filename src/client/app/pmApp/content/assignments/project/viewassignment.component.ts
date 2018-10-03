@@ -54,8 +54,8 @@ export class ViewAssignmentComponent implements OnInit {
 
   hasRights() {
     if (!this.user) { return; }
-    return this.assignment.assigner_email !== this.user.email ||
-      this.assignment.assignee_email.filter(value => value === this.user.email).length === 0;
+    return (this.assignment.assigner_email === this.user.email ||
+      this.assignment.assignee_email.filter(value => value === this.user.email).length > 0);
   }
 
   ngOnInit() {
@@ -120,6 +120,15 @@ export class ViewAssignmentComponent implements OnInit {
         this.snackBar.show('Assignment Updated');
         },
           error => this.snackBar.show('Updating assignment failed.Try again.'));
+  }
+
+  changeStatus() {
+    if (!this.hasRights) {
+      this.snackBar.show('You don\'t have the necessary rights to do that.');
+      return;
+    }
+    this.taskService.changeStatus(this.assignment)
+      .subscribe(_ => {}, err => console.log(err));
   }
 
   // Expansion Panels methods
