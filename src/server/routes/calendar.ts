@@ -52,13 +52,12 @@ router.post('/', checkBody, async function(req, res) {
   try {
     if (req.body.projectID) {
       req.body.event.project_id = req.body.projectID;
-      result = await DbClient.insertOne(req.body.event, DbKeys.calendar);
     } else {
       req.body.event.email = email;
-      result = await DbClient.insertOne(req.body.event, DbKeys.calendar);
     }
+    result = await DbClient.insertOne(req.body.event, DbKeys.calendar);
     assert.notEqual(null, result);
-    res.status(200).send(result.ops._id);
+    res.status(200).send(result.ops[0]._id);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
 });
 

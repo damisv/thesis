@@ -12,6 +12,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/isEmpty';
 import {HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/filter';
+import {CalendarService} from './calendar.service';
 
 @Injectable()
 export class UserService {
@@ -23,7 +24,8 @@ export class UserService {
   user$ = this.user.asObservable();
 
   constructor(private http: HttpClient,
-              private router: Router) {}
+              private router: Router,
+              private calendarService: CalendarService) {}
 
   giveUserProfile(user: User) { this.user.next(user); }
 /*
@@ -32,8 +34,11 @@ User Calls to API
   getUser() {
     this.http.get<User>(UserService.base)
       .subscribe(
-        res => this.user.next(res),
-        err => this.router.navigate(['auth', 'signin'])
+        res => {
+          this.user.next(res);
+          this.calendarService.get();
+        },
+            err => this.router.navigate(['auth', 'signin'])
       );
   }
 

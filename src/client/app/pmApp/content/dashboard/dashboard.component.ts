@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             res => {
                 this.tasks = res;
                 this.tasksUpdated = new Date();
-                this.tasksOverdue = res.filter(task => task.date_end.getTime() > this.tasksUpdated.getTime());
+                this.tasksOverdue = res.filter(task => (new Date(task.date_end)).getTime() > this.tasksUpdated.getTime());
             }
         );
       this.taskService.get('issue').subscribe(
