@@ -17,7 +17,7 @@ const ObjectID = require('mongodb').ObjectID;
 router.get('/', async function(req, res) {
   const email = req['decoded'].info.email;
   try {
-    const result = await DbClient.find({email: email }, DbKeys.calendar);
+    const result = await DbClient.find({'meta.email': email }, DbKeys.calendar);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -33,7 +33,7 @@ router.get('/', async function(req, res) {
 router.get('/:id', checkParams, async function(req, res) {
   const project_id = req.params.id;
   try {
-    const result = await DbClient.find({project_id: ObjectID(project_id)}, DbKeys.calendar);
+    const result = await DbClient.find({'meta.project_id': ObjectID(project_id)}, DbKeys.calendar);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
@@ -51,9 +51,9 @@ router.post('/', checkBody, async function(req, res) {
   let result;
   try {
     if (req.body.projectID) {
-      req.body.event.project_id = req.body.projectID;
+      req.body.event.meta.project_id = req.body.projectID;
     } else {
-      req.body.event.email = email;
+      req.body.event.meta.email = email;
     }
     result = await DbClient.insertOne(req.body.event, DbKeys.calendar);
     assert.notEqual(null, result);

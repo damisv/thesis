@@ -55,6 +55,14 @@ export class CalendarComponent {
     Observable.combineLatest(this.calendarService.myEvents$, this.calendarService.projectEvents$,
       (myEvents: MyCalendarEvent[], projectEvents: MyCalendarEvent[]) => ({my: myEvents, project: projectEvents}))
       .subscribe( events => {
+        events.my.map(event => {
+          event.start = new Date(event.start);
+          event.end = new Date(event.end);
+        });
+        events.project.map(event => {
+          event.start = new Date(event.start);
+          event.end = new Date(event.end);
+        });
         this.events = events.my.concat(events.project);
         this.refresh.next();
       });
