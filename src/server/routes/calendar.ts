@@ -17,7 +17,7 @@ const ObjectID = require('mongodb').ObjectID;
 router.get('/', async function(req, res) {
   const email = req['decoded'].info.email;
   try {
-    const result = await DbClient.find({email: email }, DbKeys.calendar).toArray();
+    const result = await DbClient.find({email: email }, DbKeys.calendar);
     assert.notEqual(null, result);
     res.status(200).send(result);
   } catch (error) { res.status(500).send(new Error(StatusMessages._500)); }
